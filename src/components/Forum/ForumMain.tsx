@@ -6,6 +6,7 @@ import SearchBox from './SearchBox';
 import CategoryList from './CategoryList';
 import ThreadList from './ThreadList';
 import Breadcrumbs from '../Common/PageTitle';
+import OnlineUserList from './OnlineUserList';
 
 const ForumMain = () => {
     return (
@@ -93,6 +94,7 @@ const ForumMain = () => {
                                 <div className="row">
                                     <CategoryList />
                                     <div className="col-lg-12 col-md-6">
+                                        <OnlineUserList />
                                     </div>
                                     <div className="col-lg-12 col-md-6">
 
