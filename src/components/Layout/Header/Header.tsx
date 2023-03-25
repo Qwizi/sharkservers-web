@@ -26,7 +26,7 @@ const Header = ({  }) => {
                      <div className="col-xl-2 col-lg-2 col-md-4 col-4">
                         <div className="header-main-left">
                            <div className="header-logo header1-logo">
-                              <Link href="/"><img src="/assets/img/logo/oction-logo-bw.png" alt="logo-img" /></Link>
+                              <Link href="/"><img src="/assets/img/logo/oction-logo.png" alt="logo-img"/></Link>
                            </div>
                         </div>
                      </div>
