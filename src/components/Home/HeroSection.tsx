@@ -20,10 +20,7 @@ const HeroSection = () => {
                                         <div className="banner-content banner-content2 banner-content2-1 pt-120">
                                             <h1 data-animation="fadeInUp" data-delay=".3s" className="mb-25 font-prata">
                                             Witamy na <span>SharkServers.pl</span> </h1>
-                                            <p data-animation="fadeInUp" data-delay=".5s" className="mb-40">głównym miejscu dla graczy Team Fortress 2 poszukujących wysokiej jakości serwerów</p>
-                                            <div className="banner-btn" data-animation="fadeInUp" data-delay=".7s">
-                                                <Link href="/explore-arts" className="fill-btn">Explore Now</Link>
-                                            </div>
+                                            <p data-animation="fadeInUp" data-delay=".5s" className="mb-40">wkrótce widzimy się na serwerach</p>
                                         </div>
                                     </div>
                                 </div>

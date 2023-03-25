@@ -26,7 +26,7 @@ const Header = ({  }) => {
                      <div className="col-xl-2 col-lg-2 col-md-4 col-4">
                         <div className="header-main-left">
                            <div className="header-logo header1-logo">
-                              <Link href="/"><img src="/assets/img/logo/oction-logo.png" alt="logo-img"/></Link>
+                              <Link href="/"><img src="/assets/img/logo/logo3.png" alt="logo-img"/></Link>
                            </div>
                         </div>
                      </div>
@@ -35,24 +35,11 @@ const Header = ({  }) => {
                            <div className="main-menu main-menu1 d-none d-lg-block">
                               <nav id="mobile-menu">
                                  <ul>
-                                    <li><Link href="/forum">Forum</Link></li>
-                                    <li><Link href="/users">Użytkownicy</Link></li>
-                                    <li><Link href="/users">Sklep</Link></li>
-                                    <li><Link href="/users">Lista banów</Link></li>
-                                    <li><Link href="/users">Regulaminy </Link></li>
+                                    <li className="active"><Link href="/">Strona główna</Link></li>
                                  </ul>
                               </nav>
                            </div>
-                           <form action="#" className="filter-search-input header-search d-none d-xl-inline-block">
-                              <input type="text" placeholder="Search keyword" />
-                              <button><i className="fal fa-search"></i></button>
-                           </form>
-                           <div className="header-btn ml-5 d-none d-xxl-inline-block">
-                              <Link href="/login" className='fill-btn'>Zaloguj sie</Link>
-                           </div>
-                           <div className="header-btn ml-5 d-none d-xxl-inline-block">
-                              <Link href="/register" className='fill-btn'>Zarejestruj się</Link>
-                           </div>
+
                            <div className="menu-bar d-xl-none ml-20">
                               <a className="side-toggle" href="#!">
                                  <div className="bar-icon">

@@ -10,7 +10,6 @@ const HomeMain = () => {
     return (
         <main>
             <HeroSection />
-            <TopCreatorTwo />
         </main>
     )
 }

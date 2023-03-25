@@ -18,7 +18,7 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className='body-bg'>
+      <body className='body-bg' style={{overflow: "hidden"}}>
       <ThemeProvider defaultTheme="dark">
           <Header />
           

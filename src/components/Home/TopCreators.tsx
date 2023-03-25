@@ -85,20 +85,7 @@ const TopCreatorTwo = () => {
                         <div className="row wow fadeInUp">
                             <div className="col-lg-8 col-md-8 col-sm-8">
                                 <div className="section-title1">
-                                    <h2 className="section-main-title1 mb-40">Top Creator</h2>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-4">
-                                <div className="t-seller-filter d-flex justify-content-sm-end mb-40">
-                                    <form action="#">
-                                        <div className="common-select-arrow common-select-arrow-40 white-bg">
-                                            <select name="ts-select" id="ts-select" className="top-seller-select">
-                                                <option value="1">1 Day</option>
-                                                <option value="2">7 Day</option>
-                                                <option value="3">1 Month</option>
-                                            </select>
-                                        </div>
-                                    </form>
+                                    <h2 className="section-main-title1 mb-40">Comming soon</h2>
                                 </div>
                             </div>
                         </div>
