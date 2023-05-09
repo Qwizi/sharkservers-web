@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import {json} from "stream/consumers";
 
 // @ts-ignore
-const handler = NextAuth({
+export const handler = NextAuth({
     secret: process.env.AUTH_SECRET,
     providers: [CredentialsProvider({
     // The name to display on the sign in form (e.g. 'Sign in with...'
@@ -35,7 +35,9 @@ const handler = NextAuth({
                 method: 'GET',
                 headers: {'Authorization': 'Bearer ' + token.access_token}
             })
+
             const user_info = await user_info_res.json()
+            console.log(user_info)
             const user = {
             ...user_info,
                 token: token
@@ -52,12 +54,10 @@ const handler = NextAuth({
     callbacks: {
         //@ts-ignore
         async jwt({token, user}) {
-            console.log(user)
             return {...token, ...user}
         },
         //@ts-ignore
         async session({ session, token, user }) {
-            console.log("Token" + token)
             // @ts-ignore
             session.user = token
             return session
