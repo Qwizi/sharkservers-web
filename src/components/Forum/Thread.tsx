@@ -1,4 +1,6 @@
 import React from "react";
+import Link from "next/link";
+import Username from "@/components/Elements/Username";
 
 interface IProps {
     id: number;
@@ -23,6 +25,7 @@ interface IProps {
         }
     }
 }
+
 const Thread: React.FC<IProps> = ({...props}: IProps) => {
     return (
         <div className="tab-pane fade active show" id="tab-nav1" role="tabpanel" aria-labelledby="nav-tab1">
@@ -31,11 +34,11 @@ const Thread: React.FC<IProps> = ({...props}: IProps) => {
                     <div className="q-single-content">
                         <div className="author-name-time">
                             <div className="profile-img pos-rel">
-                                <img src="/assets/img/profile/profile4.jpg" alt="profile-img" />
+                                <img src="/assets/img/profile/profile4.jpg" alt="profile-img"/>
                             </div>
                             <div className="name-post-time">
                                 <h4 className="artist-name">
-                                    {props?.author?.username}
+                                    <Username color={props.author.display_role.color} username={props.author.username}/>
                                 </h4>
                                 <div className="post-date-time">
                                     <div className="post-date">{props?.created_at}</div>
@@ -43,8 +46,10 @@ const Thread: React.FC<IProps> = ({...props}: IProps) => {
                                 </div>
                             </div>
                         </div>
-                        <h4 className="post-question">{props?.title}</h4>
-                        <p>{props?.content}</p>
+                        <h4 className="post-question">
+                            <Link href={`/forum/thread/${props.id}`}>{props?.title}</Link>
+                        </h4>
+
                     </div>
                     <div className="q-meta-content">
                         <div className="q-meta-item">
@@ -69,9 +74,7 @@ const Thread: React.FC<IProps> = ({...props}: IProps) => {
                             <div className="q-meta-type">Views</div>
                         </div>
                     </div>
-                    <div className="q-answers-btn">
-                        <a href="#" className="border-btn"><i className="flaticon-reload"></i>Przejdz do tematu</a>
-                    </div>
+
                 </div>
             </div>
         </div>

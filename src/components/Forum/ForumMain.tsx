@@ -1,7 +1,8 @@
-import CategoriesList from "@/components/Forum/CategoriesList";
-import React from "react";
+import CategoriesList from "@/components/Forum/Sidebar/CategoriesList";
+import React, {Suspense} from "react";
 import Thread from "@/components/Forum/Thread";
 import Link from "next/link";
+import LastOnlineUsersWidget from "@/components/Forum/Sidebar/LastOnlineUsers";
 
 interface IProps {
     categories_data: {
@@ -49,10 +50,29 @@ interface IProps {
         page: number;
         size: number;
     },
+     last_online_users_data: {
+        items: [
+            {
+                id: number;
+                username: string;
+                avatar: string;
+                display_role: {
+                    id: number;
+                    name: string;
+                    color: string;
+                    is_staff: boolean;
+
+                }
+            },
+        ],
+        total: number;
+        page: number;
+        size: number;
+    }
 }
 
 
-const ForumMain: React.FC<IProps> = ({categories_data, threads_data}: IProps) => {
+const ForumMain: React.FC<IProps> = ({categories_data, threads_data, last_online_users_data}: IProps) => {
     return (
         <section className={"about-info-area pt-130 pb-90"}>
             <div className="container">
@@ -81,12 +101,15 @@ const ForumMain: React.FC<IProps> = ({categories_data, threads_data}: IProps) =>
                             <div className="crate-question-wrapper mb-30">
                                 <Link className="create-question-btn" href="/forum/create">Utwórz wątek</Link>
                             </div>
-                            <CategoriesList
-                                items={categories_data.items}
-                                size={categories_data.size}
-                                page={categories_data.page}
-                                total={categories_data.total}
-                            />
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <CategoriesList
+                                    items={categories_data.items}
+                                    size={categories_data.size}
+                                    page={categories_data.page}
+                                    total={categories_data.total}
+                                />
+                            </Suspense>
+                            <LastOnlineUsersWidget last_online_users_data={last_online_users_data}/>
                         </div>
                     </div>
                 </div>

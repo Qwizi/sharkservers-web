@@ -1,5 +1,5 @@
 'use client';
-import Category from "@/components/Forum/Category";
+import Category from "@/components/Forum/Sidebar/Category";
 import React from "react";
 import {usePathname, useSearchParams} from "next/navigation";
 import {useParams} from "react-router";

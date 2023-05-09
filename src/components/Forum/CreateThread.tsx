@@ -1,6 +1,7 @@
 'use client';
 import React from "react";
 import {useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 interface IProps {
      categories_data: {
@@ -25,10 +26,11 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
     const [content, setContent] = React.useState('');
     const [category, setCategory] = React.useState(categories_data.items[0].id);
     const {data: session} = useSession()
-
+    const router = useRouter()
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // @ts-ignore
         const access_token = session?.user?.token.access_token
         const res = await fetch('http://localhost/v1/forum/threads', {
             body: JSON.stringify({
@@ -44,6 +46,7 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
         })
         const result = await res.json()
         console.log(result)
+        router.push('/forum/thread/' + result.id)
     }
 
     return (
@@ -62,7 +65,7 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
                                 <div className="single-input-unit">
                                     <label>Kategoria</label>
                                     <div className="common-select-arrow common-select-arrow-60 w-full">
-                                        <select className="art-category-select art-category-select2 w-full" onChange={(e) => setCategory(e.target.value)} value={category}>
+                                        <select className="art-category-select art-category-select2 w-full" onChange={(e) => setCategory(Number(e.target.value))} value={category}>
                                             {categories_data && categories_data.items.map((category, index) => {
                                                 return (
                                                     <option key={index} value={category.id}>{category.name}</option>
