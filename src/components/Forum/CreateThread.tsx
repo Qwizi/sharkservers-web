@@ -2,9 +2,11 @@
 import React from "react";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
+import {AuthPostApi} from "@/lib/fetchApi";
+import CreateThreadAction from "@/actions/createThreadAction";
 
 interface IProps {
-     categories_data: {
+    categories_data: {
         items: [
             {
                 id: number;
@@ -28,44 +30,25 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
     const {data: session} = useSession()
     const router = useRouter()
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        // @ts-ignore
-        const access_token = session?.user?.token.access_token
-        const res = await fetch('http://localhost/v1/forum/threads', {
-            body: JSON.stringify({
-                title: title,
-                content: content,
-                category: category,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + access_token,
-            },
-            method: 'POST'
-        })
-        const result = await res.json()
-        console.log(result)
-        router.push('/forum/thread/' + result.id)
-    }
-
     return (
         <div className="upload-wrapper mb-10">
-            <form action="#" className="upload-form" onSubmit={handleSubmit}>
+            <form action={CreateThreadAction} className="upload-form">
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="row wow fadeInUp">
                             <div className="col-md-6">
                                 <div className="single-input-unit">
                                     <label>Tytuł</label>
-                                    <input type="text" placeholder="Tytuł" onChange={(e) => setTitle(e.target.value)} value={title}/>
+                                    <input type="text" placeholder="Tytuł" onChange={(e) => setTitle(e.target.value)}
+                                           value={title}/>
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="single-input-unit">
                                     <label>Kategoria</label>
                                     <div className="common-select-arrow common-select-arrow-60 w-full">
-                                        <select className="art-category-select art-category-select2 w-full" onChange={(e) => setCategory(Number(e.target.value))} value={category}>
+                                        <select className="art-category-select art-category-select2 w-full"
+                                                onChange={(e) => setCategory(Number(e.target.value))} value={category}>
                                             {categories_data && categories_data.items.map((category, index) => {
                                                 return (
                                                     <option key={index} value={category.id}>{category.name}</option>
@@ -79,7 +62,8 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
                             <div className="col-md-12">
                                 <div className="single-input-unit">
                                     <label>Treść</label>
-                                    <textarea placeholder="Wpisz treść posta" onChange={(e) => setContent(e.target.value)} value={content}></textarea>
+                                    <textarea placeholder="Wpisz treść posta"
+                                              onChange={(e) => setContent(e.target.value)} value={content}></textarea>
                                 </div>
                             </div>
                         </div>

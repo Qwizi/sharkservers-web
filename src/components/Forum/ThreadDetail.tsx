@@ -58,7 +58,7 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
     const [content, setContent] = React.useState<string>("");
     const {data: session} = useSession();
     // @ts-ignore
-    const access_token = session?.user?.token?.access_token
+    const access_token = session?.user?.access_token
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,10 +74,6 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
             },
             method: 'POST'
         })
-        if (res.status === 401) {
-            // This will activate the closest `error.js` Error Boundary
-            throw new Error('Invalid credentials')
-        }
         if (!res.ok) {
             throw new Error('Failed fetch data')
         }
