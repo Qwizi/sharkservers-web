@@ -74,11 +74,9 @@ const Thread: React.FC<IProps> = ({...props}: IProps) => {
                             <div className="q-meta-type">Views</div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
     )
 }
 

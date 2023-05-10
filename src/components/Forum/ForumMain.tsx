@@ -3,6 +3,7 @@ import React, {Suspense} from "react";
 import Thread from "@/components/Forum/Thread";
 import Link from "next/link";
 import LastOnlineUsersWidget from "@/components/Forum/Sidebar/LastOnlineUsers";
+import Pagination from "@/components/Elements/Pagination";
 
 interface IProps {
     categories_data: {
@@ -50,7 +51,7 @@ interface IProps {
         page: number;
         size: number;
     },
-     last_online_users_data: {
+    last_online_users_data: {
         items: [
             {
                 id: number;
@@ -68,7 +69,7 @@ interface IProps {
         total: number;
         page: number;
         size: number;
-    }
+    },
 }
 
 
@@ -92,7 +93,12 @@ const ForumMain: React.FC<IProps> = ({categories_data, threads_data, last_online
                                         category={thread.category}
                                         author={thread.author}
                                     />
-                                    ))}
+                                ))}
+                            </div>
+                        </div>
+                        <div className="row wow fadeInUp">
+                            <div className="col-12">
+                                <Pagination total={threads_data.total}/>
                             </div>
                         </div>
                     </div>
