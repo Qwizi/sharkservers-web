@@ -5,15 +5,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import Provider from "@/components/Provider";
 import Header from "@/components/Layout/Header";
 import ThemeProvider from "@/components/ThemeProvider";
-import Head from "next/head";
-if (typeof window !== "undefined") {
-  require("bootstrap/dist/js/bootstrap");
-}
 import "../../public/assets/css/default.css";
 import "../../public/assets/css/fontAwesome5Pro.css";
 import "../../public/assets/css/flaticon.css";
-import { getServerSession } from "next-auth/next"
-import {handler} from "@/app/api/auth/[...nextauth]/route"
+
+import {getServerSession, Session} from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+
+if (typeof window !== "undefined") {
+  require("bootstrap/dist/js/bootstrap");
+}
 
 export const metadata = {
   title: 'SharkServers.pl',
@@ -24,12 +25,14 @@ export const metadata = {
 export default async function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
 }) {
+    const session: Session | null = await getServerSession(authOptions)
+    console.log(session?.user?.email)
   return (
     <html lang="en">
       <body className="body-bg">
-      <Provider>
+      <Provider session={session}>
           <ThemeProvider defaultTheme="dark">
               <Header/>
               {children}
