@@ -1,24 +1,18 @@
-
-import Login from "@/components/Login/Login";
+import TitleSection from "@/components/Layout/TitleSection";
 import UsersMain from "@/components/Users/UsersMain";
+import {mockSession} from "next-auth/client/__tests__/helpers/mocks";
+import user = mockSession.user;
 
-interface UsersListProps {
-    items: [any],
-    total: number,
-    page: number,
-    sie: number,
-
+const fetchUsers = async () => {
+    const res = await fetch(`http://localhost/v1/users`, { next: { revalidate: 15 }});
+    return await res.json();
 }
-async function fetchUsers() {
-    const response = await fetch('http://localhost/v1/users')
-    return await response.json()
-}
-
 export default async function UsersPage() {
-    const users:UsersListProps  = await fetchUsers()
+    const users_data = await fetchUsers();
     return (
-      <main>
-        <UsersMain users={users}/>
-      </main>
+        <>
+            <TitleSection title={"Uzytkownicy"} />
+            <UsersMain users_data={users_data}/>
+        </>
     )
-  }
+}
