@@ -3,6 +3,9 @@ import CredentialsProvider from "next-auth/providers/credentials"
 // @ts-ignore
 export const handler = NextAuth({
         secret: process.env.AUTH_SECRET,
+        session: {
+            strategy: 'jwt',
+        },
         providers: [CredentialsProvider({
             // The name to display on the sign in form (e.g. 'Sign in with...'
             name: 'Credentials',
@@ -35,10 +38,8 @@ export const handler = NextAuth({
                 })
 
                 const user_info = await user_info_res.json()
-                console.log(user_info)
                 const user = {
-                    ...user_info,
-                    token: token
+                    ...token
                 }
                 // If no error and we have user data, return it
                 if (token_res.ok && token && user_info_res.ok && user_info) {
@@ -52,7 +53,7 @@ export const handler = NextAuth({
         callbacks: {
             //@ts-ignore
             async jwt({token, account, user}) {
-
+                console.log(account)
                 return {...token, ...user}
             },
             //@ts-ignore
