@@ -5,6 +5,7 @@ import Post from "@/components/Forum/Post";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import Username from "@/components/Elements/Username";
+import {AuthPostApi} from "@/lib/fetchApi";
 
 interface IProps {
     id: number;
@@ -63,19 +64,12 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const res = await fetch('http://localhost/v1/forum/posts', {
-            body: JSON.stringify({
-                content: content,
-                thread_id: props.id,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + access_token,
-            },
-            method: 'POST'
-        })
+        const res = await AuthPostApi('/v1/forum/posts', JSON.stringify({
+            content: content,
+            thread_id: props.id,
+        }), session)
         if (!res.ok) {
-            throw new Error('Failed fetch data')
+            throw new Error(res.statusText)
         }
         const result = await res.json()
         console.log(result)

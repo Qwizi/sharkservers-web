@@ -7,7 +7,7 @@ const fetchThread = async (thread_id: number) =>{
 }
 
 const fetchThreadPosts = async (thread_id: number) =>{
-    const thread_posts = await fetch("http://localhost/v1/forum/posts?thread_id=" + thread_id, { next: { revalidate: 0 }})
+    const thread_posts = await fetch("http://localhost/v1/forum/posts?thread_id=" + thread_id, { cache: "no-cache"})
     console.log(thread_posts)
     return await thread_posts.json()
 }
@@ -21,7 +21,6 @@ export default async function ThreadDetailPage({
 }) {
     const thread_data = await fetchThread(params.id)
     const posts_data = await fetchThreadPosts(params.id)
-    console.log(posts_data)
     return (
         <>
             <TitleSection title={`Temat - ${thread_data.title}`} />
