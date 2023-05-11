@@ -1,10 +1,10 @@
 import {getServerSession, Session} from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
-const BASE_URL = process.env.API_URL
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 async function refreshToken(refresh_token: string) {
-    const res = await fetch(BASE_URL + "/v1/auth/token/refresh/", {
+    const res = await fetch(BASE_URL + "/v1/auth/token/refresh", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -43,16 +43,16 @@ export async function AuthGetApi(url: string) {
     return res
 }
 
-export async function AuthPostApi(url: string, data: any) {
-    const session: Session | null = await getServerSession(authOptions);
+export async function AuthPostApi(url: string, data: any, session: Session | null) {
     console.log("before: ", session?.user.access_token);
 
     let res = await fetch(BASE_URL + url, {
-        method: "POST",
+        body: data,
         headers: {
-            Authorization: `Bearer ${session?.user.access_token}`,
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session?.user.access_token,
         },
-        body: JSON.stringify(data),
+        method: 'POST',
     });
 
     if (res.status == 401) {
@@ -60,11 +60,12 @@ export async function AuthPostApi(url: string, data: any) {
         console.log("after: ", session?.user.access_token);
 
         res = await fetch(BASE_URL + url, {
-            method: "POST",
+            body: data,
             headers: {
-                Authorization: `Bearer ${session?.user.access_token}`,
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + session?.user.access_token,
             },
-            body: JSON.stringify(data),
+            method: 'POST',
         });
         return res
     }

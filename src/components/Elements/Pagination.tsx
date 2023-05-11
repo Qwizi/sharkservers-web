@@ -18,7 +18,7 @@ const Pagination: React.FC<IProps> = ({...props}) => {
     return (
         <div className="basic-pagination mt-20 mb-30">
             <ul>
-                {current_page && (Number(current_page) >= pages) && (
+                {current_page && (Number(current_page) >= pages) && Number(current_page) > 1 && (
                     <li>
                         <Link className="next page-numbers" href={url + `&page=${Number(current_page) - 1}`}>
                             <i className="fal fa-angle-left"></i>

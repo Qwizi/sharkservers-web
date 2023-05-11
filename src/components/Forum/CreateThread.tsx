@@ -3,7 +3,6 @@ import React from "react";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {AuthPostApi} from "@/lib/fetchApi";
-import CreateThreadAction from "@/actions/createThreadAction";
 
 interface IProps {
     categories_data: {
@@ -30,9 +29,23 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
     const {data: session} = useSession()
     const router = useRouter()
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const res = await AuthPostApi('/v1/forum/threads', JSON.stringify({
+            title: title,
+            content: content,
+            category: category,
+        }), session)
+        if (!res.ok) {
+            throw new Error(res.statusText)
+        }
+        const data  = await res.json()
+        router.push(`/forum/thread/${data.id}`)
+    }
+
     return (
         <div className="upload-wrapper mb-10">
-            <form action={CreateThreadAction} className="upload-form">
+            <form className="upload-form" onSubmit={handleSubmit}>
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="row wow fadeInUp">
