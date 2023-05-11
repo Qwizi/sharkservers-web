@@ -18,15 +18,16 @@ const LoginMain = () => {
     }
 
     return (
-        <main>
+        <>
             <section className="login-area pt-130 pb-90">
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-xxl-6 col-xl-7 col-lg-8">
                             <div className="login-wrapper pos-rel mb-40 wow fadeInUp">
                                 <div className="login-inner">
-                                    <h4>Zaloguj się</h4>
-                                    <form className="login-form" onSubmit={(e) => onSubmit(e)}>
+                                    <div className="login-content">
+                                        <h4>Zaloguj się</h4>
+                                        <form className="login-form" onSubmit={(e) => onSubmit(e)}>
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <div className="single-input-unit">
@@ -45,13 +46,14 @@ const LoginMain = () => {
                                             <button className="fill-btn" type="submit">Zaloguj się</button>
                                         </div>
                                     </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-        </main>
+        </>
     )
 }
 

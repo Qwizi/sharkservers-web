@@ -5,6 +5,7 @@ import {signIn, signOut, useSession} from "next-auth/react";
 import {signin} from "next-auth/core/routes";
 import {usePathname, useRouter} from 'next/navigation';
 import Image from "next/image";
+import useSticky from "@/hooks/useSticky";
 
 
 const Header: React.FC = () => {
@@ -18,24 +19,27 @@ const Header: React.FC = () => {
     const router = useRouter();
     const pathName = usePathname();
     const [path, setPath] = useState("");
+    const { sticky } = useSticky();
+
     useEffect(() => {
         setPath(pathName);
     }, [pathName]);
 
+
     return (
         <>
             <header className="header1">
-                <div id="header-sticky" className="header-main header-main1">
+                <div id="header-sticky" className={sticky ? "sticky header-main header-main1" : "header-main header-main1"}>
                     <div className="container header-container">
                         <div className="row align-items-center">
                             <div className="col-xl-2 col-lg-2 col-md-4 col-4">
                                 <div className="header-main-left">
                                     <div className="header-logo header1-logo">
                                         <Link href="/" className="logo-bb">
-                                            <img src={"/assets/img/logo/oction-logo.png"} alt={"SharkServers.pl logo"}/>
+                                            <img src={"/assets/img/logo/logo3.png"} alt={"SharkServers.pl logo"}/>
                                         </Link>
                                         <Link href="/" className="logo-bw">
-                                            <img src={"/assets/img/logo/oction-logo-bw.png"}
+                                            <img src={"/assets/img/logo/logo3.png"}
                                                  alt={"SharkServers.pl logo"}/>
                                         </Link>
                                     </div>
@@ -86,7 +90,7 @@ const Header: React.FC = () => {
                                                     </button>
                                                 </div>
                                                 <div className="header-btn ml-10 d-none d-xxl-inline-block">
-                                                    <Link href="/wallet-connect" className={"fill-btn"}>Zarejestruj
+                                                    <Link href="/auth/register" className={"fill-btn"}>Zarejestruj
                                                         sie</Link>
                                                 </div>
                                             </>
