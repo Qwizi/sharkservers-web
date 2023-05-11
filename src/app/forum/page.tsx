@@ -7,7 +7,7 @@ const fetchCategories = async () =>{
 }
 
 const fetchThreads = async (category_id: number, page: number) =>{
-    const threads = await fetch(`http://localhost/v1/forum/threads?category_id=${category_id}&page=${page}&size=10`, { next: { revalidate: 0 }})
+    const threads = await fetch(`http://localhost/v1/forum/threads?category_id=${category_id}&page=${page}&size=10`, {cache: 'no-store'})
     return await threads.json()
 }
 
