@@ -1,7 +1,7 @@
 'use client';
 import React from "react";
 import {useSession} from "next-auth/react";
-import {useRouter} from "next/navigation";
+import {redirect, useRouter} from "next/navigation";
 import {AuthPostApi} from "@/lib/fetchApi";
 
 interface IProps {
@@ -26,11 +26,20 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
     const [title, setTitle] = React.useState('');
     const [content, setContent] = React.useState('');
     const [category, setCategory] = React.useState(categories_data.items[0].id);
+    const [buttonDisabled, setButtonDisabled] = React.useState(false);
     const {data: session} = useSession()
     const router = useRouter()
 
+    const clearForm = () => {
+        setTitle('')
+        setContent('')
+        setCategory(categories_data.items[0].id)
+        setButtonDisabled(false)
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setButtonDisabled(true)
         const res = await AuthPostApi('/v1/forum/threads', JSON.stringify({
             title: title,
             content: content,
@@ -39,7 +48,8 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
         if (!res.ok) {
             throw new Error(res.statusText)
         }
-        const data  = await res.json()
+        const data = await res.json()
+        clearForm()
         router.push(`/forum/thread/${data.id}`)
     }
 
@@ -81,7 +91,7 @@ const CreateThreadForm: React.FC<IProps> = ({categories_data}: IProps) => {
                             </div>
                         </div>
                         <div className="upload-btn wow fadeInUp">
-                            <button id="upload-btn" className="fill-btn">Napisz temat</button>
+                            <button id="upload-btn" className="fill-btn" disabled={buttonDisabled}>Napisz temat</button>
                         </div>
                     </div>
                 </div>
