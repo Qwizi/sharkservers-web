@@ -101,6 +101,11 @@ const ForumMain: React.FC<IProps> = ({categories_data, threads_data, last_online
                                 <Pagination total={threads_data.total}/>
                             </div>
                         </div>
+                        <div className="row wow fadeInUp">
+                            <div className="col-12">
+                                <LastOnlineUsersWidget last_online_users_data={last_online_users_data}/>
+                            </div>
+                        </div>
                     </div>
                     <div className={"col-lg-4 order-1 order-lg-2"}>
                         <div className="page-sidebar">

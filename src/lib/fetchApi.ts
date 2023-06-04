@@ -72,3 +72,13 @@ export async function AuthPostApi(url: string, data: any, session: Session | nul
 
     return res
 }
+
+export async function activate_account(code: string) {
+    return await fetch(BASE_URL + "/v1/auth/activate/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({code: code}),
+    });
+}

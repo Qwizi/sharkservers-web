@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
             })
 
             const user_info = await user_info_res.json()
-            if (token_res.ok && token) {
+            if (token_res.ok && token && user_info_res.ok && user_info) {
                 return {...token, ...user_info}
             }
             return null
