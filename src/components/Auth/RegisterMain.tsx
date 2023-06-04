@@ -2,6 +2,7 @@
 import React, {useState} from "react";
 import {useSession} from "next-auth/react";
 import {AuthPostApi} from "@/lib/fetchApi";
+import {useRouter} from "next/navigation";
 
 const RegisterMain = () => {
     const [email, setEmail] = useState<string>('');
@@ -9,6 +10,7 @@ const RegisterMain = () => {
     const [password, setPassword] = useState<string>('');
     const [password2, setPassword2] = useState<string>('');
     const {data: session} = useSession()
+    const router = useRouter()
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Zarejestrowano!")
@@ -22,7 +24,7 @@ const RegisterMain = () => {
             throw new Error(res.statusText)
         }
         const data = await res.json()
-        console.log(data)
+        router.push(`/auth/register/success`)
     }
 
     return (

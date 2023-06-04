@@ -7,7 +7,7 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 const isUserLogged = async () => {
     const session: Session | null = await getServerSession(authOptions)
-    return session?.user
+    return session?.user?.username
 }
 
 export default async function LoginPage() {

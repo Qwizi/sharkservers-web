@@ -11,6 +11,7 @@ import "../../public/assets/css/flaticon.css";
 
 import {getServerSession, Session} from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import Footer from "@/components/Layout/Footer";
 
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
@@ -36,6 +37,7 @@ export default async function RootLayout({
           <ThemeProvider defaultTheme="dark">
               <Header/>
               {children}
+              <Footer />
           </ThemeProvider>
       </Provider>
       </body>
