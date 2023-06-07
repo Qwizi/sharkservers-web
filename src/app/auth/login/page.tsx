@@ -17,7 +17,6 @@ export default async function LoginPage() {
     }
     return (
         <>
-            <TitleSection title={"Zaloguj się"} />
             <LoginMain />
         </>
     )

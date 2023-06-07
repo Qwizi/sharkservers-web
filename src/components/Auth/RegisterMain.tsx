@@ -3,6 +3,8 @@ import React, {useState} from "react";
 import {useSession} from "next-auth/react";
 import {AuthPostApi} from "@/lib/fetchApi";
 import {useRouter} from "next/navigation";
+import {ErrorBoundary} from "next/dist/client/components/error-boundary";
+import Section from "@/components/Elements/Section";
 
 const RegisterMain = () => {
     const [email, setEmail] = useState<string>('');
@@ -29,8 +31,7 @@ const RegisterMain = () => {
 
     return (
         <>
-            <section className="login-area pt-130 pb-90">
-                <div className="container">
+            <Section>
                     <div className="row justify-content-center">
                         <div className="col-xxl-6 col-xl-7 col-lg-8">
                             <div className="login-wrapper pos-rel mb-40 wow fadeInUp">
@@ -81,8 +82,7 @@ const RegisterMain = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+            </Section>
         </>
     )
 }
