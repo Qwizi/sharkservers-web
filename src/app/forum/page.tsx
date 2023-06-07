@@ -31,7 +31,6 @@ export default async function ForumPage({
     const last_online_users_data = await fetchLastOnlineUsers()
     return (
         <>
-            <TitleSection title={"Forum"} />
             <ForumMain categories_data={categories_data} threads_data={threads_data} last_online_users_data={last_online_users_data}/>
         </>
     )

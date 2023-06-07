@@ -2,6 +2,7 @@
 import {createRef, useEffect, useRef, useState} from "react";
 import {activate_account} from "@/lib/fetchApi";
 import {redirect} from "next/navigation";
+import AlertMessage from "@/components/Elements/AlertMessage";
 
 const ActivateAccountForm = () => {
     const codeDefault = [
@@ -16,7 +17,7 @@ const ActivateAccountForm = () => {
     const codeRefs: any = []
     // @ts-ignore
     const refs_ = [...Array(5)].map((_, i) => {
-        codeRefs[i]=createRef()
+        codeRefs[i] = createRef()
     })
 
     const [error, setError] = useState(null)
@@ -44,6 +45,7 @@ const ActivateAccountForm = () => {
         }
         const data = await res.json()
         if (!data) {
+            // @ts-ignore
             setError("Kod aktywacyjny jest niepoprawny")
         } else {
             redirect("/auth/activate-account/success")
@@ -68,15 +70,12 @@ const ActivateAccountForm = () => {
         <form className="login-form" onSubmit={(e) => onSubmit(e)}>
             <div className="row justify-content-center">
                 <div className="col-md-12">
-                    <div className={error ? "alert alert-danger alert-dismissible fade show": "alert alert-danger hidden"}>
-                        {error}
-                        <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <div className="col-md-12">
+                        {error && (<AlertMessage message={error} show={true} type={"danger"}/>)}
                     </div>
                 </div>
                 {[...Array(5)].map((e, i) =>
-                    <div className="col-md-2 col-sm-2"  key={i}>
+                    <div className="col-md-2 col-sm-2" key={i}>
                         <div className="single-input-unit">
                             <input
                                 ref={codeRefs[i]}
