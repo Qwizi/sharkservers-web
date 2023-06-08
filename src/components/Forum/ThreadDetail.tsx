@@ -107,8 +107,8 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
                     <div className="q-meta-item">
                         <a href="#">
                             <div className="q-meta-icon"><i className="flaticon-chatting"></i></div>
-                            <div className="q-meta-comments">859</div>
-                            <div className="q-meta-type">Comments</div>
+                            <div className="q-meta-comments">{props.posts_data.total}</div>
+                            <div className="q-meta-type">Postów</div>
                         </a>
                     </div>
                     <div className="q-meta-item">

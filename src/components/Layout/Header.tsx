@@ -73,6 +73,7 @@ const Header: React.FC = () => {
                                                     onClick={handleToggle11}>
                                                     <div className="profile-action">
                                                         <ul>
+                                                            <li><Link href={"/settings"}>Ustawiena</Link></li>
                                                             <li onClick={() => signOut()}>Wyloguj sie</li>
                                                         </ul>
                                                     </div>
@@ -85,7 +86,7 @@ const Header: React.FC = () => {
                                         ) : (
                                             <>
                                                 <div className="header-btn ml-10 d-none d-xxl-inline-block">
-                                                    <button className={"fill-btn"} onClick={() => signIn()}>Zaloguj
+                                                    <button className={"fill-btn"} onClick={() => router.push(`/auth/login?callbackUrl=${pathName}`)}>Zaloguj
                                                         sie
                                                     </button>
                                                 </div>
