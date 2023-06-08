@@ -1,7 +1,7 @@
 'use client';
 import {createRef, useEffect, useRef, useState} from "react";
 import {activate_account} from "@/lib/fetchApi";
-import {redirect} from "next/navigation";
+import {redirect, useRouter} from "next/navigation";
 import AlertMessage from "@/components/Elements/AlertMessage";
 
 const ActivateAccountForm = () => {
@@ -13,7 +13,7 @@ const ActivateAccountForm = () => {
         "" // code 5
     ]
     const [code, setCode] = useState(codeDefault)
-
+    const router = useRouter()
     const codeRefs: any = []
     // @ts-ignore
     const refs_ = [...Array(5)].map((_, i) => {
@@ -48,7 +48,7 @@ const ActivateAccountForm = () => {
             // @ts-ignore
             setError("Kod aktywacyjny jest niepoprawny")
         } else {
-            redirect("/auth/activate-account/success")
+            await router.push("/auth/activate-account/success")
         }
         clearForm()
     }
@@ -68,18 +68,17 @@ const ActivateAccountForm = () => {
 
     return (
         <form className="login-form" onSubmit={(e) => onSubmit(e)}>
-            <div className="row justify-content-center">
+            <div className="row justify-content-center align-items-center text-center">
                 <div className="col-md-12">
-                    <div className="col-md-12">
-                        {error && (<AlertMessage message={error} show={true} type={"danger"}/>)}
-                    </div>
+                    {error && (<AlertMessage message={error} show={true} type={"danger"}/>)}
                 </div>
                 {[...Array(5)].map((e, i) =>
-                    <div className="col-md-2 col-sm-2" key={i}>
+                    <div className="col-md-2 col-sm-3" key={i}>
                         <div className="single-input-unit">
                             <input
                                 ref={codeRefs[i]}
                                 id={`activate_code_${i + 1}`}
+                                className={"text-center"}
                                 value={code[i]}
                                 onChange={(e) => onChangeInput(i, e.target.value)}
                                 maxLength={1}

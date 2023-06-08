@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
+import {NextApiRequest, NextApiResponse} from "next";
 // @ts-ignore
 
 // @ts-ignore
@@ -42,7 +43,11 @@ export const authOptions: NextAuthOptions = {
     debug: true,
     callbacks: {
         //@ts-ignore
-        async jwt({token, user}) {
+        async jwt({token, user, trigger, session}) {
+            if (trigger === 'update') {
+                return {...token, ...session.user}
+
+            }
             console.log(`Token ${token} User ${user}`)
             return {...token, ...user}
         },
@@ -68,7 +73,9 @@ export const authOptions: NextAuthOptions = {
         }
     }
 }
-
-export const handler = NextAuth(authOptions)
+const handler = async (req: NextApiRequest, res: NextApiResponse)=>  {
+  // Do whatever you want here, before the request is passed down to `NextAuth`
+  return await NextAuth(req, res, authOptions)
+}
 export {handler as GET, handler as POST}
 
