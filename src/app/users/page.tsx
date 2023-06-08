@@ -9,7 +9,6 @@ export default async function UsersPage() {
     const users_data = await fetchUsers();
     return (
         <>
-            <TitleSection title={"Uzytkownicy"} />
             <UsersMain users_data={users_data}/>
         </>
     )

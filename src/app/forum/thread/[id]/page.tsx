@@ -12,6 +12,11 @@ const fetchThreadPosts = async (thread_id: number) =>{
     return await thread_posts.json()
 }
 
+const fetchPostLikes = async (post_id: number) =>{
+    const post_likes = await fetch("http://localhost/v1/forum/posts/" + post_id + "/likes", { cache: "no-cache"})
+    return await post_likes.json()
+}
+
 export default async function ThreadDetailPage({
   params,
   searchParams,
@@ -21,6 +26,8 @@ export default async function ThreadDetailPage({
 }) {
     const thread_data = await fetchThread(params.id)
     const posts_data = await fetchThreadPosts(params.id)
+    const post_likes_data = await fetchPostLikes(params.id)
+    console.log(post_likes_data)
     return (
         <>
             <TitleSection title={`Temat - ${thread_data.title}`} />

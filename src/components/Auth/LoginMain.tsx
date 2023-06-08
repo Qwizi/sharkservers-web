@@ -23,11 +23,12 @@ const LoginMain = () => {
     // @ts-ignore
     const onSubmit = async (e) => {
         e.preventDefault()
+        const callback = searchParams.get("callbackUrl")
         const response: SignInResponse | undefined = await signIn('credentials', {
             username: username,
             password: password,
             redirect: true,
-            callbackUrl: '/forum'
+            callbackUrl: callback || "/forum"
         })
         console.log(`Login Response ${response}`)
     }

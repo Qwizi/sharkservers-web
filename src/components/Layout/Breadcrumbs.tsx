@@ -2,12 +2,20 @@
 import {default as BR} from "@marketsystems/nextjs13-appdir-breadcrumbs";
 import {usePathname} from "next/navigation";
 
+const getLabelFromPath = (path: string): string => {
+    const pathArray = path.split("/")
+    const secondLast = pathArray[pathArray.length - 2]
+    const secondLastFormat = secondLast.charAt(0).toUpperCase()  + secondLast.slice(1)
+    const label = pathArray[pathArray.length - 1]
+    const labelFormat = label.charAt(0).toUpperCase() + label.slice(1)
+
+    return secondLast ? `${secondLastFormat} - ${labelFormat}` : labelFormat
+}
+
 const Breadcrumbs = () => {
-    const getPathFromUrl = (url: string): string => {
-      return url.split(/[?#]/)[0];
-    };
     const pathname = usePathname()
-    const path = getPathFromUrl(pathname)
+    const label = getLabelFromPath(pathname)
+
 
     return (
         <section className="page-title-area">
@@ -15,7 +23,7 @@ const Breadcrumbs = () => {
                 <div className="row wow fadeInUp">
                     <div className="col-lg-12">
                         <div className="page-title">
-                            <h2 className="breadcrumb-title mb-10">{path}</h2>
+                            <h2 className="breadcrumb-title mb-10">{label}</h2>
                             <div className="breadcrumb-menu">
                                 <BR
                                     omitRootLabel
@@ -25,6 +33,7 @@ const Breadcrumbs = () => {
                                     activeItemStyle={{display: "inline-block"}}
                                     omitIndexList={[0]}
                                     labelsToUppercase={true}
+                                    transformLabel={label => label}
                                 />
                             </div>
 
