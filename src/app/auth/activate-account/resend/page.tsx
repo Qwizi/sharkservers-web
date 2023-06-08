@@ -1,6 +1,7 @@
 import ActivateAccountForm from "@/components/Auth/ActivateAccountForm";
+import ResendActivationCodeForm from "@/components/Auth/ResendActivationCodeForm";
 
-const ActivateAccountMain = () => {
+export default function ResendActivationCodePage() {
     return (
         <>
             <section className="login-area pt-100 pb-90">
@@ -10,8 +11,8 @@ const ActivateAccountMain = () => {
                             <div className="login-wrapper mb-40 wow fadeInUp">
                                 <div className="login-inner">
                                     <div className="login-content">
-                                        <h4>Aktywuj konto</h4>
-                                        <ActivateAccountForm />
+                                        <h4>Wyslij ponownie kod aktywacyjny</h4>
+                                        <ResendActivationCodeForm/>
                                     </div>
                                 </div>
                             </div>
@@ -22,5 +23,3 @@ const ActivateAccountMain = () => {
         </>
     )
 }
-
-export default ActivateAccountMain

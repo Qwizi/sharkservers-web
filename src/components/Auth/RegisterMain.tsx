@@ -67,7 +67,7 @@ const RegisterMain = () => {
                                                 <div className="col-md-12">
                                                     <div className="single-input-unit">
                                                         <label htmlFor="password2">Powtórz Hasło</label>
-                                                        <input type="password2" id="password2"
+                                                        <input type="password" id="password2"
                                                                placeholder="Powtórz hasło" value={password2}
                                                                onChange={(e) => setPassword2(e.target.value)}/>
                                                     </div>

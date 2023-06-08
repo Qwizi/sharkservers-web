@@ -82,3 +82,17 @@ export async function activate_account(code: string) {
         body: JSON.stringify({code: code}),
     });
 }
+
+export async function resend_activation_code(email: string) {
+    return await fetch(BASE_URL + "/v1/auth/activate/resend", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({email: email}),
+    });
+}
+
+export async function change_username(username: string, session: Session | null) {
+    return await AuthPostApi("/v1/users/me/username", JSON.stringify({username: username}), session);
+}
