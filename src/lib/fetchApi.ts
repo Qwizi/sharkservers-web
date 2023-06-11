@@ -96,3 +96,11 @@ export async function resend_activation_code(email: string) {
 export async function change_username(username: string, session: Session | null) {
     return await AuthPostApi("/v1/users/me/username", JSON.stringify({username: username}), session);
 }
+
+export async function send_chat_message(message: string, session: Session | null) {
+    return await AuthPostApi("/v1/chat", JSON.stringify({message: message}), session);
+}
+
+export async function get_servers_status(){
+    return await fetch(BASE_URL + "/v1/servers/status");
+}

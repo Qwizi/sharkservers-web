@@ -10,7 +10,6 @@ export default async function ForumCreatePage() {
     const categories = await fetchCategories()
     return (
         <>
-            <TitleSection title={"Utworz wątek"} />
             <div className="upload-area pt-130 pb-90">
                     <div className="container">
                         <CreateThreadForm categories_data={categories}/>
