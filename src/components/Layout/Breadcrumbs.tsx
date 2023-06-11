@@ -26,9 +26,9 @@ const Breadcrumbs = () => {
                             <h2 className="breadcrumb-title mb-10">{label}</h2>
                             <div className="breadcrumb-menu">
                                 <BR
-                                    omitRootLabel
                                     containerClassName={"breadcrumb-trail breadcrumbs"}
                                     listClassName={"trail-items"}
+                                    listStyle={{"margin": "0px", "padding": "0px"}}
                                     inactiveItemClassName={"trail-item trail-begin"}
                                     activeItemStyle={{display: "inline-block"}}
                                     omitIndexList={[0]}

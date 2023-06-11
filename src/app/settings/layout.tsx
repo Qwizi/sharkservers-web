@@ -31,9 +31,9 @@ const linnks = [
         icon: "flaticon-settings"
     },
     {
-        href: "/auth/signout",
-        name: "Wyloguj",
-        icon: "flaticon-logout"
+        href: "/settings/accounts",
+        name: "Konta",
+        icon: "flaticon-settings"
     }
 ]
 

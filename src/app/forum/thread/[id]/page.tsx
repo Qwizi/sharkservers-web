@@ -30,7 +30,6 @@ export default async function ThreadDetailPage({
     console.log(post_likes_data)
     return (
         <>
-            <TitleSection title={`Temat - ${thread_data.title}`} />
             <section className={"about-info-area pt-130 pb-90"}>
                 <div className="container">
                     <div className="row">
