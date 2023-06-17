@@ -4,72 +4,12 @@ import Thread from "@/components/Forum/Thread";
 import Link from "next/link";
 import LastOnlineUsersWidget from "@/components/Forum/Sidebar/LastOnlineUsers";
 import Pagination from "@/components/Elements/Pagination";
+import {Page_Category_CHE_, Page_ThreadOut_, Page_User_LVF_} from "@/client";
 
 interface IProps {
-    categories_data: {
-        items: [
-            {
-                id: number;
-                name: string;
-                description: string;
-                type: string;
-                created_at: string;
-                updated_at: string;
-            }
-        ],
-        total: number;
-        page: number;
-        size: number;
-    },
-    threads_data: {
-        items: [
-            {
-                id: number;
-                title: string;
-                is_closed: boolean;
-                content: string;
-                created_at: string;
-                updated_at: string;
-                category: {
-                    id: number;
-                    name: string;
-                }
-                author: {
-                    id: number;
-                    username: string;
-                    avatar: string;
-                    display_role: {
-                        id: number;
-                        name: string;
-                        color: string;
-                        is_staff: boolean;
-                    }
-                }
-            }
-        ],
-        total: number;
-        page: number;
-        size: number;
-    },
-    last_online_users_data: {
-        items: [
-            {
-                id: number;
-                username: string;
-                avatar: string;
-                display_role: {
-                    id: number;
-                    name: string;
-                    color: string;
-                    is_staff: boolean;
-
-                }
-            },
-        ],
-        total: number;
-        page: number;
-        size: number;
-    },
+    categories_data: Page_Category_CHE_,
+    threads_data: Page_ThreadOut_,
+    last_online_users_data: Page_User_LVF_,
 }
 
 
@@ -88,9 +28,8 @@ const ForumMain: React.FC<IProps> = ({categories_data, threads_data, last_online
                                         title={thread.title}
                                         is_closed={thread.is_closed}
                                         content={thread.content}
-                                        created_at={thread.created_at}
-                                        updated_at={thread.updated_at}
                                         category={thread.category}
+                                        // @ts-ignore
                                         author={thread.author}
                                     />
                                 ))}
@@ -114,8 +53,11 @@ const ForumMain: React.FC<IProps> = ({categories_data, threads_data, last_online
                             </div>
                             <Suspense fallback={<div>Loading...</div>}>
                                 <CategoriesList
+                                    // @ts-ignore
                                     items={categories_data.items}
+                                    // @ts-ignore
                                     size={categories_data.size}
+                                    // @ts-ignore
                                     page={categories_data.page}
                                     total={categories_data.total}
                                 />

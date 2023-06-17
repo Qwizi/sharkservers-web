@@ -2,6 +2,7 @@
 import {useSession} from "next-auth/react";
 import {useState} from "react";
 import {change_username} from "@/lib/fetchApi";
+import {toast} from "react-toastify";
 
 const UsernameTab = () => {
     const {data: session, update} = useSession()
@@ -11,7 +12,15 @@ const UsernameTab = () => {
     const onSubmit = async (e) => {
         e.preventDefault()
         if (!username) return
-        const response = await change_username(username, session)
+        const response = await toast.promise(
+            change_username(username, session),
+            {
+                pending: 'Laduje...',
+                success: 'Zmieniono nazwe uzytkownika',
+                error: 'Wystapil problem 🤯'
+            }
+        );
+        console.log(response)
         if (!response.ok) {
             throw new Error(response.statusText)
         }

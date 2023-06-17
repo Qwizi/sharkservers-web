@@ -1,4 +1,3 @@
-
 import './globals.css'
 import 'react-responsive-modal/styles.css';
 import './index.scss';
@@ -15,6 +14,7 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import Footer from "@/components/Layout/Footer";
 import {usePathname} from "next/navigation";
 import Breadcrumbs from "@/components/Layout/Breadcrumbs";
+import {ToastContainer} from "react-toastify";
 
 
 if (typeof window !== "undefined") {
@@ -40,8 +40,9 @@ export default async function RootLayout({
         <Provider session={session}>
             <ThemeProvider defaultTheme="dark">
                 <Header/>
-                <Breadcrumbs />
+                <Breadcrumbs/>
                 {children}
+
                 <Footer/>
             </ThemeProvider>
         </Provider>

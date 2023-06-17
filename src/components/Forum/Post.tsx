@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Username from "@/components/Elements/Username";
+import {PostOut} from "@/client";
 
 interface IProps {
     id: number;
@@ -20,7 +21,7 @@ interface IProps {
     updated_at: string;
 }
 
-const Post: React.FC<IProps> = ({...props}: IProps) => {
+const Post: React.FC<PostOut> = ({...props}: PostOut) => {
     return (
         <div className="q-single-answer">
             <div className="author-name-time">

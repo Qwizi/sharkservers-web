@@ -3,6 +3,8 @@ import {createRef, useEffect, useRef, useState} from "react";
 import {activate_account} from "@/lib/fetchApi";
 import {redirect, useRouter} from "next/navigation";
 import AlertMessage from "@/components/Elements/AlertMessage";
+import apiClient from "@/lib/api";
+import {toast} from "react-toastify";
 
 const ActivateAccountForm = () => {
     const codeDefault = [
@@ -38,18 +40,28 @@ const ActivateAccountForm = () => {
             codeToSend += item
         })
         console.log(codeToSend)
+        const notification = await toast.loading('Laduje...')
+        try {
+            const activateUserRes = await apiClient.auth.authActivateUser({
+                code: codeToSend
+            })
+            toast.update(notification, {
+                render: "Pomyślnie aktywowano konto",
+                type: "success",
+                isLoading: false,
+                autoClose: 4000,
+            })
+        } catch (error: any) {
+            console.log(error)
+            toast.update(notification, {
+                // @ts-ignore
+                render: error.message === "Bad Request" ? "Nie poprawny kod" : error.message,
+                type: "error",
+                isLoading: false,
+                autoClose: 4000,
+            })
+        }
 
-        const res = await activate_account(codeToSend)
-        if (!res.ok) {
-            throw new Error(res.statusText)
-        }
-        const data = await res.json()
-        if (!data) {
-            // @ts-ignore
-            setError("Kod aktywacyjny jest niepoprawny")
-        } else {
-            await router.push("/auth/activate-account/success")
-        }
         clearForm()
     }
 

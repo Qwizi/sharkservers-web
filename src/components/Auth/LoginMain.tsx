@@ -2,21 +2,27 @@
 import {useEffect, useState} from "react";
 import {signIn, SignInResponse} from "next-auth/react";
 import {useDebugValue} from "preact/compat";
-import {useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import AlertMessage from "@/components/Elements/AlertMessage";
 import Section from "@/components/Elements/Section";
+import Swal from "sweetalert2";
+import {toast} from "react-toastify";
+import {mockProviders} from "next-auth/client/__tests__/helpers/mocks";
+import callbackUrl = mockProviders.github.callbackUrl;
+import {login_user} from "@/lib/fetchApi";
 
 const LoginMain = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState("")
     const searchParams = useSearchParams();
+    const router = useRouter()
 
     useEffect(() => {
         const errorQuery = searchParams.get("error")
         if (!errorQuery) return
         if (errorQuery === "CredentialsSignin") {
-            setError("Niepoprawne dane logowania")
+            //setError("Niepoprawne dane logowania")
         }
     }, [searchParams])
 
@@ -24,13 +30,9 @@ const LoginMain = () => {
     const onSubmit = async (e) => {
         e.preventDefault()
         const callback = searchParams.get("callbackUrl")
-        const response: SignInResponse | undefined = await signIn('credentials', {
-            username: username,
-            password: password,
-            redirect: true,
-            callbackUrl: callback || "/forum"
-        })
-        console.log(`Login Response ${response}`)
+        const response = await login_user(username, password)
+        if (!response.ok) return
+        await router.push(callback || "/")
     }
 
     return (
