@@ -3,6 +3,7 @@ import ForumMain from "@/components/Forum/ForumMain";
 import ServerListSection from "@/components/Forum/ServerListSection";
 import ChatSection from "@/components/Forum/ChatSection";
 import {get_servers_status} from "@/lib/fetchApi";
+import apiClient from "@/lib/api";
 
 const fetchCategories = async () => {
     const categories = await fetch("http://localhost/v1/forum/categories", {next: {revalidate: 0}})
@@ -28,7 +29,7 @@ const fetchServerStatus = async () => {
     const server_status = await get_servers_status()
     return await server_status.json()
 }
-
+export const revalidate = 0
 export default async function ForumPage({
                                             params,
                                             searchParams,
@@ -38,7 +39,12 @@ export default async function ForumPage({
 }) {
     let category_id = searchParams["category_id"] ? Number(searchParams["category_id"]) : 1
     let page = searchParams["page"] ? Number(searchParams["page"]) : 1
-    let [categories_data, threads_data, last_online_users_data, servers_status] = await Promise.all([fetchCategories(), fetchThreads(category_id, page), fetchLastOnlineUsers(), fetchServerStatus()])
+    let [categories_data, threads_data, last_online_users_data, servers_status] = await Promise.all([
+        apiClient.forum.forumGetCategories(),
+        apiClient.forum.forumGetThreads(category_id, page, 10),
+        apiClient.users.usersGetLastLoggedUsers(),
+        fetchServerStatus()
+    ])
 
     return (
         <>

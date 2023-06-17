@@ -5,54 +5,13 @@ import Post from "@/components/Forum/Post";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import Username from "@/components/Elements/Username";
-import {AuthPostApi} from "@/lib/fetchApi";
+import {AuthPostApi, create_post} from "@/lib/fetchApi";
+import {Page_PostOut_, ThreadOut} from "@/client";
+import apiClient from "@/lib/api";
 
 interface IProps {
-    id: number;
-    title: string;
-    is_closed: boolean;
-    content: string;
-    created_at: string;
-    updated_at: string;
-    category: {
-        id: number;
-        name: string;
-    }
-    author: {
-        id: number;
-        username: string;
-        avatar: string;
-        display_role: {
-            id: number;
-            name: string;
-            color: string;
-            is_staff: boolean;
-        }
-    }
-    posts_data: {
-        items: [
-            {
-                id: number;
-                content: string;
-                created_at: string;
-                updated_at: string;
-                author: {
-                    id: number;
-                    username: string;
-                    avatar: string;
-                    display_role: {
-                        id: number;
-                        name: string;
-                        color: string;
-                        is_staff: boolean;
-                    }
-                }
-            },
-        ],
-        total: number;
-        page: number;
-        size: number;
-    }
+    thread_data: ThreadOut
+    posts_data: Page_PostOut_
 }
 
 const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
@@ -64,15 +23,11 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const res = await AuthPostApi('/v1/forum/posts', JSON.stringify({
-            content: content,
-            thread_id: props.id,
-        }), session)
-        if (!res.ok) {
-            throw new Error(res.statusText)
-        }
-        const result = await res.json()
-        console.log(result)
+        apiClient.request.config.TOKEN = session?.user?.access_token
+        const newPost = await apiClient.forum.forumCreatePost({
+            thread_id: props.thread_data.id,
+            content: content
+        })
         router.refresh()
         setContent("")
     }
@@ -87,16 +42,17 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
                         </div>
                         <div className="name-post-time">
                             <h4 className="artist-name">
-                                <Username color={props.author.display_role.color} username={props.author.username}/>
+                                <Username color={props.thread_data.author.display_role.color}
+                                          username={props.thread_data.author.username}/>
                             </h4>
                             <div className="post-date-time">
-                                <div className="post-date">{props?.created_at}</div>
+                                <div className="post-date">123</div>
                                 <div className="post-time item-border-before">9:58am</div>
                             </div>
                         </div>
                     </div>
-                    <h4 className="post-question">{props?.title}</h4>
-                    <p>{props?.content}</p>
+                    <h4 className="post-question">{props?.thread_data.title}</h4>
+                    <p>{props?.thread_data.content}</p>
                 </div>
                 <div className="q-meta-content">
                     <div className="q-meta-item">
@@ -123,8 +79,8 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
                 </div>
                 <div className="q-answers mb-30 mt-30">
                     {props.posts_data && props?.posts_data?.items?.map((post, index) => (
-                        <Post id={post.id} content={post.content} author={post.author} created_at={post.created_at}
-                              updated_at={post.updated_at} key={index}/>
+                        <Post id={post.id} content={post.content} author={post.author}
+                              key={index}/>
                     ))}
                 </div>
                 <div className="q-answers-btn">

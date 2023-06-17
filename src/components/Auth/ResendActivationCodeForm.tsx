@@ -3,6 +3,8 @@ import AlertMessage from "@/components/Elements/AlertMessage";
 import {useState} from "react";
 import useErrorParams from "@/hooks/useErrorParams";
 import {resend_activation_code} from "@/lib/fetchApi";
+import {toast} from "react-toastify";
+import apiClient from "@/lib/api";
 
 const ResendActivationCodeForm = () => {
     const [email, setEmail] = useState("")
@@ -10,12 +12,27 @@ const ResendActivationCodeForm = () => {
     const onSubmit = async (e) => {
         e.preventDefault()
         console.log("Wysylam ponownie kod aktywacyjny")
-        const response = await resend_activation_code(email)
-        if (!response.ok) {
-            throw new Error(response.statusText)
+        const notification = await toast.loading('Laduje...')
+        try {
+            const resendActivationCodeRes = await apiClient.auth.authResendActivateCode({
+                email: email
+            })
+            toast.update(notification, {
+                render: "Pomyślnie wysłano kod aktywacyjny, jezeli wprowadziles poprawny email",
+                type: "success",
+                isLoading: false,
+                autoClose: 4000,
+            })
+        } catch (error: any) {
+            console.log(error)
+            toast.update(notification, {
+                // @ts-ignore
+                render: error.message,
+                type: "error",
+                isLoading: false,
+                autoClose: 4000,
+            })
         }
-        const data = await response.json()
-        console.log("data", data)
     }
 
     return (

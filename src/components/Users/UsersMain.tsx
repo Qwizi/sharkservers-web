@@ -1,5 +1,6 @@
 import UserCard from "@/components/Users/UserCard";
 import React from "react";
+import {Page_UserOut2Schema_} from "@/client";
 
 interface IProps {
     users_data: {
@@ -23,14 +24,17 @@ interface IProps {
 
 }
 
-const UsersMain: React.FC<IProps> = ({...props}) => {
+const UsersMain: React.FC<Page_UserOut2Schema_> = ({...props}) => {
+    const {items: users} = props;
     return (
+
         <section className="creator-area pt-130 pb-100">
             <div className="container">
                 <div className="row wow fadeInUp">
-                    {props?.users_data?.items.map((item, index) => {
-                        return (
-                            <UserCard key={index} username={item.username} color={item.display_role.color}/>
+                    {users.map((user, index) => {
+
+                        return (// @ts-ignore
+                            <UserCard key={index} username={user.username} color={user.display_role.color}/>
                         )
                     })}
                 </div>

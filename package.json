@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-client": "openapi --input http://localhost:80/openapi.json --output ./src/client --client fetch --name ApiClient"
   },
   "dependencies": {
     "@marketsystems/nextjs13-appdir-breadcrumbs": "^1.0.4",
     "@reduxjs/toolkit": "^1.7.2",
+    "@sweetalert2/theme-dark": "^5.0.15",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",
@@ -23,6 +25,7 @@
     "next": "^13.4.3",
     "next-auth": "^4.22.0",
     "next-themes": "^0.2.0",
+    "openapi-typescript-codegen": "^0.24.0",
     "postcss": "8.4.21",
     "react": "18.2.0",
     "react-bootstrap": "^2.1.2",
@@ -37,7 +40,7 @@
     "react-responsive-modal": "^6.2.0",
     "react-toastify": "^8.2.0",
     "sass": "^1.49.7",
-    "sweetalert2": "^11.4.8",
+    "sweetalert2": "^11.7.12",
     "swiper": "^7.4.1",
     "tailwindcss": "3.3.1",
     "typescript": "5.0.4",

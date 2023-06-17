@@ -7,8 +7,6 @@ interface IProps {
     title: string;
     is_closed: boolean;
     content: string;
-    created_at: string;
-    updated_at: string;
     category: {
         id: number;
         name: string;
@@ -41,7 +39,7 @@ const Thread: React.FC<IProps> = ({...props}: IProps) => {
                                     <Username color={props.author.display_role.color} username={props.author.username}/>
                                 </h4>
                                 <div className="post-date-time">
-                                    <div className="post-date">{props?.created_at}</div>
+                                    <div className="post-date">123</div>
                                     <div className="post-time item-border-before">9:58am</div>
                                 </div>
                             </div>
