@@ -11,7 +11,7 @@ const LoginForm = () => {
     const [isValid, setIsValid] = useState(false)
     const [invalidCredentialsError, setInvalidCredentialsError] = useState(false)
     useEffect(() => {
-        if(isValid) {
+        if (isValid) {
             const callback = searchParams.get("callbackUrl")
             router.push(callback || "/")
         }
@@ -23,14 +23,12 @@ const LoginForm = () => {
             password: data.password,
             redirect: false,
         })
-        if (response?.ok && !response.error){
+        if (response?.ok && !response.error) {
             setIsValid(true)
         } else {
             setInvalidCredentialsError(true)
         }
     };
-
-    console.log(errors)
 
     return (
         <>
