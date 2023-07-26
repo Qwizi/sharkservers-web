@@ -3,6 +3,8 @@ import {useForm} from "react-hook-form";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import {SharkServersClient as shark_api} from "sharkservers-sdk";
+import Link from "next/link";
+import React from "react";
 
 const ActivateAccountForm = () => {
     const {register, handleSubmit, formState: {errors}, setError} = useForm();
@@ -15,16 +17,16 @@ const ActivateAccountForm = () => {
             await Alert.fire({
                 icon: 'success',
                 title: 'Konto zostało aktywowane',
-                showConfirmButton: false,
-                timer: 1500
+                timer: 1500,
+                confirmButtonText: 'Ok'
             })
 
         } catch (e) {
             await Alert.fire({
                 icon: 'error',
-                title: 'Code is invalid or expired',
-                showConfirmButton: false,
-                timer: 1500
+                title: 'Kod jest niepoprawny lub wygasł',
+                timer: 1500,
+                showConfirmButton: false
             })
         }
 
@@ -47,6 +49,8 @@ const ActivateAccountForm = () => {
 
             <div className="login-btn">
                 <button className="fill-btn" type="submit">Aktywuj konto</button>
+                <div className="note">Kod nie dotarl? <Link href={"/auth/activate-account/resend"} className={"text-btn"}>Wyslij ponownie!</Link>
+                        </div>
             </div>
         </form>
     )

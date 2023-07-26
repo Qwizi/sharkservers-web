@@ -1,8 +1,9 @@
 'use client';
 import {useForm} from "react-hook-form";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {SharkServersClient as shark_api} from "sharkservers-sdk";
 import {useRouter, useSearchParams} from "next/navigation";
+import Link from "next/link";
 
 const RegisterForm = () => {
     const router = useRouter()
@@ -100,6 +101,8 @@ const RegisterForm = () => {
                 </div>
                 <div className="login-btn">
                     <button className="fill-btn" type="submit">Zarejestruj się</button>
+                    <div className="note">Posiadasz konto? <Link href={"/auth/login"} className={"text-btn"}>Zaloguj sie</Link>
+                        </div>
                 </div>
             </form>
         </>

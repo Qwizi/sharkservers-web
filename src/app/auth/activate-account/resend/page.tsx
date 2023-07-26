@@ -1,10 +1,24 @@
 import ActivateAccountForm from "@/components/Auth/ActivateAccountForm";
 import ResendActivationCodeForm from "@/components/Auth/ResendActivationCodeForm";
+import React from "react";
+import Section from "@/components/Elements/Section";
+import {getServerSession, Session} from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {redirect} from "next/navigation";
 
-export default function ResendActivationCodePage() {
+const isUserLogged = async () => {
+    const session: Session | null = await getServerSession(authOptions)
+    return session?.user?.username
+}
+
+export default async function ResendActivationCodePage() {
+    const user_logged = await isUserLogged()
+    if (user_logged) {
+        redirect("/")
+    }
     return (
         <>
-            <section className="login-area pt-100 pb-90">
+            <Section>
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-xxl-8 col-xl-10 col-lg-10 col-md-12">
@@ -19,7 +33,7 @@ export default function ResendActivationCodePage() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </Section>
         </>
     )
 }
