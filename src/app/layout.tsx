@@ -12,9 +12,7 @@ import "../../public/assets/css/flaticon.css";
 import {getServerSession, Session} from "next-auth";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import Footer from "@/components/Layout/Footer";
-import {usePathname} from "next/navigation";
-import Breadcrumbs from "@/components/Layout/Breadcrumbs";
-import {ToastContainer} from "react-toastify";
+//import Breadcrumbs from "@/components/Layout/Breadcrumbs";
 
 
 if (typeof window !== "undefined") {
@@ -33,16 +31,15 @@ export default async function RootLayout({
     children: React.ReactNode,
 }) {
     const session: Session | null = await getServerSession(authOptions)
-    console.log(session?.user?.email)
     return (
         <html lang="en">
         <body className="body-bg">
         <Provider session={session}>
             <ThemeProvider defaultTheme="dark">
                 <Header/>
-                <Breadcrumbs/>
-                {children}
-
+                <main>
+                    {children}
+                </main>
                 <Footer/>
             </ThemeProvider>
         </Provider>

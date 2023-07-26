@@ -23,7 +23,7 @@ const Footer = () => {
                             <div className="col-lg-3 col-md-6 col-sm-6">
                                 <div className="footer-widget footer1-widget footer1-widget1 mb-40">
                                     <div className="footer-logo mb-30">
-                                        <img src="/assets/img/logo/logo3.png" alt="logo-img"/>
+                                        <img src="/assets/img/logo/logo.png" alt="logo-img"/>
                                     </div>
                                     <p className="mb-35">We provide one-stop solutions for all IT items; your bliss is
                                         just
