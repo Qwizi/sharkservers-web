@@ -2,7 +2,8 @@
 import {useForm} from "react-hook-form";
 import {signIn, SignInResponse} from "next-auth/react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import Link from "next/link";
 
 const LoginForm = () => {
     const router = useRouter()
@@ -67,7 +68,10 @@ const LoginForm = () => {
                     </div>
                     <div className="login-btn">
                         <button className="fill-btn" type="submit">Zaloguj się</button>
+                        <div className="note">Nie posiadasz konta? <Link href={"/auth/register"} className={"text-btn"}>Zarejestruj sie</Link>
+                        </div>
                     </div>
+
                 </div>
             </form>
         </>
