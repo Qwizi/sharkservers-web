@@ -73,7 +73,7 @@ export class AuthService {
      * Get Access Token From Refresh Token
      * Get access token from refresh token
      * :param token_data:
-     * :param settings:
+     * :param account:
      * :return TokenSchema:
      * @param requestBody
      * @returns TokenSchema Successful Response

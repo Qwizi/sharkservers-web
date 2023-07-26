@@ -1,4 +1,4 @@
-import PasswordTab from "@/components/Settings/PasswordTab";
+import PasswordTab from "@/components/Account/PasswordTab";
 
 export default function PasswordSettingsPage() {
     return (
