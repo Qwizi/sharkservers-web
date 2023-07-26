@@ -28,6 +28,7 @@ const PasswordTab = () => {
                 confirmButtonText: "Zamknij"
             })
         } catch (e) {
+            // @ts-ignore
             if (e?.status === 400) {
                 setError("old_password", {
                     type: "invalid_password",
@@ -36,7 +37,7 @@ const PasswordTab = () => {
             }
         }
     }
-    return (<div className="creator-info-personal mb-40 wow fadeInUp">
+    return (
         <form className="personal-info-form" onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
                 <div className="col-md-12">
@@ -83,7 +84,7 @@ const PasswordTab = () => {
                 <button id="update-btn" className="fill-btn">Aktualizuj</button>
             </div>
         </form>
-    </div>)
+    )
 }
 
 export default PasswordTab
