@@ -1,4 +1,4 @@
-import UsernameTab from "@/components/Settings/UsernameTab";
+import UsernameTab from "@/components/Account/UsernameTab";
 
 export default function SettingsUsernamePage() {
     return (

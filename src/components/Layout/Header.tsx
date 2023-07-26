@@ -6,6 +6,7 @@ import {usePathname, useRouter} from 'next/navigation';
 import Image from "next/image";
 import useSticky from "@/hooks/useSticky";
 import MobileMenu from "@/components/Layout/MobileMenu";
+import Username from "@/components/Elements/Username";
 
 
 const Header: React.FC = () => {
@@ -24,6 +25,7 @@ const Header: React.FC = () => {
         setPath(pathName);
     }, [pathName]);
 
+
     const loggedMenu = (
         <div
             className="profile-item profile-item-header ml-20 d-none d-md-inline-block pos-rel">
@@ -32,14 +34,12 @@ const Header: React.FC = () => {
                 onClick={handleToggle11}>
                 <div className="profile-action">
                     <ul>
-                        <li><Link href={"/settings"}>Ustawiena</Link></li>
-                        <li onClick={() => signOut()}>Wyloguj sie</li>
+                        <li><i className="fal fa-user"></i> <Username color={session?.user.display_role.color} username={session?.user.username}/></li>
+                        <li><Link href={"/account"}><i className="fal fa-user"></i> Konto</Link></li>
+                        <li onClick={() => signOut()}><i className="fal fa-sign-out"></i> Wyloguj sie</li>
                     </ul>
                 </div>
-                <img src="/assets/img/profile/profile4.jpg" alt="profile-img"/>
-                <div className="profile-verification verified">
-                    <i className="fas fa-check"></i>
-                </div>
+                <img src={`http://localhost${session?.user.avatar}`} alt="profile-img"/>
             </div>
         </div>
     )

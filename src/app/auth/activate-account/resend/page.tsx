@@ -1,4 +1,3 @@
-import ActivateAccountForm from "@/components/Auth/ActivateAccountForm";
 import ResendActivationCodeForm from "@/components/Auth/ResendActivationCodeForm";
 import React from "react";
 import Section from "@/components/Elements/Section";

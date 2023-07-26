@@ -6,34 +6,34 @@ import {usePathname} from "next/navigation";
 
 const linnks = [
     {
-        href: "/settings",
+        href: "/account",
         name: "Podsumowanie",
         icon: "flaticon-account"
     },
     {
-        href: "/settings/username",
+        href: "/account/username",
         name: "Nazwa użytkownika",
-        icon: "flaticon-settings"
+        icon: "flaticon-account"
     },
     {
-        href: "/settings/password",
+        href: "/account/password",
         name: "Hasło",
-        icon: "flaticon-settings"
+        icon: "flaticon-account"
     },
     {
-        href: "/settings/email",
+        href: "/account/email",
         name: "E-mail",
-        icon: "flaticon-settings"
+        icon: "flaticon-account"
     },
     {
-        href: "/settings/roles",
+        href: "/account/roles",
         name: "Role",
-        icon: "flaticon-settings"
+        icon: "flaticon-account"
     },
     {
-        href: "/settings/accounts",
+        href: "/account/accounts",
         name: "Konta",
-        icon: "flaticon-settings"
+        icon: "flaticon-account"
     }
 ]
 
@@ -57,14 +57,14 @@ export default function SettingsLayout({
                             <div className="creator-img-name">
                                 <div className="profile-img pos-rel">
                                     <div className="change-photo"><i className="flaticon-photo-camera"></i></div>
-                                    <img src="/assets/img/profile/profile1.jpg" alt="profile-img"/>
+                                    <img src={`http://localhost${session?.user.avatar}`} alt="profile-img"/>
                                 </div>
                                 <div className="creator-name-id">
                                     <h4 className="artist-name pos-rel">
                                         <Username color={session?.user?.display_role?.color || "#000"}
                                                   username={session?.user?.username || "User"} />
                                     </h4>
-                                    <div className="artist-id">@Kalla.ban</div>
+                                    <div className="artist-id">@{session?.user.username}</div>
                                 </div>
                             </div>
                             <div className="profile-setting-list">
@@ -79,7 +79,9 @@ export default function SettingsLayout({
                         </div>
                     </div>
                     <div className="col-lg-8">
+                        <div className="creator-info-personal mb-40 wow fadeInUp">
                         {children}
+                        </div>
                     </div>
                 </div>
             </div>
