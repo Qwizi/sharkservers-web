@@ -1,28 +1,7 @@
 import UserCard from "@/components/Users/UserCard";
 import React from "react";
-import {Page_UserOut2Schema_} from "@/client";
+import {Page_UserOut2Schema_} from "sharkservers-sdk";
 
-interface IProps {
-    users_data: {
-        items: [
-            {
-                id: number;
-                username: string;
-                avatar: string;
-                display_role: {
-                    id: number;
-                    name: string;
-                    color: string;
-                    is_staff: boolean;
-                }
-            },
-        ],
-        total: number;
-        page: number;
-        size: number;
-    }
-
-}
 
 const UsersMain: React.FC<Page_UserOut2Schema_> = ({...props}) => {
     const {items: users} = props;

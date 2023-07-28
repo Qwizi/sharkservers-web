@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
+import {User_CGQ, UserOut2Schema} from "@/client";
 
 declare module "next-auth" {
-    interface Session {
+    /*interface Session {
         user: {
             id: number;
             username: string;
@@ -28,6 +29,19 @@ declare module "next-auth" {
             token_type: string;
             access_token: string;
             refresh_token: string;
+        }
+    }*/
+    interface Session {
+        user: User_CGQ,
+        access_token: {
+            token: string,
+            token_type: string,
+            exp: string
+        }
+        refresh_token: {
+            token: string,
+            token_type: string,
+            exp: string
         }
     }
 }

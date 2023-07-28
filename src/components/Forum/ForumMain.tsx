@@ -4,12 +4,12 @@ import Thread from "@/components/Forum/Thread";
 import Link from "next/link";
 import LastOnlineUsersWidget from "@/components/Forum/Sidebar/LastOnlineUsers";
 import Pagination from "@/components/Elements/Pagination";
-import {Page_Category_CHE_, Page_ThreadOut_, Page_User_LVF_} from "@/client";
+import {Page_Category_LYU_, Page_ThreadOut_, Page_UserOut2Schema_} from "sharkservers-sdk";
 
 interface IProps {
-    categories_data: Page_Category_CHE_,
+    categories_data: Page_Category_LYU_,
     threads_data: Page_ThreadOut_,
-    last_online_users_data: Page_User_LVF_,
+    last_online_users_data: Page_UserOut2Schema_,
 }
 
 

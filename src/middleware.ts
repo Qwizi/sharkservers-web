@@ -12,4 +12,4 @@ export default withAuth({
     },
 })
 
-export const config = {matcher: ["/forum/create"]}
+export const config = {matcher: []}

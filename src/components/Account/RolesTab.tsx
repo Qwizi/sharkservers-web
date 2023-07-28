@@ -27,24 +27,6 @@ const RolesTab = () => {
                     {errors?.display_role?.type === "validate" &&
                         <span className="text-danger">Niepoprawna rola</span>}
                     <div className="common-select-arrow common-select-arrow-60 w-full">
-                        <Controller
-                            control={control}
-                            defaultValue={session?.user.roles[0].id}
-                            name="display_role"
-                            render={({onChange, value, name, ref}) => (
-                                <select name="g-select"
-                                        className="gender-category-select w-full mb-30"
-                                        defaultValue={session?.user.roles[0].id}
-                                        ref={ref}
-                                        onChange={val => onChange(val.value)}
-                                >
-                                    {session?.user.roles.map((role) => (
-                                            <option key={role.id} value={role.id}>{role.name}</option>
-                                        )
-                                    )}
-                                </select>
-                            )}
-                        />
 
                     </div>
                 </div>

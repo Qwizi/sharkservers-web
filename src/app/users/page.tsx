@@ -1,14 +1,12 @@
 import TitleSection from "@/components/Layout/TitleSection";
 import UsersMain from "@/components/Users/UsersMain";
-import apiClient from "@/lib/api";
+import {SharkServersClient as shark_api} from "sharkservers-sdk";
+
 const fetchUsers = async () => {
-    const res = await fetch(`http://localhost/v1/users`, { next: { revalidate: 15 }});
-    const users = await apiClient.users.usersGetUsers()
-    console.log(`Users: ${JSON.stringify(users)}`)
-    return users
+    return
 }
 export default async function UsersPage() {
-    const users_data = await fetchUsers();
+    const users_data = await shark_api.users.getUsers(undefined, 10);
     return (
         <>
             <UsersMain

@@ -5,16 +5,10 @@ import Post from "@/components/Forum/Post";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import Username from "@/components/Elements/Username";
-import {AuthPostApi, create_post} from "@/lib/fetchApi";
-import {Page_PostOut_, ThreadOut} from "@/client";
-import apiClient from "@/lib/api";
+import {Thread_OIZ} from "sharkservers-sdk";
 
-interface IProps {
-    thread_data: ThreadOut
-    posts_data: Page_PostOut_
-}
 
-const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
+const ThreadDetail: React.FC<Thread_OIZ> = ({...props}: Thread_OIZ) => {
     const [content, setContent] = React.useState<string>("");
     const {data: session} = useSession();
     // @ts-ignore
@@ -23,11 +17,7 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        apiClient.request.config.TOKEN = session?.user?.access_token
-        const newPost = await apiClient.forum.forumCreatePost({
-            thread_id: props.thread_data.id,
-            content: content
-        })
+
         router.refresh()
         setContent("")
     }
@@ -42,8 +32,8 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
                         </div>
                         <div className="name-post-time">
                             <h4 className="artist-name">
-                                <Username color={props.thread_data.author.display_role.color}
-                                          username={props.thread_data.author.username}/>
+                                <Username color="#000"
+                                          username="Qwizi"/>
                             </h4>
                             <div className="post-date-time">
                                 <div className="post-date">123</div>
@@ -51,8 +41,8 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
                             </div>
                         </div>
                     </div>
-                    <h4 className="post-question">{props?.thread_data.title}</h4>
-                    <p>{props?.thread_data.content}</p>
+                    <h4 className="post-question"></h4>
+                    <p></p>
                 </div>
                 <div className="q-meta-content">
                     <div className="q-meta-item">
@@ -63,7 +53,7 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
                     <div className="q-meta-item">
                         <a href="#">
                             <div className="q-meta-icon"><i className="flaticon-chatting"></i></div>
-                            <div className="q-meta-comments">{props.posts_data.total}</div>
+                            <div className="q-meta-comments"></div>
                             <div className="q-meta-type">Postów</div>
                         </a>
                     </div>
@@ -78,10 +68,6 @@ const ThreadDetail: React.FC<IProps> = ({...props}: IProps) => {
                     </div>
                 </div>
                 <div className="q-answers mb-30 mt-30">
-                    {props.posts_data && props?.posts_data?.items?.map((post, index) => (
-                        <Post id={post.id} content={post.content} author={post.author}
-                              key={index}/>
-                    ))}
                 </div>
                 <div className="q-answers-btn">
                     <form action="#" className="q-write-answer mb-30" onSubmit={handleSubmit}>

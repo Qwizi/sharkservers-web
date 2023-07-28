@@ -1,8 +1,8 @@
 import React from "react";
 
 interface IProps {
-    color: string;
-    username: string;
+    color: string | undefined;
+    username: string | undefined;
 }
 
 const Username: React.FC<IProps> = ({username, color}) => {
