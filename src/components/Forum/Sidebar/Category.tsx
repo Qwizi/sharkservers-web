@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import {useRouter} from "next/navigation";
 
@@ -12,7 +13,7 @@ const Category: React.FC<IProps> = ({name, id, active, number_of_threads}: IProp
     const router = useRouter();
     return (
         <button className={active ? "nav-link active" : "nav-link"} id="nav-tab1" data-bs-toggle="tab"
-            data-bs-target="#tab-nav1" type="button" role="tab" aria-selected="true" onClick={() => router.push(`/forum?category_id=${id}`)}>
+            data-bs-target="#tab-nav1" type="button" role="tab" aria-selected="true" onClick={() => router.push(`/?category_id=${id}`)}>
             <span className="sidebar-nav-link">
                 <i className="flaticon-home"></i>{name}
                 <span className="inner-item-number">{number_of_threads ? number_of_threads : 0}</span>

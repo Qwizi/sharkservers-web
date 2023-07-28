@@ -20,7 +20,7 @@ const Header: React.FC = () => {
     const pathName = usePathname();
     const [path, setPath] = useState("");
     const {sticky} = useSticky();
-
+    console.log(session)
     useEffect(() => {
         setPath(pathName);
     }, [pathName]);
@@ -34,12 +34,12 @@ const Header: React.FC = () => {
                 onClick={handleToggle11}>
                 <div className="profile-action">
                     <ul>
-                        <li><i className="fal fa-user"></i> <Username color={session?.user.display_role.color} username={session?.user.username}/></li>
+                        <li><i className="fal fa-user"></i> <Username color={session?.user?.display_role?.color} username={session?.user?.username}/></li>
                         <li><Link href={"/account"}><i className="fal fa-user"></i> Konto</Link></li>
                         <li onClick={() => signOut()}><i className="fal fa-sign-out"></i> Wyloguj sie</li>
                     </ul>
                 </div>
-                <img src={`http://localhost${session?.user.avatar}`} alt="profile-img"/>
+                <img src={`http://localhost${session?.user?.avatar}`} alt="profile-img"/>
             </div>
         </div>
     )

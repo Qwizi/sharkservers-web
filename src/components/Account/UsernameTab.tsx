@@ -14,7 +14,7 @@ const UsernameTab = () => {
     // @ts-ignore
     const onSubmit = async (data) => {
         try {
-            shark_api.request.config.TOKEN = session?.user.access_token
+            shark_api.request.config.TOKEN = session?.access_token.token
             const response = await shark_api.users.changeUserUsername({
                 username: data.username
             })
