@@ -1,7 +1,10 @@
 'use client';
 import {ToastContainer} from "react-toastify";
+import {usePathname} from "next/navigation";
 
 const Footer = () => {
+    const path = usePathname()
+    if (path.includes("/admin")) return (<></>)
     return (
         <>
             <ToastContainer
