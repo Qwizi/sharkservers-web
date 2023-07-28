@@ -13,7 +13,7 @@ const LastOnlineUsersWidget: React.FC<IProps> = ({...props}) => {
             <h4 className="sidebar-widget-title">Ostatnio Aktywni ({props?.last_online_users_data?.total})</h4>
             {props?.last_online_users_data?.items.map((user) => (
                 <>
-                    <Username color={user.display_role.color || "gray"} username={user.username} key={user.id}/><span className={"mr-1"}>,</span>
+                    <Username color={user.display_role.color || "gray"} username={user.username} key={user.id} id={user.id}/><span className={"mr-1"}>,</span>
                 </>
             ))}
         </div>

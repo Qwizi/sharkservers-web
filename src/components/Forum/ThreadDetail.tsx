@@ -33,7 +33,7 @@ const ThreadDetail: React.FC<Thread_OIZ> = ({...props}: Thread_OIZ) => {
                         <div className="name-post-time">
                             <h4 className="artist-name">
                                 <Username color="#000"
-                                          username="Qwizi"/>
+                                          username="Qwizi" id={1}/>
                             </h4>
                             <div className="post-date-time">
                                 <div className="post-date">123</div>

@@ -1,13 +1,15 @@
 import React from "react";
+import Link from "next/link";
 
 interface IProps {
     color: string | undefined;
     username: string | undefined;
+    id: number | undefined;
 }
 
-const Username: React.FC<IProps> = ({username, color}) => {
+const Username: React.FC<IProps> = ({username, color, id}) => {
     return (
-        <span style={{color: color}}>{username}</span>
+        <Link href={`/profile/${id}`}><span style={{color: color}}>{username}</span></Link>
     )
 }
 

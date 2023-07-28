@@ -34,7 +34,7 @@ const Header: React.FC = () => {
                 onClick={handleToggle11}>
                 <div className="profile-action">
                     <ul>
-                        <li><i className="fal fa-user"></i> <Username color={session?.user?.display_role?.color} username={session?.user?.username}/></li>
+                        <li><i className="fal fa-user"></i> <Username color={session?.user?.display_role?.color} username={session?.user?.username} id={session?.user.id}/></li>
                         <li><Link href={"/account"}><i className="fal fa-user"></i> Konto</Link></li>
                         <li onClick={() => signOut()}><i className="fal fa-sign-out"></i> Wyloguj sie</li>
                     </ul>

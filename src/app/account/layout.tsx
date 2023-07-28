@@ -62,7 +62,7 @@ export default function SettingsLayout({
                                 <div className="creator-name-id">
                                     <h4 className="artist-name pos-rel">
                                         <Username color={session?.user?.display_role?.color || "#000"}
-                                                  username={session?.user?.username || "User"} />
+                                                  username={session?.user?.username || "User"} id={session?.user?.id} />
                                     </h4>
                                     <div className="artist-id">@{session?.user.username}</div>
                                 </div>

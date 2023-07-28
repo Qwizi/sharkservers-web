@@ -17,7 +17,7 @@ const Thread: React.FC<ThreadOut> = ({...props}: ThreadOut) => {
                             </div>
                             <div className="name-post-time">
                                 <h4 className="artist-name">
-                                    <Username color={props?.author?.display_role?.color} username={props?.author?.username}/>
+                                    <Username color={props?.author?.display_role?.color} username={props?.author?.username} id={props.author.id}/>
                                 </h4>
                                 <div className="post-date-time">
                                     <div className="post-date">123</div>
