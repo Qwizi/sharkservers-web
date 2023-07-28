@@ -6,10 +6,11 @@ import Link from "next/link";
 
 interface IProps {
     total: number;
+    size: number | undefined;
 }
 
 const Pagination: React.FC<IProps> = ({...props}) => {
-    const {total, pages, current_page, limit} = usePagination({total: props.total})
+    const {total, pages, current_page, limit} = usePagination({total: props.total, size: props.size})
     const pathname = usePathname();
     const searchParams = useSearchParams();
     let url = pathname + "/?" + searchParams.toString();

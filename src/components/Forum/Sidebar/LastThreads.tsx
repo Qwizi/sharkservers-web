@@ -10,7 +10,7 @@ const LastThreads: React.FC<Page_ThreadOut_> = ({...props}) => {
             <>
                 <div className="activity-wrapper-action-single pos-rel">
                     <div className="activity-3dots-menu">
-                        <Username color={thread.author.display_role.color} username={thread.author.username} />
+                        <Username color={thread.author.display_role.color} username={thread.author.username} id={thread.author.id}/>
                     </div>
                     <div className="activity-meta-text">
                         <div className="actvity-text"><Link href={`/thread/${thread.id}`} className={"text-btn"}>{thread?.title}</Link></div>

@@ -13,7 +13,7 @@ const UsersMain: React.FC<Page_UserOut2Schema_> = ({...props}) => {
                     {users.map((user, index) => {
 
                         return (// @ts-ignore
-                            <UserCard key={index} username={user.username} color={user.display_role.color}/>
+                            <UserCard key={index} username={user.username} color={user.display_role.color} id={user.id}/>
                         )
                     })}
                 </div>

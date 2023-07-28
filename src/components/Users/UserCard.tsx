@@ -6,6 +6,7 @@ import Username from "@/components/Elements/Username";
 interface IProps {
     username: string;
     color: string;
+    id: number;
 }
 
 const UserCard: React.FC<IProps> = ({...props}) => {
@@ -26,7 +27,7 @@ const UserCard: React.FC<IProps> = ({...props}) => {
                                     </div>
                                 </div>
                                 <h4 className="artist-name">
-                                    <Username username={props.username} color={props.color}/>
+                                    <Username username={props.username} color={props.color} id={props.id}/>
                                 </h4>
                                 <div className="artist-id"></div>
                             </div>

@@ -31,6 +31,11 @@ export default async function Home({
             <div className="container">
                 <div className="row">
                     <div className="col-lg-8 order-2 order-lg-1">
+                        <div className="row wow fadeInUp">
+                            <div className="col-12">
+                                <Pagination total={threads_data.total} size={10}/>
+                            </div>
+                        </div>
                         <div className="forum-tab-contents mb-0 wow fadeInUp">
                             <div className="tab-content" id="nav-tabContent">
                                 {threads_data.total > 0 ?  threads_data.items.map((thread, index) => (
@@ -41,7 +46,7 @@ export default async function Home({
                         </div>
                         <div className="row wow fadeInUp">
                             <div className="col-12">
-                                <Pagination total={threads_data.total}/>
+                                <Pagination total={threads_data.total} size={10}/>
                             </div>
                         </div>
                     </div>
