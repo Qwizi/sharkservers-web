@@ -59,6 +59,10 @@ const Header: React.FC = () => {
         </>
     )
 
+    if (pathName.includes("/admin")) {
+        return <></>
+    }
+
     return (
         <>
             <header className="header1 oc-transparent-header">
