@@ -25,7 +25,6 @@ const App = () => (
         <Resource name="users" list={ListGuesser} show={ShowGuesser} create={UserCreate}/>
         <Resource name="roles" list={ListGuesser}/>
         <Resource name="scopes" list={ListGuesser}/>
-        <Resource name="servers" list={ListGuesser}/>
     </Admin>
 );
 
