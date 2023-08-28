@@ -18,15 +18,15 @@ import { Badge } from "../ui/badge";
 
 
 export function UserCard({ ...props }: UserOut2Schema) {
-  const { username, display_role } = props
+  const { username, display_role, avatar } = props
   
   return (
     <Card className="">
       <Image src="/images/profile/cover.jpg" width="600" height="150" alt="cover image"/>
       <CardHeader className="items-center">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" width="100" height="100" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={avatar} alt="@shadcn" width="100" height="100" />
+          <AvatarFallback>{username}</AvatarFallback>
         </Avatar>
         <Username
           username={username}

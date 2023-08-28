@@ -7,6 +7,15 @@ const nextConfig = {
         // !! WARN !!
         ignoreBuildErrors: true,
       },
+      images: {
+        remotePatterns: [
+          {
+            protocol: 'http',
+            hostname: 'localhost',
+            port: '',
+          },
+        ],
+      },
 }
 
 module.exports = nextConfig

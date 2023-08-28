@@ -44,7 +44,9 @@ export default function RegisterForm({setOpenDialog}: IRegisterForm) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             username: "",
-            email: ""
+            email: "",
+            password: "",
+            password2: ""
         },
     })
     const { toast } = useToast()

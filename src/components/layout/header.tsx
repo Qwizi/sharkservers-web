@@ -5,11 +5,23 @@ import Image from "next/image";
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Dialog, Popover } from '@headlessui/react'
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { Avatar, AvatarImage } from "../ui/avatar";
+import { AvatarFallback } from "@radix-ui/react-avatar";
+
+import { Button } from "../ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import Username from "../users/username";
+import { Badge } from "../ui/badge";
+import { useRouter } from "next/navigation";
+import { SwitchTheme } from "../theme-switcher";
 
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    // @ts-ignore
+    const { data: session, status } = useSession()
+    const router = useRouter()
+    
     return (
         <header className="border-b">
             <nav className="mx-auto flex container items-center justify-between p-6 " aria-label="Global">
@@ -36,12 +48,57 @@ const Header = () => {
                     </Link>
                 </Popover.Group>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-x-12">
-                    <Link href="/auth/login" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
-                        Zaloguj się
-                    </Link>
-                    <Link href="/auth/register" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
-                        Zarejestruj się
-                    </Link>
+                    {status == "unauthenticated" && (
+                        <>
+                            <Link href="/auth/login" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
+                                Zaloguj się
+                            </Link>
+                            <Link href="/auth/register" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
+                                Zarejestruj się
+                            </Link>
+                        </>
+                    )}
+                    {status == "authenticated" && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                                    <Avatar className="h-8 w-8">
+                                        <AvatarImage src={session?.user?.avatar} alt={`@${session?.user.username}`} />
+                                        <AvatarFallback>{session?.user?.username}</AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56" align="end" forceMount>
+                                <DropdownMenuLabel className="font-normal">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium leading-none">
+                                            <Username username={session?.user.username} color={session?.user?.display_role?.color}/> <Badge variant="outline" style={{color: session?.user?.display_role?.color}}>{session?.user?.display_role?.name}</Badge>
+                                        </p>
+                                        <p className="text-xs leading-none text-muted-foreground">
+                                            {session?.user.email}
+                                        </p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem>
+                                        Profil
+                                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>u
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => router.push("/settings")}>
+                                        Ustawienia
+                                        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                                    </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={(e) => signOut()}>
+                                    Wyloguj się
+                                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                    <SwitchTheme />
                 </div>
             </nav>
             <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>

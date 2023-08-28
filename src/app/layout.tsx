@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer.component";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from '@/components/ui/toaster';
 import ToasterClient from '@/components/toaster';
+import { NextAuthProvider } from '@/components/session-provider';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -17,15 +18,18 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" className={"dark"}>
+        <html lang="en" className="bg-background">
             <body>
-                <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-                    <Header />
-                    <main className="container mx-auto py-6 sm:px-6 lg:px-8 flex flex-col">
-                        {children}
-                    </main>
-                    <ToasterClient />
-                    <Footer />
+                <ThemeProvider attribute="class" defaultTheme="dark">
+                    <NextAuthProvider>
+                        <Header />
+
+                        <main className="container mx-auto py-6 sm:px-6 lg:px-8 flex flex-col">
+                            {children}
+                        </main>
+                        <ToasterClient />
+                        <Footer />
+                    </NextAuthProvider>
                 </ThemeProvider>
             </body>
         </html>
