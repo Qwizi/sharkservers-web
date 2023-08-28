@@ -1,7 +1,10 @@
 import './globals.css'
-import type {Metadata} from 'next'
-import Header from "@/components/layout/Header.component";
+import type { Metadata } from 'next'
+import Header from "@/components/layout/header";
 import Footer from "@/components/layout/Footer.component";
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from '@/components/ui/toaster';
+import ToasterClient from '@/components/toaster';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -9,19 +12,22 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({
-                                       children,
-                                   }: {
+    children,
+}: {
     children: React.ReactNode
 }) {
     return (
         <html lang="en" className={"dark"}>
-        <body className={"bg-slate-900"}>
-        <Header />
-        <main className="container mx-auto py-6 sm:px-6 lg:px-8 flex flex-col">
-            {children}
-        </main>
-        <Footer />
-        </body>
+            <body>
+                <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+                    <Header />
+                    <main className="container mx-auto py-6 sm:px-6 lg:px-8 flex flex-col">
+                        {children}
+                    </main>
+                    <ToasterClient />
+                    <Footer />
+                </ThemeProvider>
+            </body>
         </html>
     )
 }

@@ -1,27 +1,24 @@
 'use client';
 
-import {useState} from "react";
+import { useState } from "react";
 import Image from "next/image";
-import {Bars3Icon, ChevronDownIcon, XMarkIcon} from '@heroicons/react/24/outline'
-import {Dialog, Disclosure, Popover} from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Dialog, Popover } from '@headlessui/react'
+import Link from "next/link";
 
-// @ts-ignore
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     // @ts-ignore
     return (
-        <header className="bg-slate-900 border-b-2 border-slate-800">
+        <header className="border-b">
             <nav className="mx-auto flex container items-center justify-between p-6 " aria-label="Global">
                 <div className="flex lg:flex-1">
-                    <a href="#" className="-m-1.5 p-1.5">
+                    <Link href="/" className="-m-1.5 p-1.5">
                         <span className="sr-only">SharkServers.pl</span>
                         <Image className="h-9 w-auto" src={"/images/logo.png"} alt={"Shark servers.pl"} width={300}
-                               height={68}/>
-                    </a>
+                            height={68} />
+                    </Link>
                 </div>
                 <div className="flex lg:hidden">
                     <button
@@ -30,46 +27,40 @@ const Header = () => {
                         onClick={() => setMobileMenuOpen(true)}
                     >
                         <span className="sr-only">Open main menu</span>
-                        <Bars3Icon className="h-6 w-6" aria-hidden="true"/>
+                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
                 </div>
                 <Popover.Group className="hidden lg:flex lg:gap-x-12">
-                    <a href="#" className="text-sm font-semibold leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
+                    <Link href="/users" className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800">
                         Użytkownicy
-                    </a>
-                    <a href="#" className="text-sm font-semibold leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
-                        Sklep
-                    </a>
-                    <a href="#" className="text-sm font-semibold leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
-                        Lista banów
-                    </a>
+                    </Link>
                 </Popover.Group>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-x-12">
-                    <a href="#" className="text-sm font-semibold leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
+                    <Link href="/auth/login" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
                         Zaloguj się
-                    </a>
-                    <a href="#" className="text-sm font-semibold leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
+                    </Link>
+                    <Link href="/auth/register" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
                         Zarejestruj się
-                    </a>
+                    </Link>
                 </div>
             </nav>
             <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
-                <div className="fixed inset-0 z-10"/>
+                <div className="fixed inset-0 z-10" />
                 <Dialog.Panel
                     className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-slate-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                     <div className="flex items-center justify-between">
-                        <a href="#" className="-m-1.5 p-1.5">
+                        <Link href="/" className="-m-1.5 p-1.5">
                             <span className="sr-only">SharkServers.pl</span>
                             <Image className="h-9 w-auto" src={"/images/logo.png"} alt={"Shark servers.pl"} width={300}
-                                   height={68}/>
-                        </a>
+                                height={68} />
+                        </Link>
                         <button
                             type="button"
                             className="-m-2.5 rounded-md p-2.5 text-gray-700"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             <span className="sr-only">Close menu</span>
-                            <XMarkIcon className="h-6 w-6" aria-hidden="true"/>
+                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                         </button>
                     </div>
                     <div className="mt-6 flow-root">
