@@ -45,12 +45,28 @@ export default function AvatarForm() {
             const response = await SharkApi.users.uploadUserAvatar({
                 avatar: data.avatar
             })
+            const userResponse = await SharkApi.users.getLoggedUser()
+            console.log(userResponse)
             await update({
                 ...session,
+                user: {
+                    ...session?.user,
+                    avatar: userResponse.avatar
+                }
             })
             console.log(response)
+            toast({
+                variant: "default",
+                title: "Success",
+                description: "Zaaktualizwano avatar!"
+            })
         } catch (e) {
             console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Wystapił bład",
+                description: e.message
+            })
         }
         
     }
