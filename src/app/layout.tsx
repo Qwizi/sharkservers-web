@@ -18,7 +18,7 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" className="bg-background">
+        <html lang="en" className="bg-background dark">
             <body>
                 <ThemeProvider attribute="class" defaultTheme="dark">
                     <NextAuthProvider>
