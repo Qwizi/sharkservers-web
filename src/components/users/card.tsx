@@ -12,19 +12,21 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { UserOut2Schema } from "sharkservers-sdk";
+import { UserOut } from "sharkservers-sdk";
 import Username from "./username";
 import { Badge } from "../ui/badge";
+import { useRouter } from "next/navigation";
 
 
-export function UserCard({ ...props }: UserOut2Schema) {
-  const { username, display_role, avatar } = props
+export function UserCard({ ...props }: UserOut) {
+  const { id, username, display_role, avatar } = props
+  const router = useRouter()
   
   return (
     <Card className="">
       <Image src="/images/profile/cover.jpg" width="600" height="150" alt="cover image"/>
       <CardHeader className="items-center">
-        <Avatar>
+        <Avatar onClick={(e) => router.push(`/profile/${id}-${username}`)}>
           <AvatarImage src={avatar} alt="@shadcn" width="100" height="100" />
           <AvatarFallback>{username}</AvatarFallback>
         </Avatar>

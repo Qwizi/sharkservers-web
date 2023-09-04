@@ -81,7 +81,7 @@ const Header = () => {
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem onClick={(e) => router.push(`/profile/${session?.user?.id}-${session?.user?.username}`)}>
                                         Profil
                                         <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>u
                                     </DropdownMenuItem>

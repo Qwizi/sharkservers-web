@@ -1,12 +1,18 @@
 import Pagination from "@/components/pagination"
 import { UserCard } from "@/components/users/card"
 import SharkApi from "@/lib/api"
-import { Page_UserOut2Schema_ } from "sharkservers-sdk"
+import { Page_UserOut_ } from "sharkservers-sdk"
+import {notFound} from "next/navigation"
 
 export const dynamic = 'force-dynamic'
 
-export default async function UsersPage() {
-    const users_data: Page_UserOut2Schema_ = await SharkApi.users.getUsers()
+export default async function UsersPage({
+    searchParams,
+}: {
+searchParams: { [key: string]: string | string[] | undefined };
+}) {
+    let page = searchParams["page"] ? Number(searchParams["page"]) : 1
+    const users_data: Page_UserOut_ = await SharkApi.users.getUsers(page, 12)
     console.log(users_data)
     return (
         <section>
