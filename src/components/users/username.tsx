@@ -1,4 +1,3 @@
-import {UserOut2Schema} from "sharkservers-sdk"
 type UsernameType = {
     color: string | undefined;
     username: string | undefined; 

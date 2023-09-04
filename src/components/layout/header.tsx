@@ -43,6 +43,9 @@ const Header = () => {
                     </button>
                 </div>
                 <Popover.Group className="hidden lg:flex lg:gap-x-12">
+                <Link href="/forum" className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800">
+                        Forum
+                    </Link>
                     <Link href="/users" className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800">
                         Użytkownicy
                     </Link>

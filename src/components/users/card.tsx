@@ -26,21 +26,16 @@ export function UserCard({ ...props }: UserOut) {
     <Card className="">
       <Image src="/images/profile/cover.jpg" width="600" height="150" alt="cover image"/>
       <CardHeader className="items-center">
-        <Avatar onClick={(e) => router.push(`/profile/${id}-${username}`)}>
-          <AvatarImage src={avatar} alt="@shadcn" width="100" height="100" />
+        <Avatar onClick={(e) => router.push(`/profile/${id}-${username}`)}  className="h-12 w-12">
+          <AvatarImage src={avatar} alt="@shadcn" />
           <AvatarFallback>{username}</AvatarFallback>
         </Avatar>
         <Username
+          key={id}
           username={username}
           color={display_role?.color}
         />
       </CardHeader>
-      {/* <CardFooter className="flex justify-between">
-        Tematów
-        <Badge variant="outline">1</Badge>
-        Postów
-        <Badge variant="outline">1</Badge>
-      </CardFooter> */}
     </Card>
   )
 }
