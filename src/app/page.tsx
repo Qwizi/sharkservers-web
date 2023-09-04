@@ -1,11 +1,13 @@
-import ServersTable from "@/components/servers/ServersTable.component";
-import Chat from "@/components/chat/Chat.component";
 import ForumContainer from "@/components/forum/ForumContainer";
-import { Button } from "@/components/ui/button";
-export default function Home() {
+import ServersTable from "@/components/servers/servers-table";
+import SharkApi from "@/lib/api";
+
+export default async function Home() {
+  const servers_data = await SharkApi.servers.getServersStatus()
+  console.log(servers_data)
   return (
     <>
-
+        <ServersTable data={...servers_data}/>
         <ForumContainer />
     </>
   )
