@@ -1,18 +1,23 @@
-const {resolve} = require("path");
 /** @type {import('next').NextConfig} */
+const removeImports = require('next-remove-imports')();
+
 const nextConfig = {
-    images: {
-        remotePatterns: [{
-            protocol: 'http', hostname: 'localhost', port: '',
-        },],
-    }, experimental: {
-        appDir: true,
-    },
     typescript: {
-        tsconfigPath: './tsconfig.json',
-        // TODO fix this
+        // !! WARN !!
+        // Dangerously allow production builds to successfully complete even if
+        // your project has type errors.
+        // !! WARN !!
         ignoreBuildErrors: true,
-    }
+      },
+      images: {
+        remotePatterns: [
+          {
+            protocol: 'http',
+            hostname: 'localhost',
+            port: '',
+          },
+        ],
+      },
 }
 
-module.exports = nextConfig
+module.exports = removeImports(nextConfig)

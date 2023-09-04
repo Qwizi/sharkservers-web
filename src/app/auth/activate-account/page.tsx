@@ -1,34 +1,31 @@
-import Section from "@/components/Elements/Section";
-import ActivateAccountForm from "@/components/Auth/ActivateAccountForm";
-import {getServerSession, Session} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import {redirect} from "next/navigation";
-
-const isUserLogged = async () => {
-    const session: Session | null = await getServerSession(authOptions)
-    return session?.user?.username
-}
-export default async function ActivateAccountPage() {
-    const user_logged = await isUserLogged()
-    if (user_logged) {
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import ActivateAccountCard from "@/components/auth/activate-account-card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Check } from "lucide-react";
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
+export default async function ActivateAccountPage({
+    searchParams,
+}: {
+    searchParams: { [key: string]: string | string[] | undefined };
+}) {
+    const registration = searchParams.registration
+    const session = await getServerSession(authOptions);
+    if (session) {
         redirect("/")
     }
-    return (<>
-            <Section>
-                <div className="container">
-                    <div className="row justify-content-center">
-                        <div className="col-xxl-8 col-xl-10 col-lg-10 col-md-12">
-                            <div className="login-wrapper mb-40 wow fadeInUp">
-                                <div className="login-inner">
-                                    <div className="login-content">
-                                        <h4>Aktywuj konto</h4>
-                                        <ActivateAccountForm/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </Section>
-        </>)
+    return (
+        <section>
+            {registration && (
+                <Alert className="mb-10">
+                    <Check className="h-4 w-4" />
+                    <AlertTitle>Rejestracja zakończona pomyślnie</AlertTitle>
+                    <AlertDescription>
+                        Właśnie wysłaliśmy wiadomość e-mail na podany przez Ciebie adres, z kodem potrzebnym do aktywacji konto. Wpisz go do formularza poniżej
+                    </AlertDescription>
+                </Alert>
+            )}
+            <ActivateAccountCard />
+        </section>
+    )
 }

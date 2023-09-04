@@ -1,20 +1,28 @@
-import TitleSection from "@/components/Layout/TitleSection";
-import UsersMain from "@/components/Users/UsersMain";
-import {SharkServersClient as shark_api} from "sharkservers-sdk";
+import Pagination from "@/components/pagination"
+import { UserCard } from "@/components/users/card"
+import SharkApi from "@/lib/api"
+import { Page_UserOut_ } from "sharkservers-sdk"
+import {notFound} from "next/navigation"
 
-const fetchUsers = async () => {
-    return
-}
-export default async function UsersPage() {
-    const users_data = await shark_api.users.getUsers(undefined, 10);
+export const dynamic = 'force-dynamic'
+
+export default async function UsersPage({
+    searchParams,
+}: {
+searchParams: { [key: string]: string | string[] | undefined };
+}) {
+    let page = searchParams["page"] ? Number(searchParams["page"]) : 1
+    const users_data: Page_UserOut_ = await SharkApi.users.getUsers(page, 12)
+    console.log(users_data)
     return (
-        <>
-            <UsersMain
-                pages={users_data.pages}
-                total={users_data.total}
-                page={users_data.page}
-                items={users_data.items}
-            />
-        </>
+        <section>
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+            {users_data.items.map((user, i) =>
+                 <UserCard key={i} {...user} />
+            )}
+            </div>
+            <Pagination total={users_data.total}/>
+        </section>
     )
 }
+
