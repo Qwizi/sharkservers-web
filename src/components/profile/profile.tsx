@@ -14,7 +14,7 @@ interface ProfileInterface {
 
 export default function Profile({ ...props }: ProfileInterface) {
     const {user, posts, threads} = props
-    const { username, avatar, display_role, created_at } = user
+    const { id, username, avatar, display_role, created_at } = user
     return (
         <div className="flex flex-col">
             <div>
@@ -26,7 +26,7 @@ export default function Profile({ ...props }: ProfileInterface) {
                         <AvatarImage src={avatar} className="mx-auto" alt="@shadcn" width="100px" height="120" />
                         <AvatarFallback>{username}</AvatarFallback>
                     </Avatar>
-                    <Username username={username} color={display_role?.color} />
+                    <Username id={id} username={username} color={display_role?.color} />
                     <Badge className="w-full" variant="outline" style={{ color: display_role?.color }}>{display_role?.name}</Badge>
                 </div>
                 <div>

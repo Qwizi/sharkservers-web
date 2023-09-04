@@ -16,7 +16,7 @@ export default function LastThread({ ...props }: ThreadOut) {
                         <AvatarImage src={author?.avatar} alt={`@${author?.username}`} />
                         <AvatarFallback>{author?.username}</AvatarFallback>
                     </Avatar>
-                    <span><Username key={id} username={author?.username} color={author?.display_role?.color}/> </span>
+                    <span><Username key={id} id={author?.id} username={author?.username} color={author?.display_role?.color}/> </span>
                 </div>
 
                 <div className="mx-auto">

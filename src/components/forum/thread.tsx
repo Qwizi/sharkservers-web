@@ -18,7 +18,7 @@ export default function Thread({ ...props }: ThreadOut) {
                     <AvatarFallback>{author?.username}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col ml-5">
-                    <span><Username key={id} username={author?.username} color={author?.display_role?.color}/> </span>
+                    <span><Username key={id} id={author?.id} username={author?.username} color={author?.display_role?.color}/> </span>
                     <span className="text-slate-500">{dateTimeFormatter.format(new Date(created_at))}</span>
                 </div>
             </div>
