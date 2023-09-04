@@ -115,7 +115,7 @@ export default function ForumFilters({ categories, servers }: IForumFilters) {
                                         <SelectContent>
                                             <SelectItem value="0">Brak</SelectItem>
                                             {servers && servers.items.map((server, i) => 
-                                                <SelectItem value={String(server.id)}>{server.name}</SelectItem>
+                                                <SelectItem key={i} value={String(server.id)}>{server.name}</SelectItem>
                                             )}
 
                                         </SelectContent>
