@@ -76,7 +76,7 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                                     </FormControl>
                                     <SelectContent>
                                         {categories && categories.items.map((category, i) =>
-                                            <SelectItem value={String(category.id)}>{category.name}</SelectItem>
+                                            <SelectItem key={i} value={String(category.id)}>{category.name}</SelectItem>
 
                                         )}
                                     </SelectContent>
