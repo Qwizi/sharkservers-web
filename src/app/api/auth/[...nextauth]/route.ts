@@ -23,8 +23,6 @@ export const authOptions: NextAuthOptions = {
 
                 SharkApi.request.config.TOKEN = tokenData.access_token.token
                 const user_info = await SharkApi.users.getLoggedUser()
-                console.log(tokenData)
-                console.log(user_info)
                 if (!tokenData || !user_info) return null
                 return { ...user_info, ...tokenData }
             } catch (e) {
@@ -39,7 +37,6 @@ export const authOptions: NextAuthOptions = {
                 return { ...token, ...session.user }
 
             }
-            console.log(token, user)
             if (user) {
                 return { ...token, ...user }
             }

@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
+import useApi from "@/hooks/api";
 
 const MarkdownEditor = dynamic(
     () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
@@ -42,11 +43,11 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
             category: "1"
         },
     })
+    const api = useApi()
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
-            SharkApi.request.config.TOKEN = session?.access_token?.token
-            const response = await SharkApi.forum.createThread({
+            const response = await api.forum.createThread({
                 category: Number(data.category),
                 title: data.title,
                 content: data.content

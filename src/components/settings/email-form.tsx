@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import { useSession } from "next-auth/react";
+import useApi from "@/hooks/api";
 
 
 const formSchema = z.object({
@@ -35,14 +36,14 @@ export default function EmailForm({setOpen}: IEmailForm) {
             email: "",
         },
     })
+    const api = useApi()
 
     async function onSubmit(data: z.infer<typeof formSchema>, setOpen: Function) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         console.log(data)
         try {
-            SharkApi.request.config.TOKEN = session?.access_token?.token
-            const response = await SharkApi.users.requestChangeUserEmail({
+            const response = await api.users.requestChangeUserEmail({
                 email: data.email
             })
             console.log(response)

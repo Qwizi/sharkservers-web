@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import { useSession } from "next-auth/react";
+import useApi from "@/hooks/api";
 
 
 const formSchema = z.object({
@@ -31,6 +32,7 @@ export default function AvatarForm() {
             avatar: "",
         },
     })
+    const api = useApi()
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         // Do something with the form values.
@@ -40,12 +42,10 @@ export default function AvatarForm() {
         try {
             const formData = new FormData();
             formData.append("file", data.avatar[0]);
-            console.log(formData)
-            SharkApi.request.config.TOKEN = session?.access_token.token
-            const response = await SharkApi.users.uploadUserAvatar({
+            const response = await api.users.uploadUserAvatar({
                 avatar: data.avatar
             })
-            const userResponse = await SharkApi.users.getLoggedUser()
+            const userResponse = await api.users.getLoggedUser()
             console.log(userResponse)
             await update({
                 ...session,

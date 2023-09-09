@@ -14,7 +14,6 @@ export default async function Home() {
     SharkApi.forum.getThreads(undefined, 10, 1),
     SharkApi.forum.getThreads(undefined, 5, undefined, undefined, "-created_at")
   ])
-  console.log(last_threads)
   return (
     <>
         <ServersTable data={...servers}/>
