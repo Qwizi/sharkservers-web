@@ -8,7 +8,7 @@ export default function CategoriesSidebar({ ...props }: Page_CategoryOut_) {
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    const categoryId = searchParams.get("category") || 1
+    const categoryId = searchParams.get("category") || undefined
 
     const { items, total } = props
     return (
