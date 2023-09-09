@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const dateTimeFormatter = new Intl.DateTimeFormat("pl-PL", {dateStyle: "medium", timeStyle: "medium"})
+export const dateTimeFormatter = new Intl.DateTimeFormat("pl-PL", {dateStyle: "medium", timeStyle: "short"})
 
 export function hasScope(roles: any, scope: string) {
   let has = false

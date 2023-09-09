@@ -1,13 +1,30 @@
+'use client'
 import Link from "next/link";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import UserAvatar from "./avatar";
+import RoleBadge from "./role-badge";
+import { UserOut } from "sharkservers-sdk";
 
-type UsernameType = {
-    id: number | undefined,
-    color: string | undefined;
-    username: string | undefined;
-    className?: string | undefined;
+interface IUsername {
+    user: UserOut
+    className?: string | undefined
 }
-export default function Username({id, color, username, className}: UsernameType) {
+export default function Username({ user, className }: IUsername) {
     return (
-        <Link className={className} key={id} href={`/profile/${id}-${username}`} style={{color: color}}>{username}</Link>
+        <HoverCard >
+            <HoverCardTrigger className={className} key={user.id} href={`/profile/${user.id}-${user.username}`} style={{ color: user.display_role?.color }}>
+                {user.username}
+            </HoverCardTrigger>
+            <HoverCardContent className="w-[200px] h-[150px] flex flex-col items-center">
+                <UserAvatar avatar={user.avatar} username={user.username} className="h-12 w-12 mx-auto"/>
+                <div><span style={{ color: user.display_role?.color }} className="ml-2 mx-auto">{user.username}</span></div>
+                <RoleBadge {...user.display_role}/>
+            </HoverCardContent>
+        </HoverCard>
+
     )
 }

@@ -31,9 +31,7 @@ export function UserCard({ ...props }: UserOut) {
           <AvatarFallback>{username}</AvatarFallback>
         </Avatar>
         <Username
-          id={id}
-          username={username}
-          color={display_role?.color}
+          user={...props}
         />
       </CardHeader>
     </Card>

@@ -154,7 +154,7 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                         <AvatarFallback>{author?.username}</AvatarFallback>
                     </Avatar>
                     <div className="mt-2">
-                        <Username id={author?.id} username={author?.username} color={author?.display_role?.color} />
+                        <Username user={...author} />
 
                     </div>
                     <div>

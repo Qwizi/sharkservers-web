@@ -8,16 +8,14 @@ export default function LastOnlineUsers({ ...props }: Page_UserOut_) {
         <Card className="mt-10">
             <CardHeader>
                 <CardTitle>
-                    Ostatnio online ({total})
+                    Kto jest online ({total})
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex">
                 {items ? items.map((user, i) =>
                     <div>
                         <Username
-                            key={i} 
-                            id={user.id} 
-                            color={user?.display_role?.color} username={user.username} 
+                            user={...user}
                             className="mr-1 after:content-[',']
                             after:text-white
                             "

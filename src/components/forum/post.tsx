@@ -58,7 +58,7 @@ export default function Post({ ...props }: PostOut) {
                         <AvatarFallback></AvatarFallback>
                     </Avatar>
                     <div className="mt-2">
-                        <Username id={author?.id} username={author?.username} color={author?.display_role?.color} />
+                        <Username user={...author} />
 
                     </div>
                     <div>
