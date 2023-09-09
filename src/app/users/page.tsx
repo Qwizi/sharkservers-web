@@ -1,6 +1,6 @@
 import Pagination from "@/components/pagination"
 import { UserCard } from "@/components/users/card"
-import SharkApi from "@/lib/api"
+import SharkApi, { authApi } from "@/lib/api"
 import { Page_UserOut_ } from "sharkservers-sdk"
 import {notFound} from "next/navigation"
 
@@ -11,9 +11,10 @@ export default async function UsersPage({
 }: {
 searchParams: { [key: string]: string | string[] | undefined };
 }) {
+    const api = await authApi(SharkApi)
     let page = searchParams["page"] ? Number(searchParams["page"]) : 1
-    const users_data: Page_UserOut_ = await SharkApi.users.getUsers(page, 12)
-    console.log(users_data)
+    const users_data: Page_UserOut_ = await api.users.getUsers(page, 12)
+    console.log(api)
     return (
         <section>
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">

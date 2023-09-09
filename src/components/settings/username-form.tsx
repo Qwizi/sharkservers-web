@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import { useSession } from "next-auth/react";
+import useApi from "@/hooks/api";
 
 
 const formSchema = z.object({
@@ -31,14 +32,13 @@ export default function UsernameForm() {
             username: session?.user?.username,
         },
     })
+    const api = useApi()
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(data)
-        SharkApi.request.config.TOKEN = session?.access_token?.token
         try {
-            const response = await SharkApi.users.changeUserUsername({
+            const response = await api.users.changeUserUsername({
                 username: data.username
             })
             await update({
