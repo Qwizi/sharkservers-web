@@ -13,9 +13,10 @@ import SharkApi from "@/lib/api";
 import { useSession } from "next-auth/react";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
-const MDEditor = dynamic(
-    () => import("@uiw/react-md-editor"),
+const MarkdownEditor = dynamic(
+    () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
     { ssr: false }
 );
 
@@ -43,8 +44,6 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
     })
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
         try {
             SharkApi.request.config.TOKEN = session?.access_token?.token
             const response = await SharkApi.forum.createThread({
@@ -52,9 +51,19 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                 title: data.title,
                 content: data.content
             })
+            toast({
+                className: "bg-green-700",
+                title: "Pomyślnie utworzono temat!",
+                description: `Twój temat ${data.title} został pomyślnie utworzony`
+            })
             router.push(`/forum/${slugify(response.title)}-${response.id}`)
         } catch (e) {
             console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Wystąpil błąd",
+                description: e.message
+            })
         }
     }
 
@@ -105,9 +114,7 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                             <FormItem>
                                 <FormLabel>Treść</FormLabel>
                                 <FormControl>
-                                    <MDEditor previewOptions={{
-                                        rehypePlugins: [[rehypeSanitize]],
-                                    }} {...field} />
+                                    <MarkdownEditor {...field} height="500px"/>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

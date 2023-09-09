@@ -1,20 +1,15 @@
 'use client'
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
 import { Page_PostOut_, ThreadActionEnum, ThreadOut } from "sharkservers-sdk"
 import { Card } from "../ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Username from "../users/username"
 import { Separator } from "../ui/separator"
 import { Badge } from "../ui/badge"
-import ReactMarkdown from "react-markdown"
-import MarkdownPreview from "@uiw/react-markdown-preview";
 import Post from "./post"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@radix-ui/react-select"
-import MDEditor from "@uiw/react-md-editor"
 import rehypeSanitize from "rehype-sanitize"
 import { Button } from "../ui/button"
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../ui/form"
@@ -27,13 +22,23 @@ import slugify from "slugify";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { GripHorizontal } from "lucide-react"
 import { hasScope } from "@/lib/utils";
+import { toast } from "../ui/use-toast";
+import dynamic from "next/dynamic"
+const MarkdownEditor = dynamic(
+    () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
+    { ssr: false }
+);
+import MarkdownPreview from '@uiw/react-markdown-preview';
+
+
+
 interface IThreadDetail {
     thread: ThreadOut,
     posts: Page_PostOut_
 }
 
 const formSchema = z.object({
-    content: z.string(),
+    content: z.string().min(2),
 })
 
 export default function ThreadDetail({ thread, posts }: IThreadDetail) {
@@ -68,8 +73,19 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                 await router.refresh()
             }
 
+            toast({
+                className: "bg-green-700",
+                title: "Pomyślnie dodano post!",
+                description: `Twój post został pomyślnie dodany.`
+            })
+
         } catch (e) {
             console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Wystąpił błąd!",
+                description: e.message
+            })
         }
     }
 
@@ -81,8 +97,18 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
             })
             console.log(response)
             router.refresh()
+            toast({
+                className: "bg-green-700",
+                title: `Pomyślnie wykonano akcje!`,
+                description: `Twoja akcja  ${action} została wykonana pomyślnie`
+            })
         } catch (e) {
             console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Wystąpił błąd!",
+                description: e.message
+            })
         }
     }
 
@@ -92,8 +118,18 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
             const response = await SharkApi.adminForum.adminDeleteThread(threadId)
             console.log(response)
             router.push("/forum")
+            toast({
+                className: "bg-green-700",
+                title: `Pomyślnie usunięto temat!`,
+                description: `Twój temat o id ${threadId} został pomyślnie usuniety`,
+            })
         } catch (e) {
             console.log(e)
+            toast({
+                variant: "destructive",
+                title: "Wystąpił błąd!",
+                description: e.message
+            })
         }
     }
 
@@ -127,10 +163,8 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                 </div>
                 <div className="flex flex-col rounded-[0.5rem] border p-10 w-full">
                     <div className="ml-auto flex w-full justify-between">
-                        <div>
-                            <ReactMarkdown>
-                                {content}
-                            </ReactMarkdown>
+                        <div className="w-full">
+                            <MarkdownPreview source={content} />
                         </div>
                         {session?.user?.roles && hasScope(session?.user?.roles, "threads:delete") && (
                             <div>
@@ -169,6 +203,8 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
             )}
             {status === "authenticated" && is_closed === false && (
                 <div className="rounded-[0.5rem] border bg-background shadow mt-10 p-4">
+
+
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             <FormField
@@ -178,9 +214,7 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                                     <FormItem>
                                         <FormLabel>Treść wiadomosci</FormLabel>
                                         <FormControl>
-                                            <MDEditor previewOptions={{
-                                                rehypePlugins: [[rehypeSanitize]],
-                                            }} {...field} />
+                                            <MarkdownEditor  height="250px" {...field} value={field.value}/>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
