@@ -5,7 +5,7 @@ import './globals.css'
 
 import type { Metadata } from 'next'
 import Header from "@/components/layout/header";
-import Footer from "@/components/layout/Footer.component";
+import Footer from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/theme-provider"
 import ToasterClient from '@/components/toaster';
 import { NextAuthProvider } from '@/components/session-provider';

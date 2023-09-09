@@ -75,7 +75,9 @@ const Header = () => {
                                 <DropdownMenuLabel className="font-normal">
                                     <div className="flex flex-col space-y-1">
                                         <p className="text-sm font-medium leading-none">
-                                            <Username id={session?.user?.id} username={session?.user.username} color={session?.user?.display_role?.color}/> <Badge variant="outline" style={{color: session?.user?.display_role?.color}}>{session?.user?.display_role?.name}</Badge>
+                                            <Username user={...session?.user}/> 
+                                            
+                                            <Badge variant="outline" style={{color: session?.user?.display_role?.color}}>{session?.user?.display_role?.name}</Badge>
                                         </p>
                                         <p className="text-xs leading-none text-muted-foreground">
                                             {session?.user.email}

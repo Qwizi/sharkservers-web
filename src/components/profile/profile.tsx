@@ -26,7 +26,7 @@ export default function Profile({ ...props }: ProfileInterface) {
                         <AvatarImage src={avatar} className="mx-auto" alt="@shadcn" width="100px" height="120" />
                         <AvatarFallback>{username}</AvatarFallback>
                     </Avatar>
-                    <Username id={id} username={username} color={display_role?.color} />
+                    <Username user={...user}/>
                     <Badge className="w-full" variant="outline" style={{ color: display_role?.color }}>{display_role?.name}</Badge>
                 </div>
                 <div>
