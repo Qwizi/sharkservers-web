@@ -16,7 +16,7 @@ export default function LoginCard() {
             </CardContent>
             <CardFooter className="flex flex-col items-start">
                 <div>Zapomniales hasła?
-                    <Link href="/auth/forgot-password"><span className="ml-1 text-blue-600">Zresetuj hasło </span></Link>
+                    <Link href="/auth/reset-password"><span className="ml-1 text-blue-600">Zresetuj hasło </span></Link>
                 </div>
                 <div>
                 Nie posiadasz konta?<Link href="/auth/register"><span className="ml-1 text-blue-600">Zarejestruj się </span></Link>
