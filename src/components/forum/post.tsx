@@ -1,37 +1,78 @@
 import { PostOut } from "sharkservers-sdk";
 import Username from "../users/username";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import UpdatePostForm from "./update-post-form";
 import RoleBadge from "../users/role-badge";
 import PostActionMenu from "./post-action-menu";
 import UserAvatar from "../users/avatar";
 import UserInfo from "../users/user-info";
+import PostLikeButton from "./post-like-button";
+import useApi from "@/hooks/api";
+import useUser from "@/hooks/user";
 
 
 export default function Post({ ...props }: PostOut) {
     const { id, author, content } = props
     const [editPost, setEditPost] = useState(false)
+    const [liked, setLiked] = useState(false)
+    const [likes, setLikes] = useState()
+    const api = useApi()
+    const {user} = useUser()
 
-    if (!author || !content) return 
+    if (!author || !content) return
+
+    function userLikePost(likes) {
+        let userLike = false
+        likes.items.map((like, i) => {
+            if (user.id == like.author.id) {
+                userLike = true
+            }
+        })
+        return userLike
+    }
+
+    useEffect(() => {
+        const getLikes = async () => {
+            const response = await api.forum.getPostLikes(id)
+            setLikes(response)
+            if (userLikePost(response)) {
+                setLiked(true)
+            }
+        }
+        getLikes().catch(console.error)
+    }, [liked]);
 
     return (
         <div id={`post-${id}`} className="rounded-[0.5rem] border bg-background shadow">
             <div className="p-10 w-full flex gap-10">
                 <div className="flex flex-col items-center w-1/4  rounded-[0.5rem] border p-4 text-center h-[250px]">
-                    <UserInfo 
+                    <UserInfo
                         user={...author}
-                        avatarClassName="h-15 w-15  mx-auto" 
+                        avatarClassName="h-15 w-15  mx-auto"
                     />
                 </div>
                 <div className="flex flex-col rounded-[0.5rem] border p-10 w-full">
                     <div className="ml-auto flex w-full justify-between">
-                        <div className="w-full">
+                        <div className="flex flex-col w-full">
                             {editPost && editPost ? (
                                 <UpdatePostForm content_prop={content} authorId={author.id} postId={id} setEditPost={setEditPost} />
                             ) : (
                                 <MarkdownPreview source={content} />
                             )}
+
+                            <div className="ml-auto flex w-full justify-between mt-32">
+                                <div>
+                                    {likes && (
+                                        <><span>Polubien {likes.total}</span></>
+                                    )}
+                                </div>
+                                <div className="float-right">
+                                    <PostLikeButton postId={id} liked={liked} setLiked={setLiked} />
+                                </div>
+                                
+
+                            </div>
 
                         </div>
                         <PostActionMenu
