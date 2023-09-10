@@ -33,7 +33,7 @@ export default function EmailTab() {
                             W treści otrzymałeś kod potrzebny do potwierdzenia zmiany adresu e-mail. Wpisz go do formularza poniżej
                         </DialogDescription>
                     </DialogHeader>
-                    <ConfirmEmailCode />
+                    <ConfirmEmailCode setOpen={setOpen}/>
                 </DialogContent>
             </Dialog>
         </div>

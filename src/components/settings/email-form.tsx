@@ -17,6 +17,7 @@ import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import { useSession } from "next-auth/react";
 import useApi from "@/hooks/api";
+import useUser from "@/hooks/user";
 
 
 const formSchema = z.object({
@@ -30,6 +31,7 @@ interface IEmailForm {
 
 export default function EmailForm({setOpen}: IEmailForm) {
     const { data: session, update } = useSession()
+    const {user} = useUser()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -70,7 +72,7 @@ export default function EmailForm({setOpen}: IEmailForm) {
                         <FormItem>
                             <FormLabel>E-mail</FormLabel>
                             <FormControl>
-                                <Input {...field} defaultValue={session?.user?.email}/>
+                                <Input {...field} defaultValue={user?.email}/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>

@@ -17,13 +17,21 @@ import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import useApi from "@/hooks/api";
+import useUser from "@/hooks/user";
 
 const formSchema = z.object({
     code: z.string().min(5).max(5)
 })
 
-export default function ConfirmEmailCode() {
-    const {data: session} = useSession()
+interface IConfirmEmailCode {
+    setOpen: Function
+}
+
+export default function ConfirmEmailCode({setOpen}: IConfirmEmailCode) {
+    const {update, data: session} = useSession()
+    const {user} = useUser()
+    const api = useApi()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -31,13 +39,26 @@ export default function ConfirmEmailCode() {
         },
     })
 
-    async function onSubmit(data: z.infer<typeof formSchema>) {
+    async function onSubmit(data: z.infer<typeof formSchema>, setOpen: Function) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         try {
-            SharkApi.request.config.TOKEN = session?.access_token.token
-            const response = await SharkApi.users.confirmChangeUserEmail({
+            
+            const response = await api.users.confirmChangeUserEmail({
                 code: data.code
+            })
+            setOpen(false)
+            await update({
+                ...session,
+                user: {
+                    ...session?.user,
+                    email: response.email
+                }
+            })
+            toast({
+                className: "bg-green-700",
+                title: "Pomyślnie zaaktualizowano e-mail",
+                description: `Twój e-mail został zaaktualizowany.`
             })
         } catch (e) {
             console.log(e)
@@ -46,12 +67,12 @@ export default function ConfirmEmailCode() {
                 title: "Wystapil blad!",
                 description: e.message
             })
-        }
+        } 
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit((e) => onSubmit(e, setOpen))} className="space-y-8">
                 <FormField
                     control={form.control}
                     name="code"

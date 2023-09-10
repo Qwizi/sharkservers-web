@@ -61,14 +61,9 @@ export default function Post({ ...props }: PostOut) {
                                 <MarkdownPreview source={content} />
                             )}
 
-                            <div className="ml-auto flex w-full justify-between mt-32">
-                                <div>
-                                    {likes && (
-                                        <><span>Polubien {likes.total}</span></>
-                                    )}
-                                </div>
+                            <div className="ml-auto flex w-full justify-end mt-32">
                                 <div className="float-right">
-                                    <PostLikeButton postId={id} liked={liked} setLiked={setLiked} />
+                                <span className="text-sm">Polubien {likes.total}</span> <PostLikeButton postId={id} liked={liked} setLiked={setLiked} />
                                 </div>
                                 
 
