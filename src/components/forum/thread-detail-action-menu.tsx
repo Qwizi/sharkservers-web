@@ -81,6 +81,14 @@ export default function ThreadDetailActionMenu({ threadId }: IThreadDetailAction
         {
             "name": "Odepnij",
             "action": ThreadActionEnum.UNPIN,
+        },
+        {
+            "name": "Zaakceptuj",
+            "action": ThreadActionEnum.APPROVE
+        },
+        {
+            "name": "Odrzuć",
+            "action": ThreadActionEnum.REJECT
         }
     ]
 

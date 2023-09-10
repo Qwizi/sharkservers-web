@@ -8,10 +8,12 @@ import slugify from "slugify";
 import { dateTimeFormatter } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import ThreadBadges from "./thread-badges";
+import useCategory from "@/hooks/category";
 
 
 export default function Thread({ ...props }: ThreadOut) {
-    const { id, title, author, created_at, is_pinned, post_count, is_closed, category } = props
+    const { id, title, author, created_at, is_pinned, post_count, is_closed, category, status } = props
+    const {isApplicationCategory} = useCategory()
     return (
         <Card className={is_pinned ? "border border-yellow-400 p-4 animate-pulse" : "p-4 h-[250px]  delay-150"}>
             <div className="flex">
@@ -31,7 +33,7 @@ export default function Thread({ ...props }: ThreadOut) {
                 Postów: {post_count}
             </div>
             <div className="p-4">
-                <ThreadBadges categoryName={category?.name} is_closed={is_closed} is_pinned={is_pinned} />
+                <ThreadBadges categoryName={category?.name} is_closed={is_closed} is_pinned={is_pinned} status={isApplicationCategory(category) ? status : undefined}/>
             </div>
         </Card>
     )

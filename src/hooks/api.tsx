@@ -10,5 +10,7 @@ export default function useApi() {
         SharkApi.request.config.TOKEN = access_token?.token
     }
 
+    console.log(SharkApi.request)
+
     return SharkApi
 }
