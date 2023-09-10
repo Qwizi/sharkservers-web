@@ -1,13 +1,13 @@
 'use client'
 
 import SharkApi from "@/lib/api"
-import { useSession } from "next-auth/react"
+import useUser from "./user"
 
 export default function useApi() {
-    const {data: session, status} = useSession()
+    const {authenticated, access_token} = useUser()
 
-    if (status == "authenticated") {
-        SharkApi.request.config.TOKEN = session?.access_token?.token
+    if (authenticated) {
+        SharkApi.request.config.TOKEN = access_token?.token
     }
 
     return SharkApi

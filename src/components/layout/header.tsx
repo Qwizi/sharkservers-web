@@ -5,23 +5,70 @@ import Image from "next/image";
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Dialog, Popover } from '@headlessui/react'
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { Avatar, AvatarImage } from "../ui/avatar";
-import { AvatarFallback } from "@radix-ui/react-avatar";
-
-import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import Username from "../users/username";
-import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
 import { SwitchTheme } from "../theme-switcher";
+import useUser from "@/hooks/user";
+import UserMenu from "./user-menu";
+import { Separator } from "../ui/separator";
+
+
+const menuLinks = [
+    {
+        name: "Forum",
+        path: "/forum",
+    },
+    {
+        name: "Użytkownicy",
+        path: "/users"
+    }
+]
+
+const authLinks = [
+    {
+        name: "Zaloguj się",
+        path: "/auth/login",
+    },
+    {
+        name: "Zarejestruj się",
+        path: "/auth/register"
+    }
+]
+
+enum MenuTypeEnum {
+    NORMAL = "normal",
+    AUTH = "auth"
+}
+
+interface IMenuType {
+    type: MenuTypeEnum
+}
+
 
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const { data: session, status } = useSession()
+    const { status } = useUser()
     const router = useRouter()
-    
+
+
+    const MenuLinks = ({ type }: IMenuType) => {
+        let links
+
+        switch (type) {
+            case MenuTypeEnum.NORMAL:
+                return menuLinks.map((link, i) =>
+                    <Link href={link.path} className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800" onClick={(e) => setMobileMenuOpen(!mobileMenuOpen)}>
+                        {link.name}
+                    </Link>
+                )
+            case MenuTypeEnum.AUTH:
+                return authLinks.map((link, i) =>
+                    <Link href={link.path} className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800" onClick={(e) => setMobileMenuOpen(!mobileMenuOpen)}>
+                        {link.name}
+                    </Link>
+                )
+        }
+    }
     return (
         <header className="border-b">
             <nav className="mx-auto flex container items-center justify-between p-6 " aria-label="Global">
@@ -43,66 +90,11 @@ const Header = () => {
                     </button>
                 </div>
                 <Popover.Group className="hidden lg:flex lg:gap-x-12">
-                <Link href="/forum" className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800">
-                        Forum
-                    </Link>
-                    <Link href="/users" className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800">
-                        Użytkownicy
-                    </Link>
+                    <MenuLinks type={MenuTypeEnum.NORMAL} />
                 </Popover.Group>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-x-12">
-                    {status == "unauthenticated" && (
-                        <>
-                            <Link href="/auth/login" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
-                                Zaloguj się
-                            </Link>
-                            <Link href="/auth/register" className="leading-6 text-slate-200 block rounded-md px-3 py-2 text-base font-medium hover:bg-slate-800">
-                                Zarejestruj się
-                            </Link>
-                        </>
-                    )}
-                    {status == "authenticated" && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                                    <Avatar className="h-8 w-8">
-                                        <AvatarImage src={session?.user?.avatar} alt={`@${session?.user.username}`} />
-                                        <AvatarFallback>{session?.user?.username}</AvatarFallback>
-                                    </Avatar>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56" align="end" forceMount>
-                                <DropdownMenuLabel className="font-normal">
-                                    <div className="flex flex-col space-y-1">
-                                        <p className="text-sm font-medium leading-none">
-                                            <Username user={...session?.user}/> 
-                                            
-                                            <Badge variant="outline" style={{color: session?.user?.display_role?.color}}>{session?.user?.display_role?.name}</Badge>
-                                        </p>
-                                        <p className="text-xs leading-none text-muted-foreground">
-                                            {session?.user.email}
-                                        </p>
-                                    </div>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={(e) => router.push(`/profile/${session?.user?.id}-${session?.user?.username}`)}>
-                                        Profil
-                                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>u
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={(e) => router.push("/settings")}>
-                                        Ustawienia
-                                        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={(e) => signOut()}>
-                                    Wyloguj się
-                                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )}
+                    {status == "unauthenticated" && <MenuLinks type={MenuTypeEnum.AUTH} />}
+                    {status == "authenticated" && <UserMenu />}
                     <SwitchTheme />
                 </div>
             </nav>
@@ -127,40 +119,15 @@ const Header = () => {
                     </div>
                     <div className="mt-6 flow-root">
                         <div className="-my-6 divide-y divide-gray-500/10">
-                            <div className="space-y-2 py-6">
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-slate-200 hover:bg-slate-800"
-                                >
-                                    Użytkownicy
-                                </a>
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-slate-200 hover:bg-slate-800"
-                                >
-                                    Sklep
-                                </a>
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-slate-200 hover:bg-slate-800"
-                                >
-                                    Lista banów
-                                </a>
-                            </div>
-                            <div className="py-6">
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-slate-200 hover:bg-slate-800"
-                                >
-                                    Zaloguj się
-                                </a>
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-slate-200 hover:bg-slate-800"
-                                >
-                                    Zarejestruj się
-                                </a>
-                            </div>
+                            {status == "unauthenticated" && <MenuLinks type={MenuTypeEnum.AUTH} />}
+                            {status == "authenticated" && (
+                                <>
+                                    <MenuLinks type={MenuTypeEnum.NORMAL} />
+                                    <Separator/>
+                                    <UserMenu />
+                                </>
+
+                            )}
                         </div>
                     </div>
                 </Dialog.Panel>
