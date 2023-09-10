@@ -12,19 +12,23 @@ interface IForumContainer {
     last_threads: Page_ThreadOut_
 }
 
-const ForumContainer = ({categories, threads, last_threads}: IForumContainer) => {
+const ForumContainer = ({ categories, threads, last_threads }: IForumContainer) => {
     const router = useRouter()
     return (
         <div className="lg:flex lg:flex-row flex flex-col w-full h-full mt-5 gap-4">
             <div className="w-full md:w-8/12 order-2 sm:order-1 grid gird-cols-1 gap-4">
-                {threads && threads.items.map((thread, i) => 
+                {threads?.total > 0 ? threads.items.map((thread, i) =>
                     <Thread key={i} {...thread} />
+                ) : (
+                    <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+                        Brak tematów
+                    </h2>
                 )}
             </div>
             <div className="sm:w-4/12 w-full order-1 sm:order-1">
                 <Button className="w-full" onClick={(e) => router.push("/forum/create")}>Napisz temat</Button>
-                <CategoriesSidebar {...categories}/>
-                <LastThreadSidebar {...last_threads}/>
+                <CategoriesSidebar {...categories} />
+                <LastThreadSidebar {...last_threads} />
             </div>
         </div>
     )

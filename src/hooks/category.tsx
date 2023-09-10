@@ -2,6 +2,7 @@ import { Page_CategoryOut_, CategoryOut, CategoryTypeEnum } from "sharkservers-s
 
 
 export default function useCategory(categories: Page_CategoryOut_ | undefined = undefined){
+
     const isApplicationCategory = (category: CategoryOut) => {
         return category.type == CategoryTypeEnum.APPLICATION
     }
