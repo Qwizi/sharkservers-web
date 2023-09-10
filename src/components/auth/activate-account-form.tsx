@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "../ui/button";
 import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
+import useApi from "@/hooks/api";
 
 
 const formSchema = z.object({
@@ -29,12 +30,13 @@ export default function ActivateAccountForm() {
             code: "",
         },
     })
+    const api = useApi()
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
         try {
-            const response = await SharkApi.auth.activateUser({
+            const response = await api.auth.activateUser({
                 code: data.code
             })
             console.log(response)

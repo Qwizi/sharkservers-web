@@ -19,6 +19,7 @@ import { useToast } from "@/components/ui/use-toast"
 
 import * as ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
+import useApi from "@/hooks/api";
 
 
 const formSchema = z.object({
@@ -50,15 +51,14 @@ export default function RegisterForm({setOpenDialog}: IRegisterForm) {
         },
     })
     const { toast } = useToast()
-    const recaptchaRef = useRef();
+    const api = useApi()
 
 
     async function onSubmit(values: z.infer<typeof formSchema>, setOpenDialog: Function) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values)
         try {
-            const response = await SharkApi.auth.register({username: values.username, email: values.email, password: values.password, password2: values.password2})
+            const response = await api.auth.register({username: values.username, email: values.email, password: values.password, password2: values.password2})
             router.push("/auth/activate-account?registration=true")
             console.log(response)
         } catch (e) {
