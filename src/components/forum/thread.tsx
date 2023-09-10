@@ -6,19 +6,21 @@ import Username from "../users/username";
 import Link from "next/link";
 import slugify from "slugify";
 import { dateTimeFormatter } from "@/lib/utils";
+import { Badge } from "../ui/badge";
+import ThreadBadges from "./thread-badges";
 
 
 export default function Thread({ ...props }: ThreadOut) {
-    const { id, title, author, created_at, is_pinned, post_count } = props
+    const { id, title, author, created_at, is_pinned, post_count, is_closed, category } = props
     return (
-        <Card className={is_pinned ? "border border-red-500 p-4 animate-pulse" : "p-4 h-[200px]  delay-150"}>
+        <Card className={is_pinned ? "border border-yellow-400 p-4 animate-pulse" : "p-4 h-[250px]  delay-150"}>
             <div className="flex">
                 <Avatar className="h-12 w-12">
                     <AvatarImage src={author?.avatar} alt={`@${author?.username}`} />
                     <AvatarFallback>{author?.username}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col ml-5">
-                    <span><Username user={...author}/> </span>
+                    <span><Username user={...author} /> </span>
                     <span className="text-slate-500">{dateTimeFormatter.format(new Date(created_at))}</span>
                 </div>
             </div>
@@ -27,6 +29,9 @@ export default function Thread({ ...props }: ThreadOut) {
             </div>
             <div className="p-4">
                 Postów: {post_count}
+            </div>
+            <div className="p-4">
+                <ThreadBadges categoryName={category?.name} is_closed={is_closed} is_pinned={is_pinned} />
             </div>
         </Card>
     )

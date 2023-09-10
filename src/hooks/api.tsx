@@ -5,7 +5,7 @@ import useUser from "./user"
 
 export default function useApi() {
     const {authenticated, access_token} = useUser()
-
+    
     if (authenticated) {
         SharkApi.request.config.TOKEN = access_token?.token
     }

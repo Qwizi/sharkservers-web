@@ -6,6 +6,7 @@ import UpdatePostForm from "./update-post-form";
 import RoleBadge from "../users/role-badge";
 import PostActionMenu from "./post-action-menu";
 import UserAvatar from "../users/avatar";
+import UserInfo from "../users/user-info";
 
 
 export default function Post({ ...props }: PostOut) {
@@ -18,17 +19,10 @@ export default function Post({ ...props }: PostOut) {
         <div id={`post-${id}`} className="rounded-[0.5rem] border bg-background shadow">
             <div className="p-10 w-full flex gap-10">
                 <div className="flex flex-col items-center w-1/4  rounded-[0.5rem] border p-4 text-center h-[250px]">
-                    <UserAvatar 
-                        avatar={author.avatar}
-                        username={author.username}
-                        className="h-15 w-15  mx-auto"/>
-                    <div className="mt-2">
-                        <Username user={...author} />
-
-                    </div>
-                    <div>
-                        <RoleBadge {...author.display_role} />
-                    </div>
+                    <UserInfo 
+                        user={...author}
+                        avatarClassName="h-15 w-15  mx-auto" 
+                    />
                 </div>
                 <div className="flex flex-col rounded-[0.5rem] border p-10 w-full">
                     <div className="ml-auto flex w-full justify-between">
