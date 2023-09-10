@@ -11,6 +11,7 @@ export default function UserAvatar({ avatar, username, className }: IUserAvatar)
         <Avatar className={className}>
             <AvatarImage src={avatar} alt="@shadcn" />
             <AvatarFallback>{username}</AvatarFallback>
+            
         </Avatar>
     )
 }

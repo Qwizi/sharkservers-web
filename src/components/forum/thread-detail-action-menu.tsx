@@ -16,7 +16,6 @@ export default function ThreadDetailActionMenu({ threadId }: IThreadDetailAction
     const { authenticated, user } = useUser()
     const api = useApi()
     const router = useRouter()
-    console.log(user)
 
 
     async function runAction(threadId: number, action: ThreadActionEnum) {
@@ -63,7 +62,27 @@ export default function ThreadDetailActionMenu({ threadId }: IThreadDetailAction
     }
 
     //@ts-ignore
-    if (!authenticated || !user?.roles || !hasScope(user?.roles, "threads:delete") || !threadId ) return
+    if (!authenticated || !user?.roles || !hasScope(user?.roles, "threads:delete") || !threadId) return
+
+
+    const actions = [
+        {
+            "name": "Zamknij",
+            "action": ThreadActionEnum.CLOSE,
+        },
+        {
+            "name": "Otwórz",
+            "action": ThreadActionEnum.OPEN,
+        },
+        {
+            "name": "Przypnij",
+            "action": ThreadActionEnum.PIN,
+        },
+        {
+            "name": "Odepnij",
+            "action": ThreadActionEnum.UNPIN,
+        }
+    ]
 
     return (
         <DropdownMenu>
@@ -74,12 +93,11 @@ export default function ThreadDetailActionMenu({ threadId }: IThreadDetailAction
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={(e) => runAction(threadId, ThreadActionEnum.CLOSE)}>
-                    Zamknij
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => runAction(threadId, ThreadActionEnum.OPEN)}>
-                    Otwórz
-                </DropdownMenuItem>
+                {actions && actions.map((action, i) =>
+                    <DropdownMenuItem onClick={(e) => runAction(threadId, action.action)}>
+                        {action.name}
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                     onClick={(e) => deleteThread(threadId)}
