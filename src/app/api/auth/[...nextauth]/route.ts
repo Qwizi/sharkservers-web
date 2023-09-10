@@ -41,13 +41,24 @@ export const authOptions: NextAuthOptions = {
                 return { ...token, ...user }
             }
             const tokenExpire = token.access_token.exp && Date.parse(token.access_token.exp) < Date.now()
+            console.log(tokenExpire)
             if (!tokenExpire) {
                 return { ...token, ...user }
             }
-            const refresh_token = await SharkApi.auth.getAccessTokenFromRefreshToken({
-                refresh_token: token.refresh_token.token
-            })
-            return { ...token, access_token: { ...refresh_token.access_token }, ...user }
+            try {
+                const refresh_token = await SharkApi.auth.getAccessTokenFromRefreshToken({
+                    refresh_token: token.refresh_token.token
+                })
+                return { ...token, access_token: { ...refresh_token.access_token }, ...user }
+            } catch (e) {
+                console.log(e)
+                return {
+                    ...token,
+                    error: "RefreshAccessTokenError",
+                }
+            }
+            
+            
         }, //@ts-ignore
         async session({ session, token, user }) {
             // @ts-ignore
