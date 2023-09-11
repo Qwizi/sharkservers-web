@@ -13,8 +13,9 @@ export default function LastOnlineUsers({ ...props }: Page_UserOut_) {
             </CardHeader>
             <CardContent className="flex">
                 {items ? items.map((user, i) =>
-                    <div>
+                    <div key={i}>
                         <Username
+                            
                             user={...user}
                             className="mr-1 after:content-[',']
                             after:text-white

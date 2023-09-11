@@ -102,7 +102,7 @@ export default function ThreadDetailActionMenu({ threadId }: IThreadDetailAction
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 {actions && actions.map((action, i) =>
-                    <DropdownMenuItem onClick={(e) => runAction(threadId, action.action)}>
+                    <DropdownMenuItem key={i} onClick={(e) => runAction(threadId, action.action)}>
                         {action.name}
                     </DropdownMenuItem>
                 )}

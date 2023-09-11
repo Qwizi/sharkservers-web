@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
+import { useEffect } from "react";
 
 const formSchema = z.object({
     email: z.string().email()
@@ -14,16 +15,23 @@ const formSchema = z.object({
 
 interface IResetPasswordForm {
     setTab: Function;
+    defaultEmail?: string | undefined
+    disabledEmailField?: boolean | undefined
 }
 
-export default function ResetPasswordForm({setTab}: IResetPasswordForm) {
+export default function ResetPasswordForm({setTab, defaultEmail, disabledEmailField}: IResetPasswordForm) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
+            email: defaultEmail,
         },
     })
     const api = useApi()
+
+    useEffect(() => {
+        if (!defaultEmail) return
+        form.setValue("email", defaultEmail)
+    }, [defaultEmail])
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
@@ -46,6 +54,8 @@ export default function ResetPasswordForm({setTab}: IResetPasswordForm) {
         }
     }
 
+    if (!defaultEmail) return
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -56,8 +66,11 @@ export default function ResetPasswordForm({setTab}: IResetPasswordForm) {
                         <FormItem>
                             <FormLabel>E-mail</FormLabel>
                             <FormControl>
-                                <Input {...field} 
-                                type="email"/>
+                                <Input defaultValue={defaultEmail} {...field} 
+                                    type="email"
+                                    disabled={disabledEmailField}
+                                    
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

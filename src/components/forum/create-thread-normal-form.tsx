@@ -1,16 +1,13 @@
 'use client'
 import { zodResolver } from "@hookform/resolvers/zod"
 import dynamic from "next/dynamic";
-import rehypeSanitize from "rehype-sanitize";
 import { z } from "zod"
 import { Button } from "../ui/button";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form, FormDescription } from "../ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form,  } from "../ui/form";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { CategoryTypeEnum, Page_CategoryOut_ } from "sharkservers-sdk";
-import SharkApi from "@/lib/api";
-import { useSession } from "next-auth/react";
+import {  Page_CategoryOut_ } from "sharkservers-sdk";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
@@ -67,7 +64,7 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
 
         getServers().catch(console.error)
 
-    }, [form.getValues("category")])
+    }, [])
 
     function getServerName(servers: any, serverId: number) {
         let serverName = "invalid_server_name"

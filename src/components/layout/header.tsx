@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Dialog, Popover } from '@headlessui/react'
 import Link from "next/link";
@@ -57,13 +58,13 @@ const Header = () => {
         switch (type) {
             case MenuTypeEnum.NORMAL:
                 return menuLinks.map((link, i) =>
-                    <Link href={link.path} className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800" onClick={(e) => setMobileMenuOpen(!mobileMenuOpen)}>
+                    <Link key={i} href={link.path} className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800" onClick={(e) => setMobileMenuOpen(!mobileMenuOpen)}>
                         {link.name}
                     </Link>
                 )
             case MenuTypeEnum.AUTH:
                 return authLinks.map((link, i) =>
-                    <Link href={link.path} className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800" onClick={(e) => setMobileMenuOpen(!mobileMenuOpen)}>
+                    <Link key={i} href={link.path} className="text-sm leading-6 text-slate-200 block rounded-md px-3 py-2 font-medium hover:bg-slate-800" onClick={(e) => setMobileMenuOpen(!mobileMenuOpen)}>
                         {link.name}
                     </Link>
                 )
@@ -76,7 +77,7 @@ const Header = () => {
                     <Link href="/" className="-m-1.5 p-1.5">
                         <span className="sr-only">SharkServers.pl</span>
                         <Image className="h-12 w-auto" src={"/images/logo.png"} alt={"Shark servers.pl"} width={300}
-                            height={68} />
+                            height={68} priority/>
                     </Link>
                 </div>
                 <div className="flex lg:hidden">
