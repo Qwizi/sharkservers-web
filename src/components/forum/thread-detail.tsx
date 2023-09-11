@@ -1,25 +1,43 @@
 'use client'
 import { Page_PostOut_, ThreadOut } from "sharkservers-sdk"
-import Username from "../users/username"
-import { Separator } from "../ui/separator"
-import { Badge } from "../ui/badge"
-import Post from "./post"
-import Pagination from "../pagination";
-import dynamic from "next/dynamic"
-const MarkdownEditor = dynamic(
-    () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
-    { ssr: false }
-);
-import MarkdownPreview from '@uiw/react-markdown-preview';
-import RoleBadge from "../users/role-badge"
-import ThreadDetailActionMenu from "./thread-detail-action-menu"
-import ThreadDetailCreatePost from "./thread-detail-create-post"
-import UserAvatar from "../users/avatar"
-import UserInfo from "../users/user-info"
-import ThreadBadges from "./thread-badges"
 import useCategory from "@/hooks/category"
 import { useEffect, useState } from "react"
 import useApi from "@/hooks/api"
+import dynamic from "next/dynamic"
+
+const Separator = dynamic(
+    () => import("../ui/separator").then((mod) => mod.Separator),
+    { ssr: false }
+);
+const Pagination = dynamic(
+    () => import("../pagination").then((mod) => mod),
+    { ssr: false }
+);
+const MarkdownPreview = dynamic(
+    () => import("@uiw/react-markdown-preview").then((mod) => mod),
+    { ssr: false }
+);
+const ThreadDetailActionMenu = dynamic(
+    () => import("./thread-detail-action-menu").then((mod) => mod),
+    { ssr: false }
+);
+const ThreadDetailCreatePost = dynamic(
+    () => import("./thread-detail-create-post").then((mod) => mod),
+    { ssr: false }
+);
+const UserInfo = dynamic(
+    () => import("../users/user-info").then((mod) => mod),
+    { ssr: false }
+);
+const ThreadBadges = dynamic(
+    () => import("./thread-badges").then((mod) => mod),
+    { ssr: false }
+);
+const Post = dynamic(
+    () => import("./post").then((mod) => mod),
+    { ssr: false }
+);
+
 
 
 
@@ -66,8 +84,9 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
             console.log(response)
             setServer(response)
         }
+        if (!isApplicationCategory(category)) return
         getServer().catch(console.error)
-    }, meta_fields)
+    }, [])
 
 
     const meta_name_fields = ["question_experience", "question_reason"]
@@ -76,9 +95,9 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
             <div className="space-y-6 p-10 md:block">
                 <div className="space-y-0.5">
                     <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-                    <ThreadBadges 
-                        categoryName={category?.name} 
-                        is_closed={is_closed} 
+                    <ThreadBadges
+                        categoryName={category?.name}
+                        is_closed={is_closed}
                         is_pinned={is_pinned}
                         serverName={server ? server.name : ""}
                         status={isApplicationCategory(category) ? status : undefined}
@@ -113,8 +132,8 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                                                 <>
                                                     {
                                                         meta.name == "question_reason" ? "Dlaczego chcesz zostac Administarorem?" : meta.name
-                                                            || 
-                                                        meta.name == "question_experience" ? "Doświadczenie" : meta.name
+                                                            ||
+                                                            meta.name == "question_experience" ? "Doświadczenie" : meta.name
                                                     }: <MarkdownPreview source={meta.value} />
                                                 </>
                                             )}

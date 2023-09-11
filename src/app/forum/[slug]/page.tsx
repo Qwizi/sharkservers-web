@@ -24,7 +24,9 @@ export default async function ThreadDetailPage({
             api.forum.getThread(threadId),
             api.forum.getPosts(threadId, page, 10)
         ])
-        return <ThreadDetail thread={...thread} posts={posts} />
+        return (
+            <ThreadDetail thread={...thread} posts={posts} />
+        )
     } catch (e) {
         console.log(e)
         return notFound()

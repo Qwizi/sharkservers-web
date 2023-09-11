@@ -13,7 +13,7 @@ const sidebarNavItems = [
     },
     {
         title: "Hasło",
-        href: "/examples/forms/appearance",
+        href: "/settings/password",
     },
     {
         title: "Avatar",

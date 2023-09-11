@@ -20,7 +20,7 @@ export default function Post({ ...props }: PostOut) {
     const api = useApi()
     const {user} = useUser()
 
-    if (!author || !content) return
+    
 
     function userLikePost(likes) {
         let userLike = false
@@ -42,7 +42,8 @@ export default function Post({ ...props }: PostOut) {
         }
         getLikes().catch(console.error)
     }, [liked]);
-
+    if (!author || !content || !likes) return
+    
     return (
         <div id={`post-${id}`} className="rounded-[0.5rem] border bg-background shadow">
             <div className="p-10 w-full flex gap-10">
