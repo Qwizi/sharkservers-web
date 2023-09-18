@@ -48,17 +48,22 @@ export default function WebsiteStats({ users_total, threads_total, posts_total, 
                 </div>
             </div>
             <div className="flex">
-                <div className="mt-[15px]">
-                    <UserAvatar avatar={last_user.avatar} username={last_user.username} className="h-12 w-12"/>
-                </div>
-                <div className="flex flex-col">
-                    <div className="align-middle mt-[10px] pl-[30px] text-xl">
-                        <Username user={...last_user} />
-                    </div>
-                    <div className="align-middle mt-[10px] pl-[30px] text-sm">
-                        <span className="text-slate-500">Dołączył {dateTimeFormatter.format(new Date(last_user.created_at))}</span>
-                    </div>
-                </div>
+                {last_user ? (
+                    <>
+                        <div className="mt-[15px]">
+                            <UserAvatar avatar={last_user.avatar} username={last_user.username} className="h-12 w-12" />
+                        </div>
+                        <div className="flex flex-col">
+                            <div className="align-middle mt-[10px] pl-[30px] text-xl">
+                                <Username user={...last_user} />
+                            </div>
+                            <div className="align-middle mt-[10px] pl-[30px] text-sm">
+                                <span className="text-slate-500">Dołączył {dateTimeFormatter.format(new Date(last_user.created_at))}</span>
+                            </div>
+                        </div>
+                    </>
+                ) : null}
+
             </div>
         </div>
     )

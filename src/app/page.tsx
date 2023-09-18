@@ -1,3 +1,4 @@
+import Chat from "@/components/chat/chat";
 import ForumContainer from "@/components/forum/forum-container";
 import WebsiteStats from "@/components/home/website-stats";
 import ServersTable from "@/components/servers/servers-table";
@@ -50,6 +51,7 @@ export default async function Home() {
   return (
     <>
       <ServersTable data={...servers} />
+      <Chat />
       <ForumContainer categories={categories} threads={threads} last_threads={last_threads} />
       <LastOnlineUsers {...last_online_users} />
       <WebsiteStats users_total={users.total} threads_total={threads.total} posts_total={posts.total} last_user={users.items[0]} />
