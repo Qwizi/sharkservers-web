@@ -6,12 +6,14 @@ import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { useEffect, useState } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 const formSchema = z.object({
     message: z.string().min(2).max(500)
 })
 
-export default function CreateMessageForm({sendJsonMessage}: any) {
+export default function CreateMessageForm({ sendJsonMessage }: any) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -28,9 +30,21 @@ export default function CreateMessageForm({sendJsonMessage}: any) {
         })
     }
 
+    useEffect(() => {
+        form.watch((value, { name, type }) => {
+            if (name == "message") {
+                if (value?.message?.includes("@")) {
+                    console.log("Jest malpa")
+                    
+                }
+            }
+        });
+    }, [form.watch])
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
                 <FormField
                     control={form.control}
                     name="message"
@@ -39,8 +53,11 @@ export default function CreateMessageForm({sendJsonMessage}: any) {
                             <FormLabel>Wiadomosc</FormLabel>
                             <FormControl>
                                 <Input {...field} />
+
+
                             </FormControl>
                             <FormMessage />
+
                         </FormItem>
                     )}
                 />
