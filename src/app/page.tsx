@@ -7,7 +7,6 @@ import SharkApi, { authApi } from "@/lib/api";
 
 async function fetchData(api) {
   try {
-
     const [
       servers,
       categories,
