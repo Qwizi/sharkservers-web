@@ -19,7 +19,15 @@ interface IWebsiteStats {
 export default function WebsiteStats({ users_total, threads_total, posts_total, last_user }: IWebsiteStats) {
 
     return (
-        <div className="mt-32 mb-10 grid grid-cols-4 justify-between justify-items-between">
+        <div className="
+            mt-32 
+            mb-10 
+            grid
+            grid-cols-1
+            md:grid-cols-4 
+            md:justify-between 
+            md:justify-items-between
+        ">
             <div className="flex">
                 <div className="p-4 bg-primary rounded-[0.5rem] h-16 w-16">
                     <MessageSquare className="w-8 h-8 mx-auto" />

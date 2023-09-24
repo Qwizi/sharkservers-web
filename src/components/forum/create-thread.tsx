@@ -3,7 +3,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import { useState } from "react";
 import { Separator } from "../ui/separator";
-import CreateThreadNormalForm from "./create-thread-normal-form";
+import CreateThreadForm from "./create-thread-form";
 import { Page_CategoryOut_ } from "sharkservers-sdk";
 
 
@@ -25,7 +25,7 @@ export default function CreateThread({categories}: ICreateThread) {
                 <Separator />
             </div>
             <div className="p-10 w-full">
-                <CreateThreadNormalForm categories={categories}/>
+                <CreateThreadForm categories={categories}/>
             </div>
 
 

@@ -10,8 +10,9 @@ import CreateMessageForm from './create-message-form';
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const Chat = () => {
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost/ws"
     const { authenticated, access_token } = useUser()
-    const [socketUrl, setSocketUrl] = useState("ws://localhost/ws")
+    const [socketUrl, setSocketUrl] = useState(wsUrl)
     const [messages, setMessages] = useState(null)
     const {
         sendMessage,
@@ -49,7 +50,7 @@ const Chat = () => {
     });
 
     useEffect(() => {
-        if (authenticated) setSocketUrl(`ws://localhost/ws?token=${access_token.token}`)
+        if (authenticated && access_token) setSocketUrl(`${wsUrl}?token=${access_token.token}`)
     }, [authenticated, access_token])
 
     const connectionStatus = {

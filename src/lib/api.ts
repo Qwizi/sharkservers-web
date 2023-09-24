@@ -11,7 +11,7 @@ export async function authApi(client: any): Promise<ApiClient> {
     return client
 }
 
-SharkServersClient.request.config.BASE = process.env.API_URL || "http://localhost"
+SharkServersClient.request.config.BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost"
 
 
 const SharkApi = SharkServersClient

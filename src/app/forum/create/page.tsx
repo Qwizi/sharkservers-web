@@ -3,7 +3,9 @@ import SharkApi, { authApi } from "@/lib/api";
 
 export default async function CreateThreadPage() {
     const api = await authApi(SharkApi)
-    const categories = await api.forum.getCategories()
+    const categories = await api.forum.getCategories(undefined, 100, "id")
+
+    
     return (
         <CreateThread categories={categories} />
     )

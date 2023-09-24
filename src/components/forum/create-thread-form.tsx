@@ -3,11 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import dynamic from "next/dynamic";
 import { z } from "zod"
 import { Button } from "../ui/button";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form,  } from "../ui/form";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form, } from "../ui/form";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import {  Page_CategoryOut_ } from "sharkservers-sdk";
+import { Page_CategoryOut_ } from "sharkservers-sdk";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
@@ -23,8 +23,8 @@ const MarkdownEditor = dynamic(
 
 
 const formSchema = z.object({
-    title: z.string(),
-    content: z.string(),
+    title: z.string().min(3),
+    content: z.string().min(3),
     category: z.string(),
     server: z.string().optional(),
     question_experience: z.string().optional(),
@@ -36,25 +36,30 @@ interface ICreateThreadNormalForm {
     categories: Page_CategoryOut_
 }
 
-export default function CreateThreadNormalForm({ categories }: ICreateThreadNormalForm) {
+export default function CreateThreadForm({ categories }: ICreateThreadNormalForm) {
     const router = useRouter()
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
             content: "",
-            category: "1",
-            server: "1"
+            category: "",
+            server: "",
+            question_age: 0,
+            question_reason: "",
+            question_experience: ""
         },
     })
     const api = useApi()
     const { user } = useUser()
     const [servers, setServers] = useState(undefined)
-    const {isApplicationCategoryMany} = useCategory(categories)
+    const [loading, setLoading] = useState(false)
+    const { isApplicationCategoryMany } = useCategory(categories)
+    const watchCategory = form.watch("category")
 
     useEffect(() => {
-        const categoryId = Number(form.getValues("category"))
-        if (!isApplicationCategoryMany(categoryId)) return
+        console.log(watchCategory)
+        if (!isApplicationCategoryMany(Number(watchCategory))) return
 
         const getServers = async () => {
             const response = await api.servers.getServers()
@@ -64,7 +69,8 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
 
         getServers().catch(console.error)
 
-    }, [])
+        return () => setServers(undefined)
+    }, [watchCategory])
 
     function getServerName(servers: any, serverId: number) {
         let serverName = "invalid_server_name"
@@ -78,7 +84,7 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
 
     async function createDefaultThread(data: z.infer<typeof formSchema>) {
         return await api.forum.createThread({
-            category: Number(data.category),
+            category: Number(watchCategory),
             title: data.title,
             content: data.content
         })
@@ -102,6 +108,8 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
+            setLoading(true)
+            console.log(data)
             const categoryId = Number(data.category)
             const response = isApplicationCategoryMany(categoryId) ? await createApplicationThread(data) : await createDefaultThread(data)
             toast({
@@ -110,6 +118,7 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                 description: `Twój temat ${data.title} został pomyślnie utworzony`
             })
             router.push(`/forum/${slugify(response.title)}-${response.id}`)
+            
         } catch (e) {
             console.log(e)
             toast({
@@ -117,6 +126,10 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                 title: "Wystąpil błąd",
                 description: e.message
             })
+            setLoading(false)
+        }
+        finally {
+            setLoading(false)
         }
     }
 
@@ -130,10 +143,10 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Kategoria</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={String(categories.items[0].id)}>
+                                <Select onValueChange={field.onChange}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select a verified email to display" />
+                                            <SelectValue placeholder="Wybierz kategorie" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -147,7 +160,7 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                             </FormItem>
                         )}
                     />
-                    {isApplicationCategoryMany(Number(form.getValues("category"))) ? (
+                    {isApplicationCategoryMany(Number(watchCategory)) ? (
                         <>
                             <FormField
                                 control={form.control}
@@ -250,7 +263,7 @@ export default function CreateThreadNormalForm({ categories }: ICreateThreadNorm
                         </>
 
                     )}
-                    <Button type="submit">Napisz wątek</Button>
+                    <Button disabled={loading} type="submit" className="text-white">Napisz wątek</Button>
                 </form>
             </Form>
         </>

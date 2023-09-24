@@ -91,7 +91,7 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
 
     const meta_name_fields = ["question_experience", "question_reason"]
     return (
-        <div className="rounded-[0.5rem] border bg-background shadow">
+        <div className="rounded-[0.5rem] bg-background shadow">
             <div className="space-y-6 p-10 md:block">
                 <div className="space-y-0.5">
                     <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
@@ -105,14 +105,14 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                 </div>
                 <Separator />
             </div>
-            <div className="p-10 w-full flex gap-10">
-                <div className="flex flex-col items-center w-1/4  rounded-[0.5rem] border p-4 text-center h-[250px]">
+            <div className="p-10 w-full flex flex-col md:flex-row gap-10 border">
+                <div className="flex flex-col items-center w-full md:w-1/6  rounded-[0.5rem]  p-4 text-center h-[250px]">
                     <UserInfo
                         user={...author}
                         avatarClassName="h-15 w-15  mx-auto"
                     />
                 </div>
-                <div className="flex flex-col rounded-[0.5rem] border p-10 w-full">
+                <div className="flex flex-col rounded-[0.5rem]  p-10 w-full">
                     <div className="ml-auto flex w-full justify-between">
                         <div className="w-full">
                             {isApplicationCategory(category) ? (
@@ -144,7 +144,12 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
 
                                 </div>
                             ) : (
-                                <MarkdownPreview source={content} />
+
+                                <div className="prose dark:prose-invert">
+                                    <h1>Test</h1>
+                                    <MarkdownPreview source={content} className="prose dark:prose-invert" />
+                                </div>
+                                
                             )
                             }
 
