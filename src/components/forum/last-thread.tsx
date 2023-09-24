@@ -5,26 +5,35 @@ import { title } from "@uiw/react-md-editor";
 import slugify from "slugify";
 import Username from "../users/username";
 import Link from "next/link";
+import { dateTimeFormatter } from "@/lib/utils";
 
 export default function LastThread({ ...props }: ThreadOut) {
     const { id, title, created_at, author } = props;
     return (
-        <Card className={"p-4"}>
-            <div className="flex mx-auto items-center">
-                <div>
-                    <Avatar className="h-8 w-8 ">
+        <div className={"p-2"}>
+            <div className="flex">
+                <div className="w-20">
+                    <Avatar className="h-12 w-12 ">
                         <AvatarImage src={author?.avatar} alt={`@${author?.username}`} />
                         <AvatarFallback>{author?.username}</AvatarFallback>
                     </Avatar>
-                    <span><Username user={...author}/> </span>
+
                 </div>
 
-                <div className="mx-auto">
+                <div className="w-80">
                     <h4 className="text-xl"><Link href={`/forum/${slugify(title)}-${id}`}>{title}</Link></h4>
+                    <div>
+
+                        <span className="text-sm text-m">przez</span> <Username user={...author} />
+                    </div>
+                    <div>
+                        <span className="text-slate-500 text-xs">{dateTimeFormatter.format(new Date(created_at))}</span>
+                    </div>
+
                 </div>
-                
+
             </div>
 
-        </Card>
+        </div>
     )
 }

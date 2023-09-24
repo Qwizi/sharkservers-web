@@ -16,7 +16,7 @@ const ForumContainer = ({ categories, threads, last_threads }: IForumContainer) 
     const router = useRouter()
     return (
         <div className="lg:flex lg:flex-row flex flex-col w-full h-full mt-5 gap-4">
-            <div className="w-full md:w-8/12 order-2 sm:order-1 grid gird-cols-1 gap-4">
+            <div className="w-full md:w-8/12 order-2 sm:order-1 grid gird-cols-1 gap-2">
                 {threads?.total > 0 ? threads.items.map((thread, i) =>
                     <Thread key={i} {...thread} />
                 ) : (
@@ -26,7 +26,7 @@ const ForumContainer = ({ categories, threads, last_threads }: IForumContainer) 
                 )}
             </div>
             <div className="sm:w-4/12 w-full order-1 sm:order-1">
-                <Button className="w-full" onClick={(e) => router.push("/forum/create")}>Napisz temat</Button>
+                <Button className="w-full text-white" onClick={(e) => router.push("/forum/create")}>Napisz temat</Button>
                 <CategoriesSidebar {...categories} />
                 <LastThreadSidebar {...last_threads} />
             </div>

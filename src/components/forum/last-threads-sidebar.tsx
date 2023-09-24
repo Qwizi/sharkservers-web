@@ -8,12 +8,12 @@ import LastThread from "./last-thread";
 export default function LastThreadSidebar({...props}: Page_ThreadOut_) {
     const {items} = props;
     return (
-        <Card className="mt-10">
+        <Card className="mt-10 hidden md:block">
             <CardHeader>
                 <CardTitle>Ostatnie tematy</CardTitle>
                 <CardDescription>5 ostatnich tematów</CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 gap-5">
+            <CardContent className="grid gap-4">
                 {items && items.map((thread, i) => 
                     <LastThread key={i} {...thread} />
                 )}

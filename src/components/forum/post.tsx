@@ -10,6 +10,7 @@ import UserInfo from "../users/user-info";
 import PostLikeButton from "./post-like-button";
 import useApi from "@/hooks/api";
 import useUser from "@/hooks/user";
+import { Separator } from "../ui/separator";
 
 
 export default function Post({ ...props }: PostOut) {
@@ -18,9 +19,9 @@ export default function Post({ ...props }: PostOut) {
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState()
     const api = useApi()
-    const {user} = useUser()
+    const { user } = useUser()
 
-    
+
 
     function userLikePost(likes) {
         let userLike = false
@@ -43,17 +44,17 @@ export default function Post({ ...props }: PostOut) {
         getLikes().catch(console.error)
     }, [liked]);
     if (!author || !content || !likes) return
-    
+
     return (
-        <div id={`post-${id}`} className="rounded-[0.5rem] border bg-background shadow">
+        <div id={`post-${id}`} className="rounded-[0.5rem] border bg-background shadow mt-5">
             <div className="p-10 w-full flex gap-10">
-                <div className="flex flex-col items-center w-1/4  rounded-[0.5rem] border p-4 text-center h-[250px]">
+                <div className="flex flex-col items-center w-1/6 rounded-[0.5rem] p-4 text-center h-[250px] ">
                     <UserInfo
                         user={...author}
                         avatarClassName="h-15 w-15  mx-auto"
                     />
                 </div>
-                <div className="flex flex-col rounded-[0.5rem] border p-10 w-full">
+                <div className="flex flex-col rounded-[0.5rem] p-10 w-full">
                     <div className="ml-auto flex w-full justify-between">
                         <div className="flex flex-col w-full">
                             {editPost && editPost ? (
@@ -61,12 +62,13 @@ export default function Post({ ...props }: PostOut) {
                             ) : (
                                 <MarkdownPreview source={content} />
                             )}
-
-                            <div className="ml-auto flex w-full justify-end mt-32">
+                            
+                            <div className="ml-auto flex flex-col w-full justify-end mt-32">
+                                <Separator />
                                 <div className="float-right">
-                                <span className="text-sm">Polubien {likes.total}</span> <PostLikeButton postId={id} liked={liked} setLiked={setLiked} />
+                                    <span className="text-sm">Polubien {likes.total}</span> <PostLikeButton postId={id} liked={liked} setLiked={setLiked} />
                                 </div>
-                                
+
 
                             </div>
 

@@ -13,7 +13,7 @@ searchParams: { [key: string]: string | string[] | undefined };
 }) {
     const api = await authApi(SharkApi)
     let page = searchParams["page"] ? Number(searchParams["page"]) : 1
-    const users_data: Page_UserOut_ = await api.users.getUsers(page, 12)
+    const users_data: Page_UserOut_ = await api.users.getUsers(page, 12, "id")
     console.log(api)
     return (
         <section>
@@ -22,7 +22,7 @@ searchParams: { [key: string]: string | string[] | undefined };
                  <UserCard key={i} {...user} />
             )}
             </div>
-            <Pagination total={users_data.total}/>
+            <Pagination total={users_data.total} size={12}/>
         </section>
     )
 }

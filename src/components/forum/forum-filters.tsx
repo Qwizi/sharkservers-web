@@ -6,7 +6,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Page_CategoryOut_, Server_HDX } from "sharkservers-sdk"
+import { Page_CategoryOut_, Server_QGM } from "sharkservers-sdk"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Link } from "lucide-react"
 import { Button } from "../ui/button"
@@ -20,7 +20,7 @@ import useCategory from "@/hooks/category"
 interface IForumFilters {
     categories: Page_CategoryOut_,
     servers: {
-        items: Server_HDX[],
+        items: Server_QGM[],
         total: number,
         page?: number,
         size?: number,
@@ -43,7 +43,7 @@ export default function ForumFilters({ categories, servers }: IForumFilters) {
         defaultValues: {
             closed: "false",
             server: undefined,
-            order_by: "-created_at",
+            order_by: "-id",
             status: ""
         },
     })
@@ -52,7 +52,11 @@ export default function ForumFilters({ categories, servers }: IForumFilters) {
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
         console.log(data)
-        let url = `/forum?category=${categoryId}`
+        let url = `/forum?`
+
+        if (categoryId > 0) {
+            url += `category=${categoryId}`
+        }
 
         if (data.closed) {
             url += `&closed=${data.closed}`
@@ -69,9 +73,10 @@ export default function ForumFilters({ categories, servers }: IForumFilters) {
         router.push(url)
     }
     return (
-        <div className="flex items-start justify-between p-4 border">
+        <div className="border p-4 rounded-sm">
+            <h4>Filtry</h4>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="w-full grid gap-4 grid-cols-1 md:grid-cols-3">
                     <FormField
                         control={form.control}
                         name="closed"
@@ -151,22 +156,25 @@ export default function ForumFilters({ categories, servers }: IForumFilters) {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Sortuj</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue="-created_at">
+                                <Select onValueChange={field.onChange} defaultValue="-id">
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Filtruj po" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="-created_at">ID malejaco</SelectItem>
-                                        <SelectItem value="created_at">ID rosnąco</SelectItem>
+                                        <SelectItem value="-id">ID malejaco</SelectItem>
+                                        <SelectItem value="id">ID rosnąco</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Zapisz</Button>
+                    <div>
+                        <Button type="submit" className="text-white mt-8">Zapisz</Button>
+                    </div>
+
                 </form>
             </Form>
         </div>

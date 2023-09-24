@@ -4,88 +4,74 @@ import WebsiteStats from "@/components/home/website-stats";
 import ServersTable from "@/components/servers/servers-table";
 import LastOnlineUsers from "@/components/users/last-online-users";
 import SharkApi, { authApi } from "@/lib/api";
+import { ApiClient } from "sharkservers-sdk";
 
-async function fetchData(api) {
-  try {
-    const [
-      servers,
-      categories,
-      threads,
-      posts,
-      last_threads,
-      users,
-      last_online_users
-    ] = await Promise.all([
-      api.servers.getServersStatus(),
-      api.forum.getCategories(),
-      api.forum.getThreads(undefined, 10),
-      api.forum.getPosts(undefined, undefined, 1),
-      api.forum.getThreads(undefined, 5, undefined, undefined, "-created_at"),
-      api.users.getUsers(undefined, 1),
-      api.users.getLastOnlineUsers(undefined, 100)
-    ])
-    return {
-      servers: servers,
-      categories: categories,
-      threads: threads,
-      posts: posts,
-      last_threads: last_threads,
-      users: users,
-      last_online_users
-    }
-  } catch (e) {
-    throw new Error(e.message);
+export const dynamic = 'force-dynamic'
+
+
+async function fetchData(api: ApiClient) {
+  const [
+    serversResult,
+    categoriesResult,
+    threadsResult,
+    lastThreadsResult,
+    postsResult,
+    usersResult,
+    lastOnlineUsersResultsResult
+  ] = await Promise.allSettled([
+    api.servers.getServersStatus(),
+    api.forum.getCategories(undefined, 100, "id"),
+    api.forum.getThreads(undefined, 10, "-id"),
+    api.forum.getThreads(undefined, 5, "-id"),
+    api.forum.getPosts(undefined, undefined, 10, "-id"),
+    api.users.getUsers(undefined, 1, "-id"),
+    api.users.getLastOnlineUsers(undefined, 100)
+  ])
+  const servers = serversResult.status === "rejected" ? null : serversResult.value
+  const categories = categoriesResult.status === "rejected" ? null : categoriesResult.value
+  const threads = threadsResult.status === "rejected" ? null : threadsResult.value
+  const lastThreads = lastThreadsResult.status === "rejected" ? null : lastThreadsResult.value
+  const posts = postsResult.status === "rejected" ? null : postsResult.value
+  const users = usersResult.status === "rejected" ? null : usersResult.value
+  const lastOnlineUsers = lastOnlineUsersResultsResult.status === "rejected" ? null : lastOnlineUsersResultsResult.value
+
+  return {
+    servers,
+    categories,
+    threads,
+    lastThreads,
+    posts,
+    users,
+    lastOnlineUsers
   }
 }
 
 export default async function Home() {
   const api = await authApi(SharkApi)
-  const [
-    serversResult,
-    categoriesResult,
-    threadsResult,
-    postsResult,
-    last_threadsResult,
-    usersResult,
-    last_online_usersResult
-  ] = await Promise.allSettled([
-    api.servers.getServersStatus(),
-    api.forum.getCategories(),
-    api.forum.getThreads(undefined, 10),
-    api.forum.getPosts(undefined, undefined, 1),
-    api.forum.getThreads(undefined, 5, undefined, undefined, "-created_at"),
-    api.users.getUsers(undefined, 1),
-    api.users.getLastOnlineUsers(undefined, 100)
-  ])
-  if (
-    serversResult.status == "rejected" ||
-    categoriesResult.status == "rejected" ||
-    threadsResult.status == "rejected" ||
-    postsResult.status == "rejected" ||
-    last_threadsResult.status == "rejected" ||
-    usersResult.status == "rejected" ||
-    last_online_usersResult.status == "rejected"
-  ) {
-    throw new Error("Wystapil problem")
-  }
+  const {
+    servers,
+    categories,
+    threads,
+    lastThreads,
+    posts,
+    users,
+    lastOnlineUsers
 
-  if (
-    !serversResult?.value ||
-    !categoriesResult?.value ||
-    !threadsResult?.value ||
-    !postsResult?.value ||
-    !last_threadsResult?.value ||
-    !usersResult?.value ||
-    !last_online_usersResult?.value
-  ) return
-
+  } = await fetchData(api)
   return (
     <>
-      <ServersTable data={...serversResult.value} />
+      {servers && (
+        <ServersTable data={...servers} />
+      )}
       <Chat />
-      <ForumContainer categories={categoriesResult.value} threads={threadsResult.value} last_threads={last_threadsResult.value} />
-      <LastOnlineUsers {...last_online_usersResult.value} />
-      <WebsiteStats users_total={usersResult.value.total} threads_total={threadsResult.value.total} posts_total={postsResult.value.total} last_user={usersResult.value.items[0]} />
+    
+      <ForumContainer categories={categories} threads={threads} last_threads={lastThreads} />
+      
+      {lastOnlineUsers && (
+        <LastOnlineUsers {...lastOnlineUsers} />
+      )}
+
+      <WebsiteStats users_total={users ? users.total : 0} threads_total={threads ? threads.total : 0} posts_total={posts ? posts.total : 0} last_user={users ? users.items[0] : null} />
     </>
   )
 }

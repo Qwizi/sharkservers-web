@@ -16,6 +16,7 @@ import { UserOut } from "sharkservers-sdk";
 import Username from "./username";
 import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
+import UserInfo from "./user-info";
 
 
 export function UserCard({ ...props }: UserOut) {
@@ -24,14 +25,10 @@ export function UserCard({ ...props }: UserOut) {
   
   return (
     <Card className="">
-      <Image src="/images/profile/cover.jpg" width="600" height="150" alt="cover image"/>
       <CardHeader className="items-center">
-        <Avatar onClick={(e) => router.push(`/profile/${id}-${username}`)}  className="h-12 w-12">
-          <AvatarImage src={avatar} alt="@shadcn" />
-          <AvatarFallback>{username}</AvatarFallback>
-        </Avatar>
-        <Username
+        <UserInfo 
           user={...props}
+          avatarClassName="w-28 h-28"
         />
       </CardHeader>
     </Card>
