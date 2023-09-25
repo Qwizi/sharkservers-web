@@ -14,7 +14,8 @@ import { Separator } from "../ui/separator";
 
 
 export default function Post({ ...props }: PostOut) {
-    const { id, author, content } = props
+    //@ts-ignore
+    const { id, author, content, threadAuthorId } = props
     const [editPost, setEditPost] = useState(false)
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState()
@@ -47,22 +48,25 @@ export default function Post({ ...props }: PostOut) {
 
     return (
         <div id={`post-${id}`} className="rounded-[0.5rem] border bg-background shadow mt-5">
-            <div className="p-10 w-full flex gap-10">
-                <div className="flex flex-col items-center w-1/6 rounded-[0.5rem] p-4 text-center h-[250px] ">
+            <div className="p-10 w-full flex flex-col md:flex-row gap-10">
+                <div className="flex flex-col items-center w-full md:w-1/6  rounded-[0.5rem]  p-4 text-center h-[250px]">
                     <UserInfo
                         user={...author}
                         avatarClassName="h-15 w-15  mx-auto"
                     />
                 </div>
-                <div className="flex flex-col rounded-[0.5rem] p-10 w-full">
+                <div className="flex flex-col rounded-[0.5rem] p-2 w-full">
                     <div className="ml-auto flex w-full justify-between">
                         <div className="flex flex-col w-full">
                             {editPost && editPost ? (
                                 <UpdatePostForm content_prop={content} authorId={author.id} postId={id} setEditPost={setEditPost} />
                             ) : (
-                                <MarkdownPreview source={content} />
+                                <div className="prose dark:prose-invert">
+                                    <MarkdownPreview source={content} />
+                                </div>
+
                             )}
-                            
+
                             <div className="ml-auto flex flex-col w-full justify-end mt-32">
                                 <Separator />
                                 <div className="float-right">

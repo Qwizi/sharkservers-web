@@ -21,7 +21,7 @@ export default function LastThread({ ...props }: ThreadOut) {
                 </div>
 
                 <div className="w-80">
-                    <h4 className="text-xl"><Link href={`/forum/${slugify(title)}-${id}`}>{title}</Link></h4>
+                    <h4 className="text-xl whitespace-normal "><Link href={`/forum/${slugify(title)}-${id}`}>{title}</Link></h4>
                     <div>
 
                         <span className="text-sm text-m">przez</span> <Username user={...author} />

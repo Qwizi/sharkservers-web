@@ -57,5 +57,8 @@
   body {
     @apply bg-background text-foreground;
   }
+  button {
+    @apply text-white
+  }
 }
 

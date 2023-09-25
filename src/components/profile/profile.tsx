@@ -17,9 +17,10 @@ export default function Profile({ ...props }: ProfileInterface) {
     const { id, username, avatar, display_role, created_at } = user
     return (
         <div className="flex flex-col">
-            <div>
-                <Image src="/images/profile/cover.jpg" className="h-[300px] w-full" width="600" height="100" alt="cover image" />
+            <div className="h-[200px] w-full bg-slate-700">
+
             </div>
+            
             <div className="border p-4 grid grid-cols-4">
                 <div className="flex flex-col mt-[-60px] ml-10 w-[150px] text-center">
                     <Avatar className="h-[100px] w-[100px] mx-auto">

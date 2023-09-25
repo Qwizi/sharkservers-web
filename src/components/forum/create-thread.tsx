@@ -1,6 +1,6 @@
 'use client'
 import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
+
 import { useState } from "react";
 import { Separator } from "../ui/separator";
 import CreateThreadForm from "./create-thread-form";
@@ -8,10 +8,11 @@ import { Page_CategoryOut_ } from "sharkservers-sdk";
 
 
 interface ICreateThread {
-    categories: Page_CategoryOut_
+    categories: Page_CategoryOut_,
+    category?: string |  undefined
 }
 
-export default function CreateThread({categories}: ICreateThread) {
+export default function CreateThread({categories, category}: ICreateThread) {
 
     return (
         <div className="rounded-[0.5rem] border bg-background shadow">
@@ -25,7 +26,7 @@ export default function CreateThread({categories}: ICreateThread) {
                 <Separator />
             </div>
             <div className="p-10 w-full">
-                <CreateThreadForm categories={categories}/>
+                <CreateThreadForm categories={categories} category={category}/>
             </div>
 
 

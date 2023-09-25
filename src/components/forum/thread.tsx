@@ -13,7 +13,7 @@ import { Separator } from "../ui/separator";
 
 
 export default function Thread({ ...props }: ThreadOut) {
-    const { id, title, author, created_at, is_pinned, post_count, is_closed, category, status } = props
+    const { id, title, author, created_at, is_pinned, post_count, is_closed, category, status, server } = props
     const { isApplicationCategory } = useCategory()
     return (
         <Card className={is_pinned ? "border border-blue-400 p-4 animate-pulse" : "p-4 h-[250px]"}>
@@ -36,7 +36,13 @@ export default function Thread({ ...props }: ThreadOut) {
                     Postów: {post_count}
                 </div>
                 <div>
-                    <ThreadBadges categoryName={category?.name} is_closed={is_closed} is_pinned={is_pinned} status={isApplicationCategory(category) ? status : undefined} />
+                <ThreadBadges
+                        categoryName={category?.name}
+                        is_closed={is_closed}
+                        is_pinned={is_pinned}
+                        serverName={server ? server.name : ""}
+                        status={isApplicationCategory(category) ? status : undefined}
+                    />
                 </div>
             </div>
 
