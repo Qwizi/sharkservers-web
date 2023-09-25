@@ -15,6 +15,7 @@ import useApi from "@/hooks/api";
 import { useEffect, useState } from "react";
 import useUser from "@/hooks/user";
 import useCategory from "@/hooks/category";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 const MarkdownEditor = dynamic(
     () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
@@ -23,8 +24,8 @@ const MarkdownEditor = dynamic(
 
 
 const formSchema = z.object({
-    title: z.string().min(3),
-    content: z.string().min(3),
+    title: z.string(),
+    content: z.string(),
     category: z.string(),
     server: z.string().optional(),
     question_experience: z.string().optional(),
@@ -33,18 +34,19 @@ const formSchema = z.object({
 })
 
 interface ICreateThreadNormalForm {
-    categories: Page_CategoryOut_
+    categories: Page_CategoryOut_,
+    category?:  string | undefined
 }
 
-export default function CreateThreadForm({ categories }: ICreateThreadNormalForm) {
+export default function CreateThreadForm({ categories, category }: ICreateThreadNormalForm) {
     const router = useRouter()
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
             content: "",
-            category: "",
             server: "",
+            category: category ? category : "",
             question_age: 0,
             question_reason: "",
             question_experience: ""
@@ -54,13 +56,14 @@ export default function CreateThreadForm({ categories }: ICreateThreadNormalForm
     const { user } = useUser()
     const [servers, setServers] = useState(undefined)
     const [loading, setLoading] = useState(false)
+    const [showDialog, setShowDialog] = useState(false)
     const { isApplicationCategoryMany } = useCategory(categories)
-    const watchCategory = form.watch("category")
+    const watchCategory = form.watch("category", category)
 
     useEffect(() => {
         console.log(watchCategory)
         if (!isApplicationCategoryMany(Number(watchCategory))) return
-
+        setShowDialog(true)
         const getServers = async () => {
             const response = await api.servers.getServers()
             console.log(response)
@@ -70,6 +73,7 @@ export default function CreateThreadForm({ categories }: ICreateThreadNormalForm
         getServers().catch(console.error)
 
         return () => setServers(undefined)
+
     }, [watchCategory])
 
     function getServerName(servers: any, serverId: number) {
@@ -118,7 +122,7 @@ export default function CreateThreadForm({ categories }: ICreateThreadNormalForm
                 description: `Twój temat ${data.title} został pomyślnie utworzony`
             })
             router.push(`/forum/${slugify(response.title)}-${response.id}`)
-            
+
         } catch (e) {
             console.log(e)
             toast({
@@ -135,6 +139,19 @@ export default function CreateThreadForm({ categories }: ICreateThreadNormalForm
 
     return (
         <>
+            <Dialog open={showDialog} onOpenChange={setShowDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Uwaga!</DialogTitle>
+                        <DialogDescription>
+                            Przechodzac dalej oznajmiasz, że zapoznaleś się wymyaganiami w sprawie rekrutacji i je akceptujesz!
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button type="submit" onClick={() => setShowDialog(!showDialog)}>Potwierdzam</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <FormField
@@ -143,10 +160,10 @@ export default function CreateThreadForm({ categories }: ICreateThreadNormalForm
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Kategoria</FormLabel>
-                                <Select onValueChange={field.onChange}>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Wybierz kategorie" />
+                                            <SelectValue placeholder="Wybierz kategorie" defaultValue={category}/>
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -254,7 +271,7 @@ export default function CreateThreadForm({ categories }: ICreateThreadNormalForm
                                     <FormItem>
                                         <FormLabel>Treść</FormLabel>
                                         <FormControl>
-                                            <MarkdownEditor {...field} height="500px" />
+                                            <MarkdownEditor {...field} height="500px" enablePreview={false}/>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

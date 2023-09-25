@@ -59,10 +59,10 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
         is_closed,
         is_pinned,
         meta_fields,
-        status
+        status,
+        server
     } = thread
     const { isApplicationCategory } = useCategory()
-    const [server, setServer] = useState()
     const api = useApi()
 
     async function getServerId(meta_fields: any) {
@@ -74,19 +74,6 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
         })
         return Number(serverId)
     }
-
-    useEffect(() => {
-        const getServer = async () => {
-            const serverId = await getServerId(meta_fields)
-            const response = await api.servers.getServer(
-                serverId
-            )
-            console.log(response)
-            setServer(response)
-        }
-        if (!isApplicationCategory(category)) return
-        getServer().catch(console.error)
-    }, [])
 
 
     const meta_name_fields = ["question_experience", "question_reason"]
@@ -112,7 +99,7 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                         avatarClassName="h-15 w-15  mx-auto"
                     />
                 </div>
-                <div className="flex flex-col rounded-[0.5rem]  p-10 w-full">
+                <div className="flex flex-col rounded-[0.5rem] p-2 w-full">
                     <div className="ml-auto flex w-full justify-between">
                         <div className="w-full">
                             {isApplicationCategory(category) ? (
@@ -121,11 +108,11 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                                     {meta_fields && meta_fields.map((meta, i) =>
                                         <>
                                             {meta.name == "server_id" && server && (
-                                                <span>Serwer: {server.name}</span>
+                                                <h2>Serwer: {server.name}</h2>
                                             )}
                                             {meta.name == "question_age" && (
                                                 <>
-                                                    <span>Wiek: {meta.value}</span>
+                                                    <h2>Wiek: {meta.value}</h2>
                                                 </>
                                             )}
                                             {meta_name_fields.includes(meta.name) && (
@@ -146,7 +133,6 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                             ) : (
 
                                 <div className="prose dark:prose-invert">
-                                    <h1>Test</h1>
                                     <MarkdownPreview source={content} className="prose dark:prose-invert" />
                                 </div>
                                 
@@ -160,7 +146,7 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
             </div>
 
             {posts && posts.items.map((post, i) =>
-                <Post key={i} {...post} />
+                <Post key={i} {...post} threadAuthorId={author?.id} />
             )}
 
             {!is_closed && <ThreadDetailCreatePost {...thread} />}

@@ -22,7 +22,7 @@ export default async function ThreadDetailPage({
             posts
         ] = await Promise.all([
             api.forum.getThread(threadId),
-            api.forum.getPosts(threadId, page, 10)
+            api.forum.getPosts(threadId, page, 10, "id")
         ])
         return (
             <ThreadDetail thread={...thread} posts={posts} />
