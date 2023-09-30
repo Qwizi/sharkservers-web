@@ -53,7 +53,6 @@ export const authOptions: NextAuthOptions = {
             } catch (e) {
                 console.log(e)
                 return {
-                    ...token,
                     error: "RefreshAccessTokenError",
                 }
             }
