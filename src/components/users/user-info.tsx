@@ -67,9 +67,6 @@ export default function UserInfo({ user, className, avatarClassName, usernameCla
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
-
-
-
             </div>
         </div>
 

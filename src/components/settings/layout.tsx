@@ -19,6 +19,10 @@ const sidebarNavItems = [
         title: "Avatar",
         href: "/settings/avatar",
     },
+    {
+        title: "Połaczone konta",
+        href: "/settings/connected-accounts"
+    }
 ]
 
 interface SettingsLayoutProps {

@@ -7,20 +7,21 @@ import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Username from "../users/username";
 import RoleBadge from "../users/role-badge";
+import PlayerInfo from "../users/player-info";
 
 export default function UserMenu() {
-    const { user } = useUser()
+    const { user, player } = useUser()
     const router = useRouter()
     if (!user) return
 
     //@ts-ignore
-    const {id, avatar, username, email, display_role} = user
+    const { id, avatar, username, email, display_role } = user
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <UserAvatar 
+                    <UserAvatar
                         className="h-8 w-8"
                         avatar={avatar}
                         username={username}

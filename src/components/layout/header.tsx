@@ -21,6 +21,10 @@ const menuLinks = [
     {
         name: "Użytkownicy",
         path: "/users"
+    },
+    {
+        name: "Gracze",
+        path: "/players"
     }
 ]
 
