@@ -9,6 +9,7 @@ import Footer from "@/components/layout/footer";
 import { ThemeProvider } from "@/components/theme-provider"
 import ToasterClient from '@/components/toaster';
 import { NextAuthProvider } from '@/components/session-provider';
+import { ModalProvider } from '@/components/model-provider';
 
 export const metadata: Metadata = {
     title: 'SharkServers.pl',
@@ -28,6 +29,7 @@ export default function RootLayout({
                         <Header />
 
                         <main className="container mx-auto py-6 sm:px-6 lg:px-8 flex flex-col">
+                            <ModalProvider />
                             {children}
                         </main>
                         <ToasterClient />

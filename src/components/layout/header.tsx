@@ -11,6 +11,8 @@ import { SwitchTheme } from "../theme-switcher";
 import useUser from "@/hooks/user";
 import UserMenu from "./user-menu";
 import { Separator } from "../ui/separator";
+import { useVipModal } from "@/hooks/use-vip-modal";
+import { Button } from "../ui/button";
 
 
 const menuLinks = [
@@ -52,8 +54,9 @@ interface IMenuType {
 
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const { status } = useUser()
+    const { status, isVip } = useUser()
     const router = useRouter()
+    const vipModal = useVipModal()
 
 
     const MenuLinks = ({ type }: IMenuType) => {
@@ -98,8 +101,11 @@ const Header = () => {
                     <MenuLinks type={MenuTypeEnum.NORMAL} />
                 </Popover.Group>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-x-12">
+                    {status == "authenticated" && !isVip && (<Button variant={"vip"} size="sm" className="mr-2" onClick={vipModal.onOpen}>
+                        Ulepsz konto
+                    </Button>)}
                     {status == "unauthenticated" && <MenuLinks type={MenuTypeEnum.AUTH} />}
-                    {status == "authenticated" && <UserMenu />}
+                    {status == "authenticated" && (<UserMenu />)}
                     <SwitchTheme />
                 </div>
             </nav>
