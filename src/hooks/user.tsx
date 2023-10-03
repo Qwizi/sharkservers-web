@@ -25,6 +25,10 @@ export default function useUser() {
         return session?.user.id === resourceId
     }
 
+    function isVip() {
+        return session?.user?.display_role?.id === 4
+    }
+
     return {
         user: session?.user,
         player: session?.user?.player,
@@ -34,6 +38,7 @@ export default function useUser() {
         status: status,
         authenticated: status === 'authenticated',
         hasScope: hasScope,
-        isAuthor: isAuthor
+        isAuthor: isAuthor,
+        isVip: isVip(),
     }
 }

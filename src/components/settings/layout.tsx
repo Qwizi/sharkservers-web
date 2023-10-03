@@ -20,6 +20,10 @@ const sidebarNavItems = [
         href: "/settings/avatar",
     },
     {
+        title: "Zarządzaj subscrybcja",
+        href: "/settings/subscription",
+    },
+    {
         title: "Połaczone konta",
         href: "/settings/connected-accounts"
     }
