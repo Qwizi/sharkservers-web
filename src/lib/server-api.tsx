@@ -16,4 +16,3 @@ SharkServersClient.request.config.BASE = process.env.NEXT_PUBLIC_API_URL || "htt
 const SharkApi = SharkServersClient
 
 export default SharkApi
-

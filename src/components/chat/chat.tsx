@@ -10,7 +10,7 @@ import CreateMessageForm from './create-message-form';
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const Chat = () => {
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost/ws"
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "wss://api-sharkservers.qwizi.dev/ws"
     const { authenticated, access_token } = useUser()
     const [socketUrl, setSocketUrl] = useState(wsUrl)
     const [messages, setMessages] = useState(null)
@@ -26,6 +26,7 @@ const Chat = () => {
             console.log(event)
         },
         onMessage(event) {
+            console.log(socketUrl)
             console.log(event)
             const eventData = JSON.parse(event.data)
             switch (eventData.event) {
@@ -40,6 +41,7 @@ const Chat = () => {
 
         },
         onOpen: () => {
+            console.log(wsUrl)
             console.log("Polaczono")
             sendJsonMessage({
                 "event": "get_messages"

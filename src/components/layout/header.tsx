@@ -83,7 +83,7 @@ const Header = () => {
                 <div className="flex lg:flex-1">
                     <Link href="/" className="-m-1.5 p-1.5">
                         <span className="sr-only">SharkServers.pl</span>
-                        <Image className="h-12 w-auto" src={"/images/logo.png"} alt={"Shark servers.pl"} width={300}
+                        <Image className="h-12 w-auto" src={"/images/logo.png"} alt={"sharkserver.pl"} width={300}
                             height={68} priority/>
                     </Link>
                 </div>
