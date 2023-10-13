@@ -12,10 +12,13 @@ const nextConfig = {
       images: {
         remotePatterns: [
           {
+            protocol: 'https',
+            hostname: '**.qwizi.dev',
+          },
+          {
             protocol: 'http',
             hostname: 'localhost',
-            port: '',
-          },
+          }
         ],
       },
 }

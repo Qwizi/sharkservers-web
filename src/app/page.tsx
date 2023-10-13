@@ -4,8 +4,9 @@ import LastPlayers from "@/components/home/last-players";
 import WebsiteStats from "@/components/home/website-stats";
 import ServersTable from "@/components/servers/servers-table";
 import LastOnlineUsers from "@/components/users/last-online-users";
-import SharkApi, { authApi } from "@/lib/api";
+import SharkApi, { authApi } from "@/lib/server-api";
 import { ApiClient } from "sharkservers-sdk";
+
 
 export const dynamic = 'force-dynamic'
 

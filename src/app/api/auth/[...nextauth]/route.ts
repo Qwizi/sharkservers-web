@@ -2,7 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { NextApiRequest, NextApiResponse } from "next";
 import { SharkServersClient as shark_api } from "sharkservers-sdk";
-import SharkApi from "@/lib/api";
+import SharkApi from "@/lib/server-api";
+
 // @ts-ignore
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET, session: {
@@ -20,9 +21,11 @@ export const authOptions: NextAuthOptions = {
                     username: credentials.username,
                     password: credentials.password
                 })
-
+                console.log()
                 SharkApi.request.config.TOKEN = tokenData.access_token.token
+                SharkApi.request.config.HEADERS = {"user-agent": req.headers['user-agent']}
                 const user_info = await SharkApi.users.getLoggedUser()
+                console.log(SharkApi)
                 if (!tokenData || !user_info) return null
                 return { ...user_info, ...tokenData }
             } catch (e) {
