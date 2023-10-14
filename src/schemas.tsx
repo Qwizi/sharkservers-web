@@ -1,0 +1,49 @@
+import { z } from "zod";
+const MAX_FILE_SIZE = 1024 * 1024 * 2;
+function checkFileType(file: File) { // file type checking
+    if (file?.name) {
+        const fileType = file.name.split(".").pop();
+        if (["gif", "png", "jpg", "jpeg"].includes(fileType)) return true;
+    }
+    return false;
+}
+
+export const RegisterUserSchema = z.object({
+    username: z.string().min(2).max(32).regex(new RegExp('^[a-zA-Z0-9_-]+$'), "Nazwa użytkownika musi zawierac tylko litery, cyfry oraz znaki specjalne - _"),
+    email: z.coerce.string().email(),
+    password: z.string().min(8),
+    password2: z.string().min(8)
+})
+    .refine((data) => data.password === data.password2, {
+        message: "Hasła nie sa takie same",
+        path: ["password"],
+    })
+
+export const LoginUserSchema = z.object({
+    username: z.string().min(2).max(32).regex(new RegExp('^[a-zA-Z0-9_-]+$'), "Nazwa użytkownika musi zawierac tylko litery, cyfry oraz znaki specjalne - _"),
+    password: z.string().min(8),
+})
+
+export const ActivationCodeSchema = z.object({
+    code: z.string().min(5).max(5)
+})
+
+export const ChangeUsernameSchema = z.object({
+    username: z.string().min(2).max(32).regex(new RegExp('^[a-zA-Z0-9_-]+$'), "Nazwa użytkownika musi zawierac tylko litery, cyfry oraz znaki specjalne - _"),
+})
+
+export const changeAvatarSchema = z.object({
+    avatar: z.any()
+        .refine((file: File) => file?.length !== 0, "Plik jest wymagany") // If you also wanna validate if the file exists
+        .refine((file) => file.size < MAX_FILE_SIZE, "Maksymalny rozmiar pliku wynosi 2MB.") // file size validation
+        .refine((file) => checkFileType(file), "Wspieramy tylko takie formaty pliku .jpg, .jpeg, .gif, .png."),
+})
+
+
+export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>
+export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
+export type LoginUserSchemaInputs = z.infer<typeof LoginUserSchema>
+export type ChangeUsernameSchemaInputs = z.infer<typeof ChangeUsernameSchema>
+export type ChangeAvatarSchemaInputs = z.infer<typeof changeAvatarSchema>
+
+

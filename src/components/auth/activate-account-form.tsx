@@ -16,6 +16,8 @@ import { Button } from "../ui/button";
 import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import useApi from "@/hooks/api";
+import { activateUserAction } from "@/actions";
+import { ActivationCodeSchemaInputs } from "@/schemas";
 
 
 const formSchema = z.object({
@@ -32,32 +34,22 @@ export default function ActivateAccountForm() {
     })
     const api = useApi()
 
-    async function onSubmit(data: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        try {
-            const response = await api.auth.activateUser({
-                code: data.code
-            })
-            console.log(response)
+    async function onSubmit(data: ActivationCodeSchemaInputs) {
+        const response = await activateUserAction(data)
+        if (response.serverError) {
             toast({
-                variant: "default",
+                variant: "destructive",
+                title: "Ups. Coś poszło nie tak",
+                description: response.serverError === "Bad request" ? "Nie poprawny kod" : response.serverError
+            })
+        } else {
+            toast({
+                variant: "success",
                 title: "Sukces!",
                 description: "Pomyślnie aktywowano konto"
             })
-        } catch(e) {
-            console.log(e)
-            let errorMessage = "Wystapil nieoczekiwany bład"
-            if (e.status === 400) {
-                errorMessage = "Niepoprawny kod aktywacyjny"
-            }
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Wystąpil bład.",
-                description: errorMessage,
-                //action: <ToastAction altText="Try again">Try again</ToastAction>,
-              })
         }
+        
     }
 
     return (

@@ -17,6 +17,8 @@ import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import { useSession } from "next-auth/react";
 import useApi from "@/hooks/api";
+import { changeAvatarSchema, ChangeAvatarSchemaInputs } from "@/schemas";
+import { changeAvatarAction } from "@/actions";
 
 
 const formSchema = z.object({
@@ -26,18 +28,15 @@ const formSchema = z.object({
 
 export default function AvatarForm() {
     const { data: session, update } = useSession()
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            avatar: "",
-        },
+    const form = useForm<z.infer<typeof changeAvatarSchema>>({
+        resolver: zodResolver(changeAvatarSchema),
     })
     const api = useApi()
 
-    async function onSubmit(data: z.infer<typeof formSchema>) {
+    async function onSubmit(data: ChangeAvatarSchemaInputs) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(data)
+        const response = await changeAvatarAction(data)
         
         try {
             const formData = new FormData();

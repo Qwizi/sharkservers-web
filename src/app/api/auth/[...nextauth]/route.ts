@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { NextApiRequest, NextApiResponse } from "next";
 import { SharkServersClient as shark_api } from "sharkservers-sdk";
-import SharkApi from "@/lib/server-api";
+import {sharkApi} from "@/lib/server-api";
 
 // @ts-ignore
 export const authOptions: NextAuthOptions = {
@@ -17,15 +17,14 @@ export const authOptions: NextAuthOptions = {
         async authorize(credentials, req) {
             if (credentials === undefined) return null
             try {
-                const tokenData = await SharkApi.auth.loginUser({
+                const api = await sharkApi()
+                const tokenData = await api.auth.loginUser({
                     username: credentials.username,
                     password: credentials.password
                 })
-                console.log()
-                SharkApi.request.config.TOKEN = tokenData.access_token.token
-                SharkApi.request.config.HEADERS = {"user-agent": req.headers['user-agent']}
-                const user_info = await SharkApi.users.getLoggedUser()
-                console.log(SharkApi)
+                api.request.config.TOKEN = tokenData.access_token.token
+                api.request.config.HEADERS = {"user-agent": req.headers['user-agent']}
+                const user_info = await api.users.getLoggedUser()
                 if (!tokenData || !user_info) return null
                 return { ...user_info, ...tokenData }
             } catch (e) {
@@ -49,7 +48,8 @@ export const authOptions: NextAuthOptions = {
                 return { ...token, ...user }
             }
             try {
-                const refresh_token = await SharkApi.auth.getAccessTokenFromRefreshToken({
+                const api = await sharkApi()
+                const refresh_token = await api.auth.getAccessTokenFromRefreshToken({
                     refresh_token: token.refresh_token.token
                 })
                 return { ...token, access_token: { ...refresh_token.access_token }, ...user }
@@ -73,7 +73,19 @@ export const authOptions: NextAuthOptions = {
     }, pages: {
         signIn: '/auth/login',
     }, events: {
-        // @ts-ignore
+        signIn: ({user, acccount, isNewUser}) => {console.log(`User ${user.username} zalogowal się`)},
+        signOut: async ({token}) => {
+            try {
+                const api = await sharkApi()
+                api.request.config.TOKEN = token.access_token.token
+                const response = await api.auth.logoutUser()
+                console.log(response)
+                console.log(`User ${token.username} wylogowal sie`)
+            } catch (e) {
+                console.log(e)
+            }
+            
+        }
     }
 }
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

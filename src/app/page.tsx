@@ -4,7 +4,7 @@ import LastPlayers from "@/components/home/last-players";
 import WebsiteStats from "@/components/home/website-stats";
 import ServersTable from "@/components/servers/servers-table";
 import LastOnlineUsers from "@/components/users/last-online-users";
-import SharkApi, { authApi } from "@/lib/server-api";
+import {sharkApi} from "@/lib/server-api";
 import { ApiClient } from "sharkservers-sdk";
 
 
@@ -53,7 +53,7 @@ async function fetchData(api: ApiClient) {
 }
 
 export default async function Home() {
-  const api = await authApi(SharkApi)
+  const api = await sharkApi()
   const {
     servers,
     categories,

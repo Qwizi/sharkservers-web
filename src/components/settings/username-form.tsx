@@ -17,6 +17,8 @@ import SharkApi from "@/lib/api";
 import { toast } from "../ui/use-toast";
 import { useSession } from "next-auth/react";
 import useApi from "@/hooks/api";
+import { changeUsernameAction } from "@/actions";
+import { ChangeUsernameSchemaInputs } from "@/schemas";
 
 
 const formSchema = z.object({
@@ -34,13 +36,15 @@ export default function UsernameForm() {
     })
     const api = useApi()
 
-    async function onSubmit(data: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        try {
-            const response = await api.users.changeUserUsername({
-                username: data.username
+    async function onSubmit(data: ChangeUsernameSchemaInputs) {
+        const response = await changeUsernameAction(data)
+        if (response.serverError) {
+            toast({
+                variant: "destructive",
+                title: "Oh nie. Wystapil bład",
+                description: response.serverError === "Bad request" ? "Podana nazwa użytkownika jest już zajeta" : response.serverError
             })
+        } else {
             await update({
                 ...session,
                 user: {
@@ -49,22 +53,41 @@ export default function UsernameForm() {
                 }
             })
             toast({
-                variant: "default",
+                variant: "success",
                 title: "Sukces!",
                 description: "Pomyslnie zaaktualizowano nazwe użytkownika"
             })
-        } catch(e) {
-            let errorMessage = "Wystapil nieoczekiwany blad"
-            if (e.status == 400) {
-                errorMessage = "Podana nazwa uzytkownika jest niedostępna"
-            }
-            console.log(e)
-            toast({
-                variant: "destructive",
-                title: "Oh nie. Wystapil bład",
-                description: errorMessage
-            })
         }
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        // try {
+        //     const response = await api.users.changeUserUsername({
+        //         username: data.username
+        //     })
+        //     await update({
+        //         ...session,
+        //         user: {
+        //             ...session?.user,
+        //             username: data.username
+        //         }
+        //     })
+        //     toast({
+        //         variant: "default",
+        //         title: "Sukces!",
+        //         description: "Pomyslnie zaaktualizowano nazwe użytkownika"
+        //     })
+        // } catch(e) {
+        //     let errorMessage = "Wystapil nieoczekiwany blad"
+        //     if (e.status == 400) {
+        //         errorMessage = "Podana nazwa uzytkownika jest niedostępna"
+        //     }
+        //     console.log(e)
+        //     toast({
+        //         variant: "destructive",
+        //         title: "Oh nie. Wystapil bład",
+        //         description: errorMessage
+        //     })
+        // }
     }
 
     return (
@@ -77,7 +100,7 @@ export default function UsernameForm() {
                         <FormItem>
                             <FormLabel>Nazwa użytkownika</FormLabel>
                             <FormControl>
-                                <Input {...field} defaultValue={session?.user?.username}/>
+                                <Input {...field} defaultValue={session?.user?.username} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

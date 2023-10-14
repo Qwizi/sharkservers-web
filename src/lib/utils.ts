@@ -23,3 +23,33 @@ export function hasScope(roles: any, scope: string) {
   
   return has
 }
+
+import { getCsrfToken } from 'next-auth/react';
+import { init } from '../../node_modules/next-auth/core/init'; // You have to import it like this
+import getAuthorizationUrl from '../../node_modules/next-auth/core/lib/oauth/authorization-url';
+import { setCookie } from '../../node_modules/next-auth/next/utils';
+import type { NextAuthOptions } from 'next-auth';
+import { getServerSession } from 'next-auth';
+import { GetServerSidePropsContext } from 'next';
+import { IncomingMessage } from 'http';
+import { NextApiRequestCookies } from 'next/dist/server/api-utils';
+
+async function getServerSignInUrl(
+  req: IncomingMessage,
+  cookies: NextApiRequestCookies,
+  authOptions: NextAuthOptions
+) {
+  const { options, cookies: initCookies } = await init({
+    action: 'signin',
+    authOptions,
+    isPost: true,
+    cookies,
+    csrfToken: await getCsrfToken({ req }),
+    callbackUrl: req.url,
+  });
+  const { redirect, cookies: authCookies } = await getAuthorizationUrl({options, query: {} });
+  return {
+    redirect,
+    cookies: [...initCookies, ...authCookies],
+  };
+}
