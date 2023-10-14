@@ -2,6 +2,7 @@ import ForumContainer from "@/components/forum/forum-container";
 import ForumFilters from "@/components/forum/forum-filters";
 import Pagination from "@/components/pagination";
 import SharkApi, { authApi } from "@/lib/api";
+import { sharkApi } from "@/lib/server-api";
 
 
 export const dynamic = 'force-dynamic'
@@ -11,7 +12,7 @@ export default async function ForumPage({
 }: {
     searchParams: { [key: string]: string | string[] | undefined };
 }) {
-    const api = await authApi(SharkApi)
+    const api = await sharkApi()
     const page = searchParams["page"] ? Number(searchParams["page"]) : 1
     const category = searchParams["category"] ? Number(searchParams["category"]) : undefined
     const server = searchParams["server"] ? Number(searchParams["server"]) : undefined

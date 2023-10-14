@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "../ui/button";
 import {signIn, SignInResponse} from "next-auth/react";
 import { toast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 
 
@@ -34,6 +35,23 @@ export default function LoginForm() {
             username: "",
         },
     })
+    const searchPararms = useSearchParams()
+    
+    useEffect(() => {
+        const errorParam = searchPararms.get("error")
+        console.log(errorParam)
+        if (errorParam == "CredentialsSignin") {
+            const timeout = setTimeout(() => {
+                toast({
+                    variant: "destructive",
+                    title: "Wystapił problem",
+                    description: "Nie poprawny login/hasło"
+                })
+            }, 0)
+        
+            return (() => clearTimeout(timeout))
+        }
+    }, [searchPararms, toast])
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
@@ -41,18 +59,10 @@ export default function LoginForm() {
         const response: SignInResponse | undefined = await signIn("credentials", {
             username: values.username,
             password: values.password,
-            redirect: false
+            redirect: true
         })
-
-        if (!response || !response.ok || response.error) {
-            toast({
-                variant: "destructive",
-                title: "Wystapił problem",
-                description: "Nie poprawny login/hasło"
-            })
-            return
-        }
-        router.push("/")
+        console.log(response)
+        
     }
 
     return (

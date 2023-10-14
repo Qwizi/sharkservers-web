@@ -2,6 +2,7 @@ import Profile from "@/components/profile/profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import SharkApi, { authApi } from "@/lib/api";
+import { sharkApi } from "@/lib/server-api";
 import Image from "next/image"
 import { notFound } from "next/navigation";
 
@@ -15,7 +16,7 @@ export default async function UserProfilePage({
     try {
         let user_id = Number(params.slug.split("-")[0])
         let slug_username = params.slug.split("-")[1]
-        const api = await authApi(SharkApi)
+        const api = await sharkApi()
         const user = await api.users.getUser(user_id)
         if (slug_username == undefined || slug_username.toLowerCase() !== user.username.toLowerCase()) {
             notFound()

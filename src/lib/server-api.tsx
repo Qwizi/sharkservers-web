@@ -1,7 +1,10 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Session, getServerSession } from "next-auth"
 import {ApiClient, SharkServersClient} from "sharkservers-sdk"
-export async function authApi(client: any): Promise<ApiClient> {
+
+export async function sharkApi(): Promise<ApiClient> {
+    const client = SharkServersClient
+    client.request.config.BASE = process.env.API_URL || "http://localhost:80"
     const session: Session | null | undefined = await getServerSession(authOptions)
     client.request.config.TOKEN = undefined
     if (session && session?.access_token) {
@@ -9,10 +12,3 @@ export async function authApi(client: any): Promise<ApiClient> {
     }
     return client
 }
-
-SharkServersClient.request.config.BASE = process.env.NEXT_PUBLIC_API_URL || "https://api-beta-sharkservers.qwizi.dev"
-
-
-const SharkApi = SharkServersClient
-
-export default SharkApi

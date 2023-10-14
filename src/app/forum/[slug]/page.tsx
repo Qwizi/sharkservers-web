@@ -1,5 +1,6 @@
 import ThreadDetail from "@/components/forum/thread-detail";
 import SharkApi, { authApi } from "@/lib/api";
+import { sharkApi } from "@/lib/server-api";
 import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic'
@@ -13,7 +14,7 @@ export default async function ThreadDetailPage({
     searchParams: { [key: string]: string | string[] | undefined };
 }) {
     try {
-        const api = await authApi(SharkApi)
+        const api = await sharkApi()
         let slugSplit = params.slug.split("-")
         let threadId = Number(slugSplit[slugSplit.length - 1]);
         const page = searchParams["page"] ? Number(searchParams["page"]) : 1

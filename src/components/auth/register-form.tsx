@@ -1,5 +1,5 @@
 'use client';
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
@@ -20,9 +20,10 @@ import { useToast } from "@/components/ui/use-toast"
 import * as ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
 import useApi from "@/hooks/api";
+import { registerUserAction } from "@/actions"
 
 
-const formSchema = z.object({
+export const registerFormSchema = z.object({
     username: z.string().min(2).max(32).regex(new RegExp('^[a-zA-Z0-9_-]+$'), "Nazwa użytkownika musi zawierac tylko litery, cyfry oraz znaki specjalne - _"),
     email: z.coerce.string().email(),
     password: z.string().min(8),
@@ -33,6 +34,7 @@ const formSchema = z.object({
     path: ["password"],
 })
 
+export type RegisterUserInputs = z.infer<typeof registerFormSchema>
 
 interface IRegisterForm {
     setOpenDialog: Function
@@ -41,8 +43,8 @@ interface IRegisterForm {
 
 export default function RegisterForm({setOpenDialog}: IRegisterForm) {
     const router = useRouter()
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof registerFormSchema>>({
+        resolver: zodResolver(registerFormSchema),
         defaultValues: {
             username: "",
             email: "",
@@ -51,37 +53,24 @@ export default function RegisterForm({setOpenDialog}: IRegisterForm) {
         },
     })
     const { toast } = useToast()
-    const api = useApi()
 
-
-    async function onSubmit(values: z.infer<typeof formSchema>, setOpenDialog: Function) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        try {
-            const response = await api.auth.register({username: values.username, email: values.email, password: values.password, password2: values.password2})
-            router.push("/auth/activate-account?registration=true")
-            console.log(response)
-        } catch (e) {
-            console.log(e)
-            let error_message = "Wystąpil nie oczekiwany bład!"
-            if (e.status == 422) {
-                error_message = "Podany email lub nazwa użytkownika jest juz zajęta"
-            }
-            else if (e.status == 429) {
-                error_message = "Zwolnij troche!"
-            }
+    const registerUser: SubmitHandler<RegisterUserInputs> = async data => {
+        const response = await registerUserAction(data)
+        console.log(response.validationError)
+        if (response.serverError) {
             toast({
                 variant: "destructive",
-                title: "Uh oh! Wystąpil bład.",
-                description: error_message,
-                //action: <ToastAction altText="Try again">Try again</ToastAction>,
-              })
+                title: "Ups. Coś poszło nie tak",
+                description: response.serverError
+            })
+        } else {
+            router.push("/auth/activate-account?registration=true")
         }
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(data => onSubmit(data, setOpenDialog))} className="space-y-8">
+            <form onSubmit={form.handleSubmit(registerUser)} className="space-y-8">
                 <FormField
                     control={form.control}
                     name="username"
