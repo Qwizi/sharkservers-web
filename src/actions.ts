@@ -3,8 +3,9 @@ import { z } from "zod"
 import { RegisterUserInputs, registerFormSchema } from "@/components/auth/register-form";
 import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
-import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs } from "@/schemas";
+import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs } from "@/schemas";
 import { revalidatePath } from "next/cache";
+import { DatabaseZap } from "lucide-react";
 
 export const registerUserAction = action(RegisterUserSchema, async (data: RegisterUserInputs) => {
     const api = await sharkApi()
@@ -33,15 +34,30 @@ export const changeUsernameAction = authAction(ChangeUsernameSchema, async  ({ .
     const response = await api.users.changeUserUsername({
         username: data.username
     })
+    revalidatePath("/");
+    revalidatePath("/users");
     return response
 })
 
-export const changeAvatarAction = authAction(changeAvatarSchema, async ({ ...data }: ChangeAvatarSchemaInputs, { session }) => {
-    const formData = new FormData();
-    formData.append("file", data.avatar[0]);
+export const changeAvatarAction = authAction(changeAvatarSchema, async ({...data}: ChangeAvatarSchemaInputs, { session }) => {
+    console.log(data)
     const api = await sharkApi()
     const response = await api.users.uploadUserAvatar({
         avatar: data.avatar
     })
-    return response
+    revalidatePath("/");
+    revalidatePath("/users");
+    return {test: true}
+})
+
+export const requestChangeEmailAction = authAction(emailSchema, async ({...data}: EmailSchemaInputs, { session, api }) => {
+    return await api.users.requestChangeUserEmail({
+        email: data.email
+    })
+})
+
+export const confirmChangeEmailAction = authAction(ActivationCodeSchema, async (data: ActivationCodeSchemaInputs, {session, api}) => {
+    return await api.users.confirmChangeUserEmail({
+        code: data.code
+    })
 })

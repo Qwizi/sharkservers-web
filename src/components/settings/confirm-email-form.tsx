@@ -19,6 +19,8 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import useApi from "@/hooks/api";
 import useUser from "@/hooks/user";
+import { ActivationCodeSchema, ActivationCodeSchemaInputs } from "@/schemas";
+import { confirmChangeEmailAction } from "@/actions";
 
 const formSchema = z.object({
     code: z.string().min(5).max(5)
@@ -28,46 +30,41 @@ interface IConfirmEmailCode {
     setOpen: Function
 }
 
-export default function ConfirmEmailCode({setOpen}: IConfirmEmailCode) {
-    const {update, data: session} = useSession()
-    const {user} = useUser()
+export default function ConfirmEmailCode({ setOpen }: IConfirmEmailCode) {
+    const { update, data: session } = useSession()
+    const { user } = useUser()
     const api = useApi()
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof ActivationCodeSchema>>({
+        resolver: zodResolver(ActivationCodeSchema),
         defaultValues: {
             code: "",
         },
     })
 
-    async function onSubmit(data: z.infer<typeof formSchema>, setOpen: Function) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        try {
-            
-            const response = await api.users.confirmChangeUserEmail({
-                code: data.code
+    async function onSubmit(data: ActivationCodeSchemaInputs, setOpen: Function) {
+        const response = await confirmChangeEmailAction(data)
+        console.log(response)
+        if (response.serverError) {
+            toast({
+                variant: "destructive",
+                title: "Oh nie. Wystapil bład",
+                description: response.serverError === "Bad Request" ? "Nie poprawny kod" : response.serverError
             })
-            setOpen(false)
+        } else {
             await update({
                 ...session,
                 user: {
                     ...session?.user,
-                    email: response.email
+                    email: response?.data?.email
                 }
             })
+            setOpen(false)
             toast({
-                className: "bg-green-700",
-                title: "Pomyślnie zaaktualizowano e-mail",
-                description: `Twój e-mail został zaaktualizowany.`
+                variant: "success",
+                title: "Sukces!",
+                description: "Pomyślnie zmieniono adres email"
             })
-        } catch (e) {
-            console.log(e)
-            toast({
-                variant: "destructive",
-                title: "Wystapil blad!",
-                description: e.message
-            })
-        } 
+        }
     }
 
     return (

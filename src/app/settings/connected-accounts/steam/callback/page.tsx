@@ -2,6 +2,7 @@ import SharkApi, { authApi } from "@/lib/api";
 import { SteamAuthSchema } from "sharkservers-sdk"
 import * as qs from "querystring"
 import { redirect } from "next/navigation";
+import { sharkApi } from "@/lib/server-api";
 
 export default async function SteamCallback({
     searchParams,
@@ -9,8 +10,7 @@ export default async function SteamCallback({
     searchParams: { [key: string]: string | undefined };
 }) {
     try {
-        const api = await authApi(SharkApi)
-        console.log(searchParams);
+        const api = await sharkApi()
         const params: SteamAuthSchema = {
             openid_assoc_handle: searchParams["openid.assoc_handle"] || '',
             openid_claimed_id: searchParams["openid.claimed_id"] || '',
@@ -29,6 +29,6 @@ export default async function SteamCallback({
         console.error(e.body["detail"])
         throw new Error(e.body["detail"])
     } finally {
-        redirect("/settings/connected-accounts")
+        redirect("/settings/refresh")
     }
 }

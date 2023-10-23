@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { NextApiRequest, NextApiResponse } from "next";
-import { SharkServersClient as shark_api } from "sharkservers-sdk";
-import {sharkApi} from "@/lib/server-api";
+import { sharkApi } from "@/lib/server-api";
+import jwt from "jsonwebtoken";
+import getCsrfToken from "next-auth/"
+
 
 // @ts-ignore
 export const authOptions: NextAuthOptions = {
@@ -18,12 +20,13 @@ export const authOptions: NextAuthOptions = {
             if (credentials === undefined) return null
             try {
                 const api = await sharkApi()
+                api.request.config.HEADERS = { "user-agent": req.headers['user-agent'] }
                 const tokenData = await api.auth.loginUser({
                     username: credentials.username,
                     password: credentials.password
                 })
                 api.request.config.TOKEN = tokenData.access_token.token
-                api.request.config.HEADERS = {"user-agent": req.headers['user-agent']}
+
                 const user_info = await api.users.getLoggedUser()
                 if (!tokenData || !user_info) return null
                 return { ...user_info, ...tokenData }
@@ -42,25 +45,41 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 return { ...token, ...user }
             }
-            const tokenExpire = token.access_token.exp && Date.parse(token.access_token.exp) < Date.now()
-            console.log(tokenExpire)
-            if (!tokenExpire) {
-                return { ...token, ...user }
-            }
             try {
-                const api = await sharkApi()
-                const refresh_token = await api.auth.getAccessTokenFromRefreshToken({
-                    refresh_token: token.refresh_token.token
-                })
-                return { ...token, access_token: { ...refresh_token.access_token }, ...user }
+                var decoded = jwt.verify(token.access_token.token, process.env.API_SECRET || "invalid secret");
+                console.log(decoded)
+                
+
+                const tokenExpire = token.access_token.exp && Date.parse(token.access_token.exp) < Date.now()
+                if (tokenExpire) {
+                    const api = await sharkApi()
+                    console.log(api)
+                    const refresh_token = await api.auth.getAccessTokenFromRefreshToken({
+                        refresh_token: token.refresh_token.token
+                    })
+                    console.log(refresh_token)
+                    return { ...token, access_token: { ...refresh_token.access_token }, ...user }
+                }
+                return { ...token, ...user }
             } catch (e) {
                 console.log(e)
-                return {
-                    error: "RefreshAccessTokenError",
-                }
+                const csrfTokenResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/csrf`)
+                const csrfTokenData = await csrfTokenResponse.json()
+                const signOutResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/signout`, {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: csrfTokenData
+                    })
+                })
+                console.log(signOutResponse)
+                return null
             }
-            
-            
+
+
         }, //@ts-ignore
         async session({ session, token, user }) {
             // @ts-ignore
@@ -73,8 +92,8 @@ export const authOptions: NextAuthOptions = {
     }, pages: {
         signIn: '/auth/login',
     }, events: {
-        signIn: ({user, acccount, isNewUser}) => {console.log(`User ${user.username} zalogowal się`)},
-        signOut: async ({token}) => {
+        signIn: ({ user, acccount, isNewUser }) => { console.log(`User ${user.username} zalogowal się`) },
+        signOut: async ({ token }) => {
             try {
                 const api = await sharkApi()
                 api.request.config.TOKEN = token.access_token.token
@@ -84,7 +103,7 @@ export const authOptions: NextAuthOptions = {
             } catch (e) {
                 console.log(e)
             }
-            
+
         }
     }
 }

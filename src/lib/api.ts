@@ -10,7 +10,7 @@ export async function authApi(client: any): Promise<ApiClient> {
     return client
 }
 
-SharkServersClient.request.config.BASE = process.env.NEXT_PUBLIC_API_URL || "https://api-beta-sharkservers.qwizi.dev"
+SharkServersClient.request.config.BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80"
 
 
 const SharkApi = SharkServersClient
