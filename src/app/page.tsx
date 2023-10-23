@@ -39,7 +39,6 @@ async function fetchData(api: ApiClient) {
   const users = usersResult.status === "rejected" ? null : usersResult.value
   const lastOnlineUsers = lastOnlineUsersResultsResult.status === "rejected" ? null : lastOnlineUsersResultsResult.value
   const lastPlayers = lastPlayersResult.status === "rejected" ? null : lastPlayersResult.value
-
   return {
     servers,
     categories,

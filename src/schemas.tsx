@@ -34,9 +34,10 @@ export const ChangeUsernameSchema = z.object({
 
 export const changeAvatarSchema = z.object({
     avatar: z.any()
-        .refine((file: File) => file?.length !== 0, "Plik jest wymagany") // If you also wanna validate if the file exists
-        .refine((file) => file.size < MAX_FILE_SIZE, "Maksymalny rozmiar pliku wynosi 2MB.") // file size validation
-        .refine((file) => checkFileType(file), "Wspieramy tylko takie formaty pliku .jpg, .jpeg, .gif, .png."),
+})
+
+export const emailSchema = z.object({
+    email: z.coerce.string().email(),
 })
 
 
@@ -45,5 +46,6 @@ export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
 export type LoginUserSchemaInputs = z.infer<typeof LoginUserSchema>
 export type ChangeUsernameSchemaInputs = z.infer<typeof ChangeUsernameSchema>
 export type ChangeAvatarSchemaInputs = z.infer<typeof changeAvatarSchema>
+export type EmailSchemaInputs = z.infer<typeof emailSchema>
 
 

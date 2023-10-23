@@ -34,10 +34,7 @@ export default function AvatarForm() {
     const api = useApi()
 
     async function onSubmit(data: ChangeAvatarSchemaInputs) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        const response = await changeAvatarAction(data)
-        
+        //!!TODO Zmien na serverAction
         try {
             const formData = new FormData();
             formData.append("file", data.avatar[0]);
