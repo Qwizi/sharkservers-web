@@ -3,7 +3,7 @@ import { z } from "zod"
 import { RegisterUserInputs, registerFormSchema } from "@/components/auth/register-form";
 import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
-import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs } from "@/schemas";
+import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, IdSchema, IdSchemaInputs, CreateRoleSchema, CreateRoleSchemaInputs } from "@/schemas";
 import { revalidatePath } from "next/cache";
 import { DatabaseZap } from "lucide-react";
 
@@ -28,7 +28,7 @@ export const activateUserAction = action(ActivationCodeSchema, async (data: Acti
     return responseData
 })
 
-export const changeUsernameAction = authAction(ChangeUsernameSchema, async  ({ ...data }: ChangeUsernameSchemaInputs, { session }) => {
+export const changeUsernameAction = authAction(ChangeUsernameSchema, async ({ ...data }: ChangeUsernameSchemaInputs, { session }) => {
     const api = await sharkApi()
     console.log(data)
     const response = await api.users.changeUserUsername({
@@ -39,7 +39,7 @@ export const changeUsernameAction = authAction(ChangeUsernameSchema, async  ({ .
     return response
 })
 
-export const changeAvatarAction = authAction(changeAvatarSchema, async ({...data}: ChangeAvatarSchemaInputs, { session }) => {
+export const changeAvatarAction = authAction(changeAvatarSchema, async ({ ...data }: ChangeAvatarSchemaInputs, { session }) => {
     console.log(data)
     const api = await sharkApi()
     const response = await api.users.uploadUserAvatar({
@@ -47,17 +47,36 @@ export const changeAvatarAction = authAction(changeAvatarSchema, async ({...data
     })
     revalidatePath("/");
     revalidatePath("/users");
-    return {test: true}
+    return { test: true }
 })
 
-export const requestChangeEmailAction = authAction(emailSchema, async ({...data}: EmailSchemaInputs, { session, api }) => {
+export const requestChangeEmailAction = authAction(emailSchema, async ({ ...data }: EmailSchemaInputs, { session, api }) => {
     return await api.users.requestChangeUserEmail({
         email: data.email
     })
 })
 
-export const confirmChangeEmailAction = authAction(ActivationCodeSchema, async (data: ActivationCodeSchemaInputs, {session, api}) => {
+export const confirmChangeEmailAction = authAction(ActivationCodeSchema, async (data: ActivationCodeSchemaInputs, { session, api }) => {
     return await api.users.confirmChangeUserEmail({
         code: data.code
     })
+})
+
+export const deleteRoleAction = authAction(IdSchema, async (data: IdSchemaInputs, { session, api }) => {
+    
+    const response = await api.adminRoles.adminDeleteRole(data.id)
+    revalidatePath("/roles");
+    return response
+})
+
+export const createRoleAction = authAction(CreateRoleSchema, async (data: CreateRoleSchemaInputs, { session, api }) => {
+    const response = await api.adminRoles.adminCreateRole({
+        name: data.name,
+        color: data.color,
+        is_staff: data.is_staff,
+        scopes: data.scopesIds ? data.scopesIds : undefined
+    })
+
+    revalidatePath("/roles");
+    return response
 })

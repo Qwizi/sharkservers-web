@@ -29,20 +29,27 @@ import { Input } from "@/components/ui/input"
 
 import React from "react"
 import { Button } from "./ui/button"
+import { usePathname } from "next/navigation"
+import CreateResourceDialog from "./create-resource-dialog"
+import CreateRoleForm from "./roles/create-role-form"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    scopes?: any
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    scopes
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
+    const [openCreateDialog, setOpenCreateDialog] = React.useState<boolean>(false)
+    const pathname = usePathname()
     const table = useReactTable({
         data,
         columns,
@@ -55,6 +62,23 @@ export function DataTable<TData, TValue>({
             columnFilters,
         }
     })
+
+    const createResourceDialog = () => {
+        switch (pathname) {
+            case "/roles":
+                return (
+                    <div>
+                        <Button onClick={() => setOpenCreateDialog(!openCreateDialog)}>Dodaj role</Button>
+                        <CreateResourceDialog open={openCreateDialog} setOpen={setOpenCreateDialog}>
+                            <CreateRoleForm setOpen=        {setOpenCreateDialog}
+                            scopes={scopes}
+                            />
+                        </CreateResourceDialog>
+                    </div>
+
+                )
+        }
+    }
 
     return (
         <div>
@@ -95,6 +119,7 @@ export function DataTable<TData, TValue>({
                             })}
                     </DropdownMenuContent>
                 </DropdownMenu>
+                {createResourceDialog()}
             </div>
             <div className="rounded-md border">
                 <Table>

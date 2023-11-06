@@ -40,6 +40,18 @@ export const emailSchema = z.object({
     email: z.coerce.string().email(),
 })
 
+export const IdSchema = z.object({
+    id: z.number().positive()
+})
+
+export const CreateRoleSchema = z.object({
+    name: z.string().min(3),
+    color: z.string(),
+    is_staff: z.boolean(),
+    scopes: z.array(z.string()).optional(),
+    scopesIds: z.array(z.number()).optional()
+})
+
 
 export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>
 export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
@@ -47,5 +59,7 @@ export type LoginUserSchemaInputs = z.infer<typeof LoginUserSchema>
 export type ChangeUsernameSchemaInputs = z.infer<typeof ChangeUsernameSchema>
 export type ChangeAvatarSchemaInputs = z.infer<typeof changeAvatarSchema>
 export type EmailSchemaInputs = z.infer<typeof emailSchema>
+export type IdSchemaInputs = z.infer<typeof IdSchema>
+export type CreateRoleSchemaInputs = z.infer<typeof CreateRoleSchema>
 
 
