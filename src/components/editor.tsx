@@ -1,6 +1,5 @@
-
 import {
-AdmonitionDirectiveDescriptor,
+  AdmonitionDirectiveDescriptor,
   MDXEditor,
   UndoRedo,
   codeBlockPlugin,
@@ -25,11 +24,14 @@ AdmonitionDirectiveDescriptor,
   CreateLink,
   DiffSourceToggleWrapper,
   InsertImage,
-  ListsToggle
-} from "@mdxeditor/editor"
+  ListsToggle,
+} from "@mdxeditor/editor";
 
-export default function Editor({field, content}: any) {
-    return <MDXEditor markdown={content}  plugins={[
+export default function Editor({ field, content }: any) {
+  return (
+    <MDXEditor
+      markdown={content}
+      plugins={[
         toolbarPlugin({
           toolbarContents: () => (
             <>
@@ -44,7 +46,7 @@ export default function Editor({field, content}: any) {
                 <Separator />
               </DiffSourceToggleWrapper>
             </>
-          )
+          ),
         }),
         listsPlugin(),
         quotePlugin(),
@@ -58,10 +60,13 @@ export default function Editor({field, content}: any) {
         // codeBlockPlugin({ defaultCodeBlockLanguage: 'txt' }),
         // sandpackPlugin({ sandpackConfig: virtuosoSampleSandpackConfig }),
         // codeMirrorPlugin({ codeBlockLanguages: { js: 'JavaScript', css: 'CSS', txt: 'text' } }),
-        directivesPlugin({ directiveDescriptors: [AdmonitionDirectiveDescriptor] }),
-        diffSourcePlugin({ viewMode: 'rich-text', diffMarkdown: 'boo' }),
-        markdownShortcutPlugin()
+        directivesPlugin({
+          directiveDescriptors: [AdmonitionDirectiveDescriptor],
+        }),
+        diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "boo" }),
+        markdownShortcutPlugin(),
       ]}
       {...field}
-      />
+    />
+  );
 }
