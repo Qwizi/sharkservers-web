@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -25,7 +25,7 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -46,10 +46,10 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
-    --color-border-default: var(--background)
+    --color-border-default: var(--background);
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
@@ -58,7 +58,6 @@
     @apply bg-background text-foreground;
   }
   button {
-    @apply text-white
+    @apply text-white;
   }
 }
-
