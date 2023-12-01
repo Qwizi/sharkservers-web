@@ -12,3 +12,10 @@ services:
     environment:
       NODE_ENV: development
     user: "root:root"
+    networks:
+      - shark
+
+networks:
+  shark:
+    name: shark
+    external: true
