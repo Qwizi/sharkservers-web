@@ -64,7 +64,11 @@ const sidebarNavItems = [
         links: [
             {
                 title: "Lista kategorii",
-                href: "/admin/forum/categories",
+                href: "/admin/forum-categories",
+            },
+            {
+                title: "Dodaj kategorie",
+                href: "/admin/forum-categories/create",
             },
         ],
     },

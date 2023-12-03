@@ -3,7 +3,7 @@ import { z } from "zod"
 import { RegisterUserInputs, registerFormSchema } from "@/components/auth/register-form";
 import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
-import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs, UpdateUserSchema, UpdateUserSchemaInputs, CreateRoleSchema, CreateRoleSchemaInputs, CreateServerSchema, CreateServerSchemaInputs, UpdateServerSchema, UpdateServerSchemaInputs } from "@/schemas";
+import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs, UpdateUserSchema, UpdateUserSchemaInputs, CreateRoleSchema, CreateRoleSchemaInputs, CreateServerSchema, CreateServerSchemaInputs, UpdateServerSchema, UpdateServerSchemaInputs, CreateForumCategorySchema, CreateForumCategorySchemaInputs } from "@/schemas";
 import { revalidatePath } from "next/cache";
 
 const HOME_PATH = "/"
@@ -164,4 +164,16 @@ export const adminUpdateServerAction = authAction(UpdateServerSchema, async (dat
     // console.log(response)
     // revalidatePath(ADMIN_SERVERS_PATH);
     // return response
+})
+
+export const adminCreateForumCategoryAction = authAction(CreateForumCategorySchema, async (data: CreateForumCategorySchemaInputs, { session, api }) => {
+
+    const response = await api.adminForum.adminCreateCategory({
+        name: data.name,
+        description: data.description,
+        type: data.type,
+    })
+    console.log(response)
+    revalidatePath(ADMIN_SERVERS_PATH);
+    return response
 })

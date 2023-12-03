@@ -1,3 +1,4 @@
+import { CategoryTypeEnum } from "sharkservers-sdk";
 import { z } from "zod";
 const MAX_FILE_SIZE = 1024 * 1024 * 2;
 function checkFileType(file: File) { // file type checking
@@ -95,6 +96,14 @@ export const UpdateServerSchema = z.object({
     port: z.string(),
 })
 
+export const CreateForumCategorySchema = z.object({
+    name: z.string().min(2).max(32),
+    description: z.string().min(2).max(32),
+    type: z.string().refine((value) => Object.values(CategoryTypeEnum).includes(value as CategoryTypeEnum), {
+        "message": "Invalid category type"
+    }),
+})
+
 
 export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>
 export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
@@ -108,5 +117,6 @@ export type UpdateUserSchemaInputs = z.infer<typeof UpdateUserSchema>
 export type CreateRoleSchemaInputs = z.infer<typeof CreateRoleSchema>
 export type CreateServerSchemaInputs = z.infer<typeof CreateServerSchema>
 export type UpdateServerSchemaInputs = z.infer<typeof UpdateServerSchema>
+export type CreateForumCategorySchemaInputs = z.infer<typeof CreateForumCategorySchema>
 
 
