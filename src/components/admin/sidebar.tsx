@@ -53,6 +53,10 @@ const sidebarNavItems = [
                 title: "Lista serwerow",
                 href: "/admin/servers",
             },
+            {
+                title: "Dodaj serwer",
+                href: "/admin/servers/create",
+            },
         ],
     },
     {
