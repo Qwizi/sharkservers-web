@@ -3,7 +3,7 @@ import { z } from "zod"
 import { RegisterUserInputs, registerFormSchema } from "@/components/auth/register-form";
 import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
-import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema } from "@/schemas";
+import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs } from "@/schemas";
 import { revalidatePath } from "next/cache";
 import { DatabaseZap } from "lucide-react";
 
@@ -70,6 +70,12 @@ export const adminCreateUserAction = authAction(CreateUserSchema, async (data: C
         is_activated: data.is_activated,
         is_superuser: data.is_superuser,
     })
+    revalidatePath("/admin/users");
+    return response
+})
+
+export const adminDeleteUserAction = authAction(UserIdSchema, async (data: UserIdSchemaInputs, {session, api}) => {
+    const response = await api.adminUsers.adminDeleteUser(data.id)
     revalidatePath("/admin/users");
     return response
 })
