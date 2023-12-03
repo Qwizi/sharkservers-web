@@ -63,6 +63,23 @@ export const UserIdSchema = z.object({
     id: z.number().int()
 })
 
+function isValidColor(value: string): boolean {
+    const regex = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
+    return regex.test(value);
+}
+
+const colorSchema = z.string().refine(isValidColor, {
+    message: "Invalid color",
+});
+
+export const CreateRoleSchema = z.object({
+    name: z.string().min(2).max(32),
+    tag: z.string().min(2).max(32),
+    color: colorSchema,
+    is_staff: z.boolean(),
+    scopes: z.array(z.string())
+})
+
 
 export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>
 export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
@@ -73,5 +90,6 @@ export type EmailSchemaInputs = z.infer<typeof emailSchema>
 export type CreateUserSchemaInputs = z.infer<typeof CreateUserSchema>
 export type UserIdSchemaInputs = z.infer<typeof UserIdSchema>
 export type UpdateUserSchemaInputs = z.infer<typeof UpdateUserSchema>
+export type CreateRoleSchemaInputs = z.infer<typeof CreateRoleSchema>
 
 

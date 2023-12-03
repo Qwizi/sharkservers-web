@@ -2,6 +2,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { Separator } from "../ui/separator"
+import { Users } from "lucide-react"
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
@@ -9,6 +11,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 const sidebarNavItems = [
     {
         name: "Użytkownicy",
+        icon: <Users className="h-6 w-6" />,
         links: [
             {
                 title: "Lista użytkowników",
@@ -17,6 +20,20 @@ const sidebarNavItems = [
             {
                 title: "Dodaj użytkownika",
                 href: "/admin/users/create",
+            },
+        ],
+    },
+    {
+        name: "Role",
+        icon: <Users className="h-6 w-6" />,
+        links: [
+            {
+                title: "Lista ról",
+                href: "/admin/roles",
+            },
+            {
+                title: "Dodaj role",
+                href: "/admin/roles/create",
             },
         ],
     },
@@ -58,9 +75,13 @@ export function Sidebar({ className }: SidebarProps) {
                 <div className="px-3 py-2">
                     {sidebarNavItems.map((item) =>
                         <div key={item.name}>
-                            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-                                {item.name}
-                            </h2>
+                            <div className="flex">
+                                <div className="mr-2">{item.icon}</div>
+                                <div><h2 className="text-lg font-semibold tracking-tight">
+                                    {item.name}
+                                </h2>
+                                </div>
+                            </div>
                             <div className="space-y-1">
                                 {item.links.map((link) => (
                                     <Button
@@ -73,10 +94,12 @@ export function Sidebar({ className }: SidebarProps) {
                                     </Button>
                                 ))}
                             </div>
+                            <Separator className="mt-2 mb-2" />
                         </div>
                     )}
                 </div>
             </div>
+
         </div>
     )
 }

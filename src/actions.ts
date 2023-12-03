@@ -3,12 +3,13 @@ import { z } from "zod"
 import { RegisterUserInputs, registerFormSchema } from "@/components/auth/register-form";
 import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
-import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs, UpdateUserSchema, UpdateUserSchemaInputs } from "@/schemas";
+import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs, UpdateUserSchema, UpdateUserSchemaInputs, CreateRoleSchema, CreateRoleSchemaInputs } from "@/schemas";
 import { revalidatePath } from "next/cache";
 
 const HOME_PATH = "/"
 const USERS_PATH = "/users"
 const ADMIN_USERS_PATH = "/admin/users"
+const ADMIN_ROLE_PATH = "/admin/roles"
 
 export const registerUserAction = action(RegisterUserSchema, async (data: RegisterUserInputs) => {
     const api = await sharkApi()
@@ -102,5 +103,30 @@ export const adminUpdateUserAction = authAction(UpdateUserSchema, async (data: U
     revalidatePath(ADMIN_USERS_PATH);
     revalidatePath(USERS_PATH);
     revalidatePath(HOME_PATH);
+    return response
+})
+
+export const adminDeleteRoleAction = authAction(UserIdSchema, async (data: UserIdSchemaInputs, { session, api }) => {
+    const response = await api.adminRoles.adminDeleteRole(data.id)
+    revalidatePath(ADMIN_ROLE_PATH);
+    return response
+})
+
+export const adminCreateRoleAction = authAction(CreateRoleSchema, async (data: CreateRoleSchemaInputs, { session, api }) => {
+
+    const scopes = data.scopes.map((scope) => {
+        return Number(scope)
+    })
+    const response = await api.adminRoles.adminCreateRole({
+        //TODO add tag
+        //tag: data.name.toLowerCase(),
+        name: data.name,
+        color: data.color,
+        is_staff: data.is_staff,
+        scopes: scopes
+
+    })
+    console.log(response)
+    revalidatePath(ADMIN_ROLE_PATH);
     return response
 })
