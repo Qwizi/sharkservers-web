@@ -3,7 +3,7 @@ import { z } from "zod"
 import { RegisterUserInputs, registerFormSchema } from "@/components/auth/register-form";
 import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
-import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs } from "@/schemas";
+import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema } from "@/schemas";
 import { revalidatePath } from "next/cache";
 import { DatabaseZap } from "lucide-react";
 
@@ -60,4 +60,16 @@ export const confirmChangeEmailAction = authAction(ActivationCodeSchema, async (
     return await api.users.confirmChangeUserEmail({
         code: data.code
     })
+})
+
+export const adminCreateUserAction = authAction(CreateUserSchema, async (data: CreateUserSchemaInputs, {session, api}) => {
+    const response = await api.adminUsers.adminCreateUser({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        is_activated: data.is_activated,
+        is_superuser: data.is_superuser,
+    })
+    revalidatePath("/admin/users");
+    return response
 })
