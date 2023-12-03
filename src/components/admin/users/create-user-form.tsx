@@ -2,6 +2,7 @@
 
 import { adminCreateUserAction } from "@/actions";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
@@ -85,8 +86,8 @@ export default function CreateUserForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Aktywowany</FormLabel>
-                            <FormControl>
-                                <Input {...field} type="checkbox" />
+                            <FormControl className="ml-2">
+                                <Checkbox {...field}  defaultChecked={true}/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -97,13 +98,13 @@ export default function CreateUserForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Superużytkownik</FormLabel>
-                            <FormControl>
-                                <Input {...field} type="checkbox" />
+                            <FormControl  className="ml-2">
+                                <Checkbox {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
-                <Button type="submit">Aktualizuj</Button>
+                <Button type="submit">Dodaj</Button>
             </form>
         </Form>
     )

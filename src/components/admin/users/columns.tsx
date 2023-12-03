@@ -13,23 +13,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-
 
 import { useState } from "react"
-import { adminDeleteUserAction } from "@/actions"
-import { toast } from "@/components/ui/use-toast"
-import { revalidatePath } from "next/cache"
+import DeleteUserAlert from "./delete-user-alert"
+import { useRouter } from "next/navigation"
+
 export const columns: ColumnDef<UserOutWithEmail>[] = [
     {
         accessorKey: "id",
@@ -56,40 +44,11 @@ export const columns: ColumnDef<UserOutWithEmail>[] = [
         cell: ({ row }) => {
             const user = row.original
             const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-
-            async function onDeleteButtonClick() {
-                const response = await adminDeleteUserAction({ id: user.id })
-                if (response.serverError) {
-                    toast({
-                        variant: "destructive",
-                        title: "Oh nie. Wystapil bład",
-                        description: response.serverError
-                    })
-                } else {
-                    toast({
-                        variant: "success",
-                        title: "Sukces!",
-                        description: "Pomyslnie usunięto użytkownika"
-                    })
-                }
-            }
+            const router = useRouter()
 
             return (
                 <>
-                    <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Czy napewno chcesz usunąc użytkownika {user.username} ({user.id})?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Ta akcja jest nieodwracalna. Spowoduje trwałe usunięcie konta {user.username} ({user.id}) z bazy danych.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Anuluj</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => onDeleteButtonClick()}>Usuń</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                    <DeleteUserAlert {...user} isDeleteModalOpen={isDeleteModalOpen} setIsDeleteModalOpen={setIsDeleteModalOpen} />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -105,7 +64,7 @@ export const columns: ColumnDef<UserOutWithEmail>[] = [
                                 Kopiuj id
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Edytuj</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push(`/admin/users/${user.id}/edit`)}>Edytuj</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}>Usuń</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
