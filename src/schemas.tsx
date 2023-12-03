@@ -48,6 +48,10 @@ export const CreateUserSchema = z.object({
     is_superuser: z.boolean().optional(),
 })
 
+export const UserIdSchema = z.object({
+    id: z.number().int()
+})
+
 
 export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>
 export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
@@ -56,5 +60,6 @@ export type ChangeUsernameSchemaInputs = z.infer<typeof ChangeUsernameSchema>
 export type ChangeAvatarSchemaInputs = z.infer<typeof changeAvatarSchema>
 export type EmailSchemaInputs = z.infer<typeof emailSchema>
 export type CreateUserSchemaInputs = z.infer<typeof CreateUserSchema>
+export type UserIdSchemaInputs = z.infer<typeof UserIdSchema>
 
 
