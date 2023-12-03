@@ -40,6 +40,14 @@ export const emailSchema = z.object({
     email: z.coerce.string().email(),
 })
 
+export const CreateUserSchema = z.object({
+    username: z.string().min(2).max(32).regex(new RegExp('^[a-zA-Z0-9_-]+$'), "Nazwa użytkownika musi zawierac tylko litery, cyfry oraz znaki specjalne - _"),
+    email: z.coerce.string().email(),
+    password: z.string().min(8),
+    is_activated: z.boolean().optional(),
+    is_superuser: z.boolean().optional(),
+})
+
 
 export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>
 export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
@@ -47,5 +55,6 @@ export type LoginUserSchemaInputs = z.infer<typeof LoginUserSchema>
 export type ChangeUsernameSchemaInputs = z.infer<typeof ChangeUsernameSchema>
 export type ChangeAvatarSchemaInputs = z.infer<typeof changeAvatarSchema>
 export type EmailSchemaInputs = z.infer<typeof emailSchema>
+export type CreateUserSchemaInputs = z.infer<typeof CreateUserSchema>
 
 
