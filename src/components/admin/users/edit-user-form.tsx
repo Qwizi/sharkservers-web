@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 import { UpdateUserSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -175,7 +176,10 @@ export default function EditUserForm({ user, roles }: EditUserFormProps) {
                         <FormItem>
                             <FormLabel>Aktywowany</FormLabel>
                             <FormControl className="ml-2">
-                                <Checkbox {...field}  defaultChecked={user.is_activated} />
+                                <Input className={cn(
+                                    "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+
+                                )} type="checkbox" {...field} defaultChecked={user.is_activated} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -187,7 +191,10 @@ export default function EditUserForm({ user, roles }: EditUserFormProps) {
                         <FormItem>
                             <FormLabel>Superużytkownik</FormLabel>
                             <FormControl className="ml-2">
-                                <Checkbox {...field} defaultChecked={user.is_superuser} />
+                                <Input className={cn(
+                                    "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+
+                                )} type="checkbox" {...field} defaultChecked={user.is_superuser} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

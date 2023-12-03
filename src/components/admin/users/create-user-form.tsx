@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 import { CreateUserSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -87,7 +88,10 @@ export default function CreateUserForm() {
                         <FormItem>
                             <FormLabel>Aktywowany</FormLabel>
                             <FormControl className="ml-2">
-                                <Checkbox {...field}  defaultChecked={true}/>
+                                <Input className={cn(
+                                    "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+
+                                )} type="checkbox" {...field} {...field}  defaultChecked={true}/>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -99,7 +103,10 @@ export default function CreateUserForm() {
                         <FormItem>
                             <FormLabel>Superużytkownik</FormLabel>
                             <FormControl  className="ml-2">
-                                <Checkbox {...field} />
+                                <Input className={cn(
+                                    "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+
+                                )} type="checkbox" {...field} {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
