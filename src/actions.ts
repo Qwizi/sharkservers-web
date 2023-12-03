@@ -5,7 +5,10 @@ import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
 import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs } from "@/schemas";
 import { revalidatePath } from "next/cache";
-import { DatabaseZap } from "lucide-react";
+
+const HOME_PATH = "/"
+const USERS_PATH = "/users"
+const ADMIN_USERS_PATH = "/admin/users"
 
 export const registerUserAction = action(RegisterUserSchema, async (data: RegisterUserInputs) => {
     const api = await sharkApi()
@@ -15,8 +18,8 @@ export const registerUserAction = action(RegisterUserSchema, async (data: Regist
         password: data.password,
         password2: data.password2,
     })
-    revalidatePath("/");
-    revalidatePath("/users");
+    revalidatePath(HOME_PATH);
+    revalidatePath(USERS_PATH);
     return responseData
 })
 
@@ -34,8 +37,8 @@ export const changeUsernameAction = authAction(ChangeUsernameSchema, async  ({ .
     const response = await api.users.changeUserUsername({
         username: data.username
     })
-    revalidatePath("/");
-    revalidatePath("/users");
+    revalidatePath(HOME_PATH);
+    revalidatePath(USERS_PATH);
     return response
 })
 
@@ -45,8 +48,8 @@ export const changeAvatarAction = authAction(changeAvatarSchema, async ({...data
     const response = await api.users.uploadUserAvatar({
         avatar: data.avatar
     })
-    revalidatePath("/");
-    revalidatePath("/users");
+    revalidatePath(HOME_PATH);
+    revalidatePath(USERS_PATH);
     return {test: true}
 })
 
@@ -70,12 +73,12 @@ export const adminCreateUserAction = authAction(CreateUserSchema, async (data: C
         is_activated: data.is_activated,
         is_superuser: data.is_superuser,
     })
-    revalidatePath("/admin/users");
+    revalidatePath(ADMIN_USERS_PATH);
     return response
 })
 
 export const adminDeleteUserAction = authAction(UserIdSchema, async (data: UserIdSchemaInputs, {session, api}) => {
     const response = await api.adminUsers.adminDeleteUser(data.id)
-    revalidatePath("/admin/users");
+    revalidatePath(ADMIN_USERS_PATH);
     return response
 })
