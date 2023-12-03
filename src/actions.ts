@@ -3,13 +3,14 @@ import { z } from "zod"
 import { RegisterUserInputs, registerFormSchema } from "@/components/auth/register-form";
 import { sharkApi } from "@/lib/server-api";
 import { action, authAction } from "@/lib/action";
-import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs, UpdateUserSchema, UpdateUserSchemaInputs, CreateRoleSchema, CreateRoleSchemaInputs } from "@/schemas";
+import { RegisterUserSchema, ActivationCodeSchema, ActivationCodeSchemaInputs, LoginUserSchema, LoginUserSchemaInputs, ChangeUsernameSchema, ChangeUsernameSchemaInputs, changeAvatarSchema, ChangeAvatarSchemaInputs, emailSchema, EmailSchemaInputs, CreateUserSchemaInputs, CreateUserSchema, UserIdSchema, UserIdSchemaInputs, UpdateUserSchema, UpdateUserSchemaInputs, CreateRoleSchema, CreateRoleSchemaInputs, CreateServerSchema, CreateServerSchemaInputs, UpdateServerSchema, UpdateServerSchemaInputs } from "@/schemas";
 import { revalidatePath } from "next/cache";
 
 const HOME_PATH = "/"
 const USERS_PATH = "/users"
 const ADMIN_USERS_PATH = "/admin/users"
 const ADMIN_ROLE_PATH = "/admin/roles"
+const ADMIN_SERVERS_PATH = "/admin/servers"
 
 export const registerUserAction = action(RegisterUserSchema, async (data: RegisterUserInputs) => {
     const api = await sharkApi()
@@ -92,11 +93,11 @@ export const adminUpdateUserAction = authAction(UpdateUserSchema, async (data: U
         is_superuser: data.is_superuser,
         display_role: Number(data.display_role)
     }
-    if (data?.roles && data.roles.length >  0) {
+    if (data?.roles && data.roles.length > 0) {
         const roles = data.roles?.map((role) => {
             return Number(role)
         })
-        updatedData = {...updatedData, roles: roles}
+        updatedData = { ...updatedData, roles: roles }
     }
     console.log(updatedData)
     const response = await api.adminUsers.adminUpdateUser(data.id, updatedData)
@@ -129,4 +130,38 @@ export const adminCreateRoleAction = authAction(CreateRoleSchema, async (data: C
     console.log(response)
     revalidatePath(ADMIN_ROLE_PATH);
     return response
+})
+
+export const adminDeleteServerAction = authAction(UserIdSchema, async (data: UserIdSchemaInputs, { session, api }) => {
+    const response = await api.adminServers.adminDeleteServer(data.id)
+    revalidatePath(ADMIN_SERVERS_PATH);
+    return response
+})
+
+export const adminCreateServerAction = authAction(CreateServerSchema, async (data: CreateServerSchemaInputs, { session, api }) => {
+
+    const response = await api.adminServers.adminCreateServer({
+        //@ts-expect-error
+        tag: data.tag,
+        name: data.name,
+        ip: data.ip,
+        port: Number(data.port),
+    })
+    console.log(response)
+    revalidatePath(ADMIN_SERVERS_PATH);
+    return response
+})
+
+export const adminUpdateServerAction = authAction(UpdateServerSchema, async (data: UpdateServerSchemaInputs, { session, api }) => {
+    //TODO fix this
+    // const response = await api.adminServers.adminUpdateServer({
+    //     //@ts-expect-error
+    //     tag: data.tag,
+    //     name: data.name,
+    //     ip: data.ip,
+    //     port: Number(data.port),
+    // })
+    // console.log(response)
+    // revalidatePath(ADMIN_SERVERS_PATH);
+    // return response
 })

@@ -80,6 +80,21 @@ export const CreateRoleSchema = z.object({
     scopes: z.array(z.string())
 })
 
+export const CreateServerSchema = z.object({
+    tag: z.string().min(2).max(32),
+    name: z.string().min(2).max(32),
+    ip: z.string().min(2).max(32),
+    port: z.string(),
+})
+
+export const UpdateServerSchema = z.object({
+    id: z.number().int(),
+    tag: z.string().min(2).max(32),
+    name: z.string().min(2).max(32),
+    ip: z.string().min(2).max(32),
+    port: z.string(),
+})
+
 
 export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>
 export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>
@@ -91,5 +106,7 @@ export type CreateUserSchemaInputs = z.infer<typeof CreateUserSchema>
 export type UserIdSchemaInputs = z.infer<typeof UserIdSchema>
 export type UpdateUserSchemaInputs = z.infer<typeof UpdateUserSchema>
 export type CreateRoleSchemaInputs = z.infer<typeof CreateRoleSchema>
+export type CreateServerSchemaInputs = z.infer<typeof CreateServerSchema>
+export type UpdateServerSchemaInputs = z.infer<typeof UpdateServerSchema>
 
 
