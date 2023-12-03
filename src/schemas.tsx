@@ -48,6 +48,17 @@ export const CreateUserSchema = z.object({
     is_superuser: z.boolean().optional(),
 })
 
+export const UpdateUserSchema = z.object({
+    id: z.number().int(),
+    username: z.string().min(2).max(32).regex(new RegExp('^[a-zA-Z0-9_-]+$'), "Nazwa użytkownika musi zawierac tylko litery, cyfry oraz znaki specjalne - _").optional(),
+    email: z.coerce.string().email().optional(),
+    is_activated: z.boolean().optional(),
+    is_superuser: z.boolean().optional(),
+    roles: z.array(z.string()).optional(),
+    display_role: z.string().optional(),
+    avatar: z.any().optional()
+})
+
 export const UserIdSchema = z.object({
     id: z.number().int()
 })
@@ -61,5 +72,6 @@ export type ChangeAvatarSchemaInputs = z.infer<typeof changeAvatarSchema>
 export type EmailSchemaInputs = z.infer<typeof emailSchema>
 export type CreateUserSchemaInputs = z.infer<typeof CreateUserSchema>
 export type UserIdSchemaInputs = z.infer<typeof UserIdSchema>
+export type UpdateUserSchemaInputs = z.infer<typeof UpdateUserSchema>
 
 
