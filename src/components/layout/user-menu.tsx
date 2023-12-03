@@ -50,6 +50,12 @@ export default function UserMenu() {
                         Ustawienia
                         <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                     </DropdownMenuItem>
+                    {user.is_superuser && (
+                        <DropdownMenuItem onClick={(e) => router.push("/admin")}>
+                            Panel Admina
+                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    )}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={(e) => signOut()}>
