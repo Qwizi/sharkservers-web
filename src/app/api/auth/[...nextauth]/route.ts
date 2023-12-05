@@ -5,6 +5,43 @@ import { sharkApi } from "@/lib/server-api";
 import jwt from "jsonwebtoken";
 import getCsrfToken from "next-auth/"
 
+async function loginUser(credentials: any, req: any) {
+    try {
+        if (credentials === undefined) return null
+        const api = await sharkApi()
+        api.request.config.HEADERS = { "user-agent": req.headers['user-agent'] }
+        const tokenData = await api.auth.loginUser({
+            username: credentials.username,
+            password: credentials.password
+        })
+        api.request.config.TOKEN = tokenData.access_token.token
+
+        const user_info = await api.usersMe.getLoggedUser()
+        if (!tokenData || !user_info) return null
+        return { ...user_info, ...tokenData }
+    } catch (e) {
+        console.log(e)
+        return null
+    }
+}
+
+async function logoutUser (token: any) {
+    try  {
+        const api = await sharkApi()
+        api.request.config.TOKEN = token.access_token.token
+        await api.auth.logoutUser()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+function setSession(session: any, token: any) {
+    const { access_token, refresh_token, ...newToken } = token
+    session.user = newToken
+    session.access_token = access_token
+    session.refresh_token = refresh_token
+    return session
+}
 
 // @ts-ignore
 export const authOptions: NextAuthOptions = {
@@ -15,23 +52,12 @@ export const authOptions: NextAuthOptions = {
             username: { label: "Username", type: "text", placeholder: "jsmith" },
             password: { label: "Password", type: "password" }
         },
-        //@ts-ignore
+        //@ts-expect-error
         async authorize(credentials, req) {
-            if (credentials === undefined) return null
-            try {
-                const api = await sharkApi()
-                api.request.config.HEADERS = { "user-agent": req.headers['user-agent'] }
-                const tokenData = await api.auth.loginUser({
-                    username: credentials.username,
-                    password: credentials.password
-                })
-                api.request.config.TOKEN = tokenData.access_token.token
-
-                const user_info = await api.users.getLoggedUser()
-                if (!tokenData || !user_info) return null
-                return { ...user_info, ...tokenData }
-            } catch (e) {
-                console.log(e)
+            const user = await loginUser(credentials, req)
+            if (user) {
+                return user
+            } else {
                 return null
             }
         },
@@ -46,23 +72,18 @@ export const authOptions: NextAuthOptions = {
                 return { ...token, ...user }
             }
             try {
-                var decoded = jwt.verify(token.access_token.token, process.env.API_SECRET || "invalid secret");
-                console.log(decoded)
-                
+                var decoded = jwt.verify(token.access_token.token, process.env.API_SECRET || "invalid secret");                
 
                 const tokenExpire = token.access_token.exp && Date.parse(token.access_token.exp) < Date.now()
                 if (tokenExpire) {
                     const api = await sharkApi()
-                    console.log(api)
                     const refresh_token = await api.auth.getAccessTokenFromRefreshToken({
                         refresh_token: token.refresh_token.token
                     })
-                    console.log(refresh_token)
                     return { ...token, access_token: { ...refresh_token.access_token }, ...user }
                 }
                 return { ...token, ...user }
             } catch (e) {
-                console.log(e)
                 const csrfTokenResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/csrf`)
                 const csrfTokenData = await csrfTokenResponse.json()
                 const signOutResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/signout`, {
@@ -75,35 +96,20 @@ export const authOptions: NextAuthOptions = {
                         token: csrfTokenData
                     })
                 })
-                console.log(signOutResponse)
                 return null
             }
 
 
-        }, //@ts-ignore
-        async session({ session, token, user }) {
-            // @ts-ignore
-            const { access_token, refresh_token, ...newToken } = token
-            session.user = newToken
-            session.access_token = access_token
-            session.refresh_token = refresh_token
-            return session
+        }, 
+        session({ session, token, user }: any) {
+            return setSession(session, token)
         },
     }, pages: {
         signIn: '/auth/login',
     }, events: {
-        signIn: ({ user, acccount, isNewUser }) => { console.log(`User ${user.username} zalogowal się`) },
-        signOut: async ({ token }) => {
-            try {
-                const api = await sharkApi()
-                api.request.config.TOKEN = token.access_token.token
-                const response = await api.auth.logoutUser()
-                console.log(response)
-                console.log(`User ${token.username} wylogowal sie`)
-            } catch (e) {
-                console.log(e)
-            }
-
+        signIn: ({ user, acccount, isNewUser }: any) => { console.log(`User ${user.username} zalogowal się`) },
+        signOut: async ({ token }: any) => {
+            await logoutUser(token)
         }
     }
 }

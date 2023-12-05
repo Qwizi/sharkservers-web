@@ -32,7 +32,7 @@ export default function DeleteServerAlert({ ...props }: DeleteServerAlertProps) 
             toast({
                 variant: "success",
                 title: "Sukces!",
-                description: "Pomyslnie usunięto użytkownika"
+                description: "Pomyslnie usunięto server"
             })
         }
     }

@@ -1,5 +1,4 @@
 'use client'
-
 import { useSession } from "next-auth/react"
 
 export default function useUser() {
@@ -21,12 +20,30 @@ export default function useUser() {
         return has
     }
 
+    function hasRole(display_role: any, roles: any, roleTag: string) {
+        if (display_role?.tag == roleTag) {
+            return true
+        }
+        let has = false
+        roles?.map((item) => {
+            if (item.tag == roleTag) {
+                has = true
+            }
+        })
+
+        return has
+    }
+
     function isAuthor(resourceId: number) {
         return session?.user.id === resourceId
     }
 
     function isVip() {
-        return session?.user?.display_role?.id === 4
+        return hasRole(session?.user?.display_role, session?.user?.roles, "vip")
+    }
+
+    function isSuperUser() {
+        return session?.user.is_superuser
     }
 
     return {
@@ -38,7 +55,9 @@ export default function useUser() {
         status: status,
         authenticated: status === 'authenticated',
         hasScope: hasScope,
+        hasRole: hasRole,
         isAuthor: isAuthor,
-        isVip: isVip(),
+        isSuperUser: isSuperUser,
+        isVip: isVip,
     }
 }

@@ -1,9 +1,8 @@
 "use client"
-import {  ServerOut } from "sharkservers-sdk"
+import {  GroupOut } from "sharkservers-sdk"
 import { ColumnDef } from "@tanstack/react-table"
-import ActionMenuServer from "./action-menu-server"
 
-export const columns: ColumnDef<ServerOut>[] = [
+export const columns: ColumnDef<GroupOut>[] = [
     {
         accessorKey: "id",
         header: "Id",
@@ -13,21 +12,21 @@ export const columns: ColumnDef<ServerOut>[] = [
         header: "Name",
     },
     {
-        accessorKey: "ip",
-        header: "Ip",
+        accessorKey: "flags",
+        header: "Flags",
     },
     {
-        accessorKey: "port",
-        header: "Port",
+        accessorKey: "immunity_level",
+        header: "immunity_level",
     },
     {
         id: "actions",
         cell: ({ row }) => {
-            const server = row.original
+            const group = row.original
 
             return (
                 <>
-                    <ActionMenuServer {...server} />
+                   
                 </>
 
             )
