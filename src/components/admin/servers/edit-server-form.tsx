@@ -29,7 +29,8 @@ export default function EditServerForm({ server }: EditServerFormProps) {
             name: server.name,
             tag: server.tag,
             ip: server.ip,
-            port: server.port,
+            port: String(server.port),
+            api_url: server.api_url,
         },
     })
     const router = useRouter()
@@ -58,16 +59,28 @@ export default function EditServerForm({ server }: EditServerFormProps) {
             toast({
                 variant: "success",
                 title: "Sukces!",
-                description: "Pomyslnie zaktualizowano użytkownika"
+                description: "Pomyslnie zaktualizowano server"
             })
-            router.push("/admin/users")
+            router.push("/admin/servers")
         }
     }
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
+                <FormField
+                    control={form.control}
+                    name="id"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Id</FormLabel>
+                            <FormControl>
+                                <Input {...field} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                <FormField
                     control={form.control}
                     name="name"
                     render={({ field }) => (
@@ -105,13 +118,13 @@ export default function EditServerForm({ server }: EditServerFormProps) {
                             <FormMessage />
                         </FormItem>
                     )} />
-                
+
                 <FormField
                     control={form.control}
-                    name="port"
+                    name="api_url"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Port</FormLabel>
+                            <FormLabel>Api url</FormLabel>
                             <FormControl>
                                 <Input {...field} />
                             </FormControl>

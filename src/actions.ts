@@ -36,7 +36,7 @@ export const activateUserAction = action(ActivationCodeSchema, async (data: Acti
 export const changeUsernameAction = authAction(ChangeUsernameSchema, async ({ ...data }: ChangeUsernameSchemaInputs, { session }) => {
     const api = await sharkApi()
     console.log(data)
-    const response = await api.users.changeUserUsername({
+    const response = await api.usersMe.changeUserUsername({
         username: data.username
     })
     revalidatePath(HOME_PATH);
@@ -47,7 +47,7 @@ export const changeUsernameAction = authAction(ChangeUsernameSchema, async ({ ..
 export const changeAvatarAction = authAction(changeAvatarSchema, async ({ ...data }: ChangeAvatarSchemaInputs, { session }) => {
     console.log(data)
     const api = await sharkApi()
-    const response = await api.users.uploadUserAvatar({
+    const response = await api.usersMe.uploadUserAvatar({
         avatar: data.avatar
     })
     revalidatePath(HOME_PATH);
@@ -56,13 +56,13 @@ export const changeAvatarAction = authAction(changeAvatarSchema, async ({ ...dat
 })
 
 export const requestChangeEmailAction = authAction(emailSchema, async ({ ...data }: EmailSchemaInputs, { session, api }) => {
-    return await api.users.requestChangeUserEmail({
+    return await api.usersMe.requestChangeUserEmail({
         email: data.email
     })
 })
 
 export const confirmChangeEmailAction = authAction(ActivationCodeSchema, async (data: ActivationCodeSchemaInputs, { session, api }) => {
-    return await api.users.confirmChangeUserEmail({
+    return await api.usersMe.confirmChangeUserEmail({
         code: data.code
     })
 })
@@ -91,7 +91,8 @@ export const adminUpdateUserAction = authAction(UpdateUserSchema, async (data: U
         email: data.email,
         is_activated: data.is_activated,
         is_superuser: data.is_superuser,
-        display_role: Number(data.display_role)
+        display_role: Number(data.display_role),
+        password: data.password,
     }
     if (data?.roles && data.roles.length > 0) {
         const roles = data.roles?.map((role) => {
@@ -119,8 +120,7 @@ export const adminCreateRoleAction = authAction(CreateRoleSchema, async (data: C
         return Number(scope)
     })
     const response = await api.adminRoles.adminCreateRole({
-        //TODO add tag
-        //tag: data.name.toLowerCase(),
+        tag: data.tag,
         name: data.name,
         color: data.color,
         is_staff: data.is_staff,
@@ -141,11 +141,11 @@ export const adminDeleteServerAction = authAction(UserIdSchema, async (data: Use
 export const adminCreateServerAction = authAction(CreateServerSchema, async (data: CreateServerSchemaInputs, { session, api }) => {
 
     const response = await api.adminServers.adminCreateServer({
-        //@ts-expect-error
         tag: data.tag,
         name: data.name,
         ip: data.ip,
         port: Number(data.port),
+        api_url: data.api_url,
     })
     console.log(response)
     revalidatePath(ADMIN_SERVERS_PATH);
@@ -153,17 +153,16 @@ export const adminCreateServerAction = authAction(CreateServerSchema, async (dat
 })
 
 export const adminUpdateServerAction = authAction(UpdateServerSchema, async (data: UpdateServerSchemaInputs, { session, api }) => {
-    //TODO fix this
-    // const response = await api.adminServers.adminUpdateServer({
-    //     //@ts-expect-error
-    //     tag: data.tag,
-    //     name: data.name,
-    //     ip: data.ip,
-    //     port: Number(data.port),
-    // })
-    // console.log(response)
-    // revalidatePath(ADMIN_SERVERS_PATH);
-    // return response
+    const response = await api.adminServers.adminUpdateServer(data.id, {
+        tag: data.tag,
+        name: data.name,
+        ip: data.ip,
+        port: Number(data.port),
+        api_url: data.api_url,
+    })
+    console.log(response)
+    revalidatePath(ADMIN_SERVERS_PATH);
+    return response
 })
 
 export const adminCreateForumCategoryAction = authAction(CreateForumCategorySchema, async (data: CreateForumCategorySchemaInputs, { session, api }) => {

@@ -52,6 +52,7 @@ export const CreateUserSchema = z.object({
 export const UpdateUserSchema = z.object({
     id: z.number().int(),
     username: z.string().min(2).max(32).regex(new RegExp('^[a-zA-Z0-9_-]+$'), "Nazwa użytkownika musi zawierac tylko litery, cyfry oraz znaki specjalne - _").optional(),
+    password: z.string().min(8).optional(),
     email: z.coerce.string().email().optional(),
     is_activated: z.boolean().optional(),
     is_superuser: z.boolean().optional(),
@@ -86,14 +87,16 @@ export const CreateServerSchema = z.object({
     name: z.string().min(2).max(32),
     ip: z.string().min(2).max(32),
     port: z.string(),
+    api_url: z.string().min(2).max(256),
 })
 
 export const UpdateServerSchema = z.object({
     id: z.number().int(),
-    tag: z.string().min(2).max(32),
-    name: z.string().min(2).max(32),
-    ip: z.string().min(2).max(32),
-    port: z.string(),
+    tag: z.string().min(2).max(32).optional(),
+    name: z.string().min(2).max(32).optional(),
+    ip: z.string().min(2).max(32).optional(),
+    port: z.string().optional(),
+    api_url: z.string().min(2).max(256).optional(),
 })
 
 export const CreateForumCategorySchema = z.object({

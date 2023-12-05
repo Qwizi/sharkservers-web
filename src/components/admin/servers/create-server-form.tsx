@@ -12,7 +12,6 @@ import { CreateRoleSchema, CreateServerSchema, CreateUserSchema } from "@/schema
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Page_Scope_GGF_ } from "sharkservers-sdk";
 import { z } from "zod";
 
 export default function CreateServerRole() {
@@ -23,6 +22,7 @@ export default function CreateServerRole() {
             name: "",
             ip: "",
             port: "",
+            api_url: "",
         },
     })
     const router = useRouter()
@@ -110,7 +110,18 @@ export default function CreateServerRole() {
                             <FormMessage />
                         </FormItem>
                     )} />
-
+                <FormField
+                    control={form.control}
+                    name="api_url"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Api url</FormLabel>
+                            <FormControl>
+                                <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
                 <Button type="submit">Dodaj</Button>
             </form>
         </Form>
