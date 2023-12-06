@@ -1,27 +1,27 @@
 /** @type {import('next').NextConfig} */
-const removeImports = require('next-remove-imports')();
+const removeImports = require("next-remove-imports")();
 
 const nextConfig = {
-    typescript: {
-        // !! WARN !!
-        // Dangerously allow production builds to successfully complete even if
-        // your project has type errors.
-        // !! WARN !!
-        ignoreBuildErrors: true,
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.qwizi.dev",
       },
-      images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: '**.qwizi.dev',
-          },
-          {
-            protocol: 'http',
-            hostname: 'localhost',
-          }
-        ],
+      {
+        protocol: "http",
+        hostname: "localhost",
       },
-      experimental: {},
-}
+    ],
+  },
+  experimental: {},
+};
 
-module.exports = removeImports(nextConfig)
+module.exports = removeImports(nextConfig);
