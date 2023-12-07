@@ -7,7 +7,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form, } from 
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Page_CategoryOut_ } from "sharkservers-sdk";
+import { CategoryOut, CategoryTypeEnum, Page_CategoryOut_, Page_ServerOut_, Page_UserOut_ } from "sharkservers-sdk";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import useUser from "@/hooks/user";
 import useCategory from "@/hooks/category";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { CreateForumCategorySchema, CreateNormalThreadSchema, CreateThreadSchema } from "@/schemas";
+import { createNormalThreadAction } from "@/actions";
 
 const MarkdownEditor = dynamic(
     () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
@@ -23,267 +25,247 @@ const MarkdownEditor = dynamic(
 );
 
 
-const formSchema = z.object({
-    title: z.string(),
-    content: z.string(),
-    category: z.string(),
-    server: z.string().optional(),
-    question_experience: z.string().optional(),
-    question_age: z.number().optional(),
-    question_reason: z.string().optional(),
-})
-
 interface ICreateThreadNormalForm {
     categories: Page_CategoryOut_,
-    category?:  string | undefined
+    category?: CategoryOut | undefined,
+    servers?: Page_ServerOut_ | undefined,
 }
 
-export default function CreateThreadForm({ categories, category }: ICreateThreadNormalForm) {
+export default function CreateThreadForm({ categories, category, servers }: ICreateThreadNormalForm) {
     const router = useRouter()
-    const form = useForm({
-        resolver: zodResolver(formSchema),
+    const { user } = useUser()
+    const normalForm = useForm<z.infer<typeof CreateNormalThreadSchema>>({
+        resolver: zodResolver(CreateNormalThreadSchema),
         defaultValues: {
             title: "",
             content: "",
-            server: "",
-            category: category ? category : "",
-            question_age: 0,
-            question_reason: "",
-            question_experience: ""
-        },
-    })
-    const api = useApi()
-    const { user } = useUser()
-    const [servers, setServers] = useState(undefined)
-    const [loading, setLoading] = useState(false)
-    const [showDialog, setShowDialog] = useState(false)
-    const { isApplicationCategoryMany } = useCategory(categories)
-    const watchCategory = form.watch("category", category)
-
-    useEffect(() => {
-        console.log(watchCategory)
-        if (!isApplicationCategoryMany(Number(watchCategory))) return
-        setShowDialog(true)
-        const getServers = async () => {
-            const response = await api.servers.getServers()
-            console.log(response)
-            setServers(response)
+            category: category?.id?.toString()
         }
+    });
+    const applicationForm = useForm<z.infer<typeof CreateThreadSchema>>({
+        resolver: zodResolver(CreateThreadSchema),
+        defaultValues: {
+            title: `Podanie na administratora - ${user?.username}`,
+            content: `Podanie na administratora - ${user?.username}`,
+            question_age: 0,
+            question_experience: "",
+            question_reason: "",
+            category: category?.id?.toString()
+        }
+    });
+    const api = useApi()
 
-        getServers().catch(console.error)
 
-        return () => setServers(undefined)
-
-    }, [watchCategory])
-
-    function getServerName(servers: any, serverId: number) {
-        let serverName = "invalid_server_name"
-        servers.items.map((server, i) => {
-            if (server.id === serverId) {
-                serverName = server.name
-            }
-        })
-        return serverName
-    }
-
-    async function createDefaultThread(data: z.infer<typeof formSchema>) {
-        return await api.forum.createThread({
-            category: Number(watchCategory),
-            title: data.title,
-            content: data.content
-        })
-    }
-
-    async function createApplicationThread(data: z.infer<typeof formSchema>) {
-        const serverId = Number(data.server)
-        const serverName = getServerName(servers, serverId)
-        const title = `Podanie na Administratora - ${user?.username}`
-        console.log(serverId)
-        return await api.forum.createThread({
-            category: Number(data.category),
-            title: title,
-            content: title,
-            server_id: serverId,
-            question_age: data.question_age,
-            question_experience: data.category,
-            question_reason: data.question_reason
-        })
-    }
-
-    async function onSubmit(data: z.infer<typeof formSchema>) {
-        try {
-            setLoading(true)
-            console.log(data)
-            const categoryId = Number(data.category)
-            const response = isApplicationCategoryMany(categoryId) ? await createApplicationThread(data) : await createDefaultThread(data)
-            toast({
-                className: "bg-green-700",
-                title: "Pomyślnie utworzono temat!",
-                description: `Twój temat ${data.title} został pomyślnie utworzony`
-            })
-            router.push(`/forum/${slugify(response.title)}-${response.id}`)
-
-        } catch (e) {
-            console.log(e)
+    async function onSubmitNormalThread(data: z.infer<typeof CreateNormalThreadSchema>) {
+        const response = await createNormalThreadAction(data)
+        console.log(response);
+        if (response.serverError) {
             toast({
                 variant: "destructive",
-                title: "Wystąpil błąd",
-                description: e.message
-            })
-            setLoading(false)
+                title: "Oh nie. Wystapil bład",
+                description: response.serverError,
+            });
         }
-        finally {
-            setLoading(false)
+        else if (response.validationError) {
+            toast({
+                variant: "destructive",
+                title: "Oh nie. Wystapil bład",
+                description: response.validationError,
+            });
         }
+        else {
+            toast({
+                variant: "success",
+                title: "Sukces!",
+                description: "Pomyslnie utworzono użytkownika",
+            });
+            normalForm.reset();
+            const title = response?.data?.title
+            router.push(`/forum/${slugify(title)}-${response?.data?.id}`)
+        }
+    }
+
+    async function onSubmit(data: z.infer<typeof CreateThreadSchema>) {
+        //const response = await createThreadAction(data)
+    }
+
+    useEffect(() => {
+        if (category?.type == CategoryTypeEnum.APPLICATION) {
+            applicationForm.setValue("title", `Podanie na administratora - ${user?.username}`)
+            applicationForm.setValue("content", `Podanie na administratora - ${user?.username}`)
+        } else {
+            applicationForm.reset()
+        }
+    }, [category])
+
+    if (category?.type == CategoryTypeEnum.APPLICATION) {
+        return (
+            <>
+                <Form {...applicationForm}>
+                    <form onSubmit={applicationForm.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={applicationForm.control}
+                            name="category"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Kategoria</FormLabel>
+                                    <Select onValueChange={(value) => {
+                                        field.onChange(value);
+                                        router.push(`/forum/create?category=${value}`);
+
+                                    }} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Wybierz kategorie" defaultValue={category?.id} />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {categories && categories.items.map((category, i) =>
+                                                <SelectItem key={i} value={String(category.id)}>{category.name}</SelectItem>
+
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={applicationForm.control}
+                            name="server_id"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Serwer</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue="1">
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select a verified email to display" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {servers && servers.items.map((server, i) =>
+                                                <SelectItem key={i} value={String(server.id)}>{server.name}</SelectItem>
+
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={applicationForm.control}
+                            name="question_age"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Wiek</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Wiek" {...field} type="number"
+                                            onChange={(e) =>
+                                                field.onChange(
+                                                    Number.isNaN(parseInt(e.target.value))
+                                                        ? 0
+                                                        : parseInt(e.target.value)
+                                                )} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+
+                        />
+                        <FormField
+                            control={applicationForm.control}
+                            name="question_experience"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Doświadczenie</FormLabel>
+                                    <FormControl>
+                                        <MarkdownEditor {...field} height="200px" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={applicationForm.control}
+                            name="question_reason"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Dlaczego chcesz zostać administratorem?</FormLabel>
+                                    <FormControl>
+                                        <MarkdownEditor {...field} height="200px" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit" className="text-white">Napisz wątek</Button>
+                    </form>
+                </Form>
+            </>
+
+        )
     }
 
     return (
-        <>
-            <Dialog open={showDialog} onOpenChange={setShowDialog}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Uwaga!</DialogTitle>
-                        <DialogDescription>
-                            Przechodzac dalej oznajmiasz, że zapoznaleś się wymyaganiami w sprawie rekrutacji i je akceptujesz!
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <Button type="submit" onClick={() => setShowDialog(!showDialog)}>Potwierdzam</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
-                        control={form.control}
-                        name="category"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Kategoria</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Wybierz kategorie" defaultValue={category}/>
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {categories && categories.items.map((category, i) =>
-                                            <SelectItem key={i} value={String(category.id)}>{category.name}</SelectItem>
+        <Form {...normalForm}>
+            <form onSubmit={normalForm.handleSubmit(onSubmitNormalThread)} className="space-y-8">
+                <FormField
+                    control={normalForm.control}
+                    name="category"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Kategoria</FormLabel>
+                            <Select onValueChange={(value) => {
+                                field.onChange(value);
+                                router.push(`/forum/create?category=${value}`);
 
-                                        )}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    {isApplicationCategoryMany(Number(watchCategory)) ? (
-                        <>
-                            <FormField
-                                control={form.control}
-                                name="server"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Serwer</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue="1">
-                                            <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select a verified email to display" />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {servers && servers.items.map((server, i) =>
-                                                    <SelectItem key={i} value={String(server.id)}>{server.name}</SelectItem>
+                            }} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Wybierz kategorie" defaultValue={category?.id} />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {categories && categories.items.map((category, i) =>
+                                        <SelectItem key={i} value={String(category.id)}>{category.name}</SelectItem>
 
-                                                )}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="question_age"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Wiek</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Wiek" {...field} type="number"
-                                                onChange={(e) =>
-                                                    field.onChange(
-                                                        Number.isNaN(parseInt(e.target.value))
-                                                            ? 0
-                                                            : parseInt(e.target.value)
-                                                    )} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-
-                            />
-                            <FormField
-                                control={form.control}
-                                name="question_experience"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Doświadczenie</FormLabel>
-                                        <FormControl>
-                                            <MarkdownEditor {...field} height="200px" />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="question_reason"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Dlaczego chcesz zostać administratorem?</FormLabel>
-                                        <FormControl>
-                                            <MarkdownEditor {...field} height="200px" />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </>
-                    ) : (
-                        <>
-                            <FormField
-                                control={form.control}
-                                name="title"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Tytuł</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Tytuł" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="content"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Treść</FormLabel>
-                                        <FormControl>
-                                            <MarkdownEditor {...field} height="500px" enablePreview={false}/>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </>
-
+                                    )}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
                     )}
-                    <Button disabled={loading} type="submit" className="text-white">Napisz wątek</Button>
-                </form>
-            </Form>
-        </>
+                />
 
+                <FormField
+                    control={normalForm.control}
+                    name="title"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Tytuł</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Tytuł" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={normalForm.control}
+                    name="content"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Treść</FormLabel>
+                            <FormControl>
+                                <MarkdownEditor readOnly={category?.type === CategoryTypeEnum.APPLICATION ? true : false} {...field} height={category?.type === CategoryTypeEnum.APPLICATION ? "50px" : "500px"} enablePreview={false} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit" className="text-white">Napisz wątek</Button>
+            </form>
+        </Form>
     )
 }

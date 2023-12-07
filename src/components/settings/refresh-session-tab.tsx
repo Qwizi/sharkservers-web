@@ -15,7 +15,7 @@ export function RefreshSessionTab() {
         if (status === "unauthenticated") return
         if (dataRefreshed) return
         try {
-            const userData = await api.users.getLoggedUser()
+            const userData = await api.usersMe.getLoggedUser()
             console.log(userData)
             await update({
                 ...session,

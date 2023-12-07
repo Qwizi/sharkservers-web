@@ -32,11 +32,15 @@ import {
   UpdateServerSchemaInputs,
   CreateForumCategorySchema,
   CreateForumCategorySchemaInputs,
+  CreateThreadSchema,
+  CreateNormalThreadSchema,
+  CreateApplicationThreadFormSchema,
 } from "@/schemas";
 import { revalidatePath } from "next/cache";
 
 const HOME_PATH = "/";
 const USERS_PATH = "/users";
+const FORUM_PATH = "/forum";
 const ADMIN_USERS_PATH = "/admin/users";
 const ADMIN_ROLE_PATH = "/admin/roles";
 const ADMIN_SERVERS_PATH = "/admin/servers";
@@ -246,3 +250,37 @@ export const adminCreateForumCategoryAction = authAction(
     return response;
   },
 );
+
+export const createNormalThreadAction = authAction(
+  CreateNormalThreadSchema,
+  async (data, { session, api }) => {
+    const response = await api.forum.createThread({
+      title: data.title,
+      content: data.content,
+      category: Number(data.category),
+    });
+    console.log(response);
+    revalidatePath(HOME_PATH)
+    revalidatePath(FORUM_PATH);
+    return response;
+  },
+);
+
+
+export const createApplicantThreadAction = authAction(
+  CreateApplicationThreadFormSchema,
+  async (data, { session, api }) => {
+    const response = await api.forum.createThread({
+      title: data.title,
+      content: data.content,
+      server_id: Number(data.server_id),
+      category: Number(data.category),
+      question_age: Number(data.question_age),
+      question_experience: data.question_experience,
+      question_reason: data.question_reason,
+    });
+    console.log(response);
+    revalidatePath(HOME_PATH)
+    revalidatePath(FORUM_PATH);
+    return response;
+  },);

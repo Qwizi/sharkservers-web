@@ -23,7 +23,7 @@ export default async function SteamCallback({
             openid_sig: searchParams["openid.sig"] || '',
             openid_signed: searchParams['openid.signed'] || ''
         }
-        const response = await api.users.connectSteamProfile(params)
+        const response = await api.usersMe.connectSteamProfile(params)
         console.log(response)
     } catch (e) {
         console.error(e.body["detail"])

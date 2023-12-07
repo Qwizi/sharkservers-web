@@ -1,6 +1,8 @@
 import { withAuth } from "next-auth/middleware";
+import { redirect } from "next/navigation";
 
-export default withAuth(function middleware(req) {}, {
+export default withAuth(function middleware(req) {
+}, {
   callbacks: {
     authorized: ({ req, token }) => {
       if (
