@@ -151,6 +151,32 @@ export const CreateForumCategorySchema = z.object({
     ),
 });
 
+export const CreateNormalThreadSchema = z.object({
+  title: z.string().min(2).max(64),
+  content: z.string().min(2),
+  category: z.string().min(1),
+});
+
+export const CreateThreadSchema = z.object({
+  title: z.string().min(2).max(64),
+  content: z.string().min(2),
+  category: z.string().min(1),
+  server_id: z.string().min(1).optional(),
+  question_experience: z.string().min(2).optional(),
+  question_age: z.number().int().optional(),
+  question_reason: z.string().min(2).optional(),
+});
+
+export const CreateApplicationThreadFormSchema = z.object({
+  title: z.string().min(2).max(64),
+  content: z.string().min(2),
+  category: z.string().min(1),
+  server_id: z.string().min(1),
+  question_experience: z.string().min(2),
+  question_age: z.number().int(),
+  question_reason: z.string().min(2),
+});
+
 export type RegisterUserSchemaInputs = z.infer<typeof RegisterUserSchema>;
 export type ActivationCodeSchemaInputs = z.infer<typeof ActivationCodeSchema>;
 export type LoginUserSchemaInputs = z.infer<typeof LoginUserSchema>;
@@ -166,3 +192,8 @@ export type UpdateServerSchemaInputs = z.infer<typeof UpdateServerSchema>;
 export type CreateForumCategorySchemaInputs = z.infer<
   typeof CreateForumCategorySchema
 >;
+export type CreateThreadSchemaInputs = z.infer<typeof CreateThreadSchema>;
+export type CreateNormalThreadSchemaInputs = z.infer<
+  typeof CreateNormalThreadSchema>;
+export type CreateApplicationThreadFormSchemaInputs = z.infer<
+  typeof CreateApplicationThreadFormSchema>;

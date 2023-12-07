@@ -102,7 +102,7 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                 <div className="flex flex-col rounded-[0.5rem] p-2 w-full">
                     <div className="ml-auto flex w-full justify-between">
                         <div className="w-full">
-                            {isApplicationCategory(category) ? (
+                            {/* {isApplicationCategory(category) ? (
                                 <div className="flex flex-col">
                                     <span>Nick: {author.username}</span>
                                     {meta_fields && meta_fields.map((meta, i) =>
@@ -137,8 +137,10 @@ export default function ThreadDetail({ thread, posts }: IThreadDetail) {
                                 </div>
                                 
                             )
-                            }
-
+                            } */}
+                        <div className="prose dark:prose-invert">
+                                    <MarkdownPreview source={content} className="prose dark:prose-invert" />
+                                </div>
                         </div>
                         <ThreadDetailActionMenu threadId={id} />
                     </div>
