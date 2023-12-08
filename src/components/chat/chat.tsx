@@ -10,7 +10,7 @@ import CreateMessageForm from './create-message-form';
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const Chat = () => {
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "wss://api-sharkservers.qwizi.dev/ws"
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8080/ws"
     const { authenticated, access_token } = useUser()
     const [socketUrl, setSocketUrl] = useState(wsUrl)
     const [messages, setMessages] = useState(null)
