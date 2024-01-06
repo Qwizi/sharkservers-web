@@ -194,6 +194,8 @@ export type CreateForumCategorySchemaInputs = z.infer<
 >;
 export type CreateThreadSchemaInputs = z.infer<typeof CreateThreadSchema>;
 export type CreateNormalThreadSchemaInputs = z.infer<
-  typeof CreateNormalThreadSchema>;
+  typeof CreateNormalThreadSchema
+>;
 export type CreateApplicationThreadFormSchemaInputs = z.infer<
-  typeof CreateApplicationThreadFormSchema>;
+  typeof CreateApplicationThreadFormSchema
+>;
