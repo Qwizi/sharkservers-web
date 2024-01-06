@@ -260,12 +260,11 @@ export const createNormalThreadAction = authAction(
       category: Number(data.category),
     });
     console.log(response);
-    revalidatePath(HOME_PATH)
+    revalidatePath(HOME_PATH);
     revalidatePath(FORUM_PATH);
     return response;
   },
 );
-
 
 export const createApplicantThreadAction = authAction(
   CreateApplicationThreadFormSchema,
@@ -280,7 +279,8 @@ export const createApplicantThreadAction = authAction(
       question_reason: data.question_reason,
     });
     console.log(response);
-    revalidatePath(HOME_PATH)
+    revalidatePath(HOME_PATH);
     revalidatePath(FORUM_PATH);
     return response;
-  },);
+  },
+);
