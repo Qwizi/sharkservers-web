@@ -59,7 +59,7 @@ export default function CreateThread({
               {categories &&
                 categories.items.map((category) => {
                   return (
-                    <SelectItem value={String(category.id)}>
+                    <SelectItem value={String(category.id)} key={category.id}>
                       {category.name}
                     </SelectItem>
                   );
